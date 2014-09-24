@@ -1,0 +1,101 @@
+/*******************************
+            Global
+*******************************/
+html, body {
+  font-size: 15px;
+  height: 100%;
+}
+
+body {
+  font-family: "Open Sans", "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+  background: #FFFFFF;
+  margin: 0px;
+  padding: 0px;
+  color: #555555;
+  text-rendering: optimizeLegibility;
+  
+}
+
+.ui.cortopo {
+  background-color: #FFFFFF;
+  color: rgba(0, 0, 0, 0.7);
+}
+.ui.inverted.cortopo {
+  background-color: rgba(34, 173, 50, 0.9);
+  color: #FFFFFF;
+}
+
+.ui.corlateral {
+  background-color: rgba(89, 143, 223, 0.9);
+  color: #FFFFFF;
+}
+
+.ui.inverted.corlateral {
+  background-color: rgba(51, 64, 84, 1);
+  color: #FFFFFF;
+}
+
+.ui.corrodape {
+  background-color: rgba(89, 143, 223, 0.9);
+  color: #FFFFFF;
+}
+
+.ui.inverted.corrodape {
+  background-color: rgba(52, 101, 58, 1);
+  color: #FFFFFF;
+}
+
+.ui.header {
+  font-family: 'Source Sans Pro', "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+}
+
+/*******************************
+            Global
+
+/*******************************
+          Responsive
+*******************************/
+
+@media only screen and (max-width : 1000px) {
+  #feed .inbox .date {
+    float: none;
+    margin-bottom: 0.5em;
+  }
+}
+
+@media only screen and (max-width : 1250px) {
+  /*rtl:ignore*/
+  #feed .left.column > .menu .item {
+    font-size: 1rem;
+  }
+}
+
+#wrap {height: auto; min-height: 100%;}
+
+#conteudoConteiner {
+    margin: 5px;
+    overflow:auto;
+    padding-bottom: 150px;
+}
+
+.textoLongo{
+  font-family: "Helvetica Neue",Helvetica,Arial;
+  padding-left: 40px !important;
+}
+
+#footer {
+    position: relative;
+    margin-top: -150px; /* negative value of footer height */
+    height: 150px;
+    clear:both;
+    /*background: url("http://semantic-ui.com/images/dark-bg.png") repeat; */
+}
+ 
+/*Opera Fix*/
+body:before {
+    content:"";
+    height:100%;
+    float:left;
+    width:0;
+    margin-top:-32767px;
+}
