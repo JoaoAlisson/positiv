@@ -21,8 +21,26 @@
 	<script type="text/javascript">
     var URL = <?php echo "'".URL ."'";?>;
     var PAGINACAMINHO = <?php echo "'http://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]'";?>;
+    var CONTROLLER_GLOBAl = "<?php echo CONTROLLER.'/';?>";
 
 		$(document).ready(function(){
+
+    $( document ).tooltip({
+      position: {
+        my: "center bottom-20",
+        at: "center top",
+        using: function( position, feedback ) {
+          $( this ).css( position );
+          $( "<div>" )
+            .addClass( "arrow" )
+            .addClass( feedback.vertical )
+            .addClass( feedback.horizontal )
+            .appendTo( this );
+        }
+      }
+    });
+
+
         $('.ui.sidebar').sidebar('attach events', '.menuLateral');
 		});
 
@@ -117,7 +135,7 @@
        
       <div class="right menu">
              
-        <a class="popup icon item" data-content="View project on Github" href="<?php echo URL;?>login/deslogar">
+        <a class="popup icon item" data-content="View project on Github" title="Deslogar" href="<?php echo URL;?>login/deslogar">
           <?php echo Sessao::pegar("usuario");?>
           <i class="icon sign out"></i>
         </a>

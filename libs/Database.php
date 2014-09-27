@@ -25,8 +25,9 @@ class Database extends PDO{
 			$tabela = PREFIXO.$tabela;
 			$sth = $this->prepare("INSERT INTO $tabela ($campos) VALUES ($valores)");
 
+			mysql_connect(DB_HOST, DB_USER, DB_PASS);
 			foreach ($dados as $key => $value) {
-				$sth->bindValue(":$key", $value);
+				$sth->bindValue(":$key", mysql_real_escape_string($value));
 			}
 
 			$sth->execute();
@@ -58,9 +59,11 @@ class Database extends PDO{
 			$tabela = PREFIXO.$tabela;
 			$sth = $this->prepare("UPDATE $tabela SET $alteracoes WHERE id = :id");
 
+			$id = (int)$id;
 			$sth->bindValue(":id", $id);
+			mysql_connect(DB_HOST, DB_USER, DB_PASS);
 			foreach ($dados as $key => $value) {
-				$sth->bindValue(":$key", $value);
+				$sth->bindValue(":$key", mysql_real_escape_string($value));
 			}
 
 			$validar[1] = "Editado com Sucesso";
@@ -82,6 +85,7 @@ class Database extends PDO{
 		$controller = $tabela;
 		$tabela = PREFIXO."$tabela";
 
+		$id = (int)$id;
 		$sql = "SELECT $campos FROM $tabela WHERE id = {$id}";
 
 		$query = $this->prepare($sql);
@@ -105,12 +109,14 @@ class Database extends PDO{
 
 		$where = "";
 		$validar = "";
+		mysql_connect(DB_HOST, DB_USER, DB_PASS);
 		if($onde != null){
 			$validar = $this->validar($onde, "false");	
 			$i = 0;
 			if($validar[0] == "ok"){
 				$where = "WHERE ";
 				foreach ($onde as $campo => $valor){
+					$valor = mysql_real_escape_string($valor);
 					if($valor != ""){
 						if($this->tipos[$campo] == "numero" || $this->tipos[$campo] == "moeda" || $this->tipos[$campo] == "inteiro")
 							$where .= ($i > 0) ? "AND ".$campo." = '".$valor."' " : $campo." = '".$valor."' ";
@@ -170,6 +176,9 @@ class Database extends PDO{
 
 	}
 
+	/*
+		OBS: esta função não trata as entradas antes da pesquisa. CUIDADO!!
+	 */
 	public function pegarOnde($onde = null, $campos = null, $tabela = null){
 
 		if($campos == null)

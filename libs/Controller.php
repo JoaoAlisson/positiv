@@ -49,6 +49,8 @@ class Controller{
 
 		if(isset($this->model))
 			$this->model->inserirPermissao($this->permissao);
+
+		define("CONTROLLER", $this->informacoes['nomeController']);
 	}
 
 	public function  loadModel($name){

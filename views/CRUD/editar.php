@@ -12,7 +12,7 @@
 <h2>Edidar <?php echo $dados['nome'][0];?></h2>
 <?php 
 	$this->html->formulario();
-	echo "<input type='text' name='id' value='739' style='display:none;' />";	
+	echo "<input type='text' name='id' value='".$dados['id']."' style='display:none;' />";	
 	foreach ($dados['campos'] as $chave => $campo) {
 		$this->html->campo($chave);
 	}	

@@ -44,10 +44,27 @@ class ControllerCRUD extends Controller{
 		}
 
 		$camposPegar = array_keys($campos);
+		array_push($camposPegar, "id");
 
 		$pagina = isset($this->GET['pag']) ? $this->GET['pag'] : null;
-		$ordem = isset($this->GET['ordem']) ? $this->GET['ordem'] : null;
-		$ordenacao = isset($this->GET['ordenacao']) ? $this->GET['ordenacao'] : null;
+		$ordem = "";
+		//valida campos informados para ordenação
+		if(isset($this->GET['ordem'])){
+			$ordem = isset($this->campos[$this->GET['ordem']]) ? $this->GET['ordem'] : null;
+		}else{
+			$ordem = null;
+		}
+
+		//valida se o valor de ordenação eh "ASC" ou "DESC"
+		$ordenacao = "";
+		if(isset($this->GET['ordenacao'])){
+			if($this->GET['ordenacao'] != "ASC" && $this->GET['ordenacao'] != "DESC")
+				$ordenacao = null;
+			else
+				$ordenacao = $this->GET['ordenacao'];
+		}else{
+			$ordenacao = null;
+		}
 
 		if(!isset($campos[$ordem]) && $ordem != null)
 			$ordem = null;
@@ -129,6 +146,7 @@ class ControllerCRUD extends Controller{
 
 	public function editar(){
 
+		$id = isset($_POST['idSet']) ? $_POST['idSet'] : "842";
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
 			if(isset($_POST['ajaxPg'])){
 				require "views/erro/index.php";
@@ -150,10 +168,11 @@ class ControllerCRUD extends Controller{
 			$retorno['retorno'] = $retornou; 					
 		}else{
 
-			$retorno = $this->model->pegar('739');
+			$retorno = $this->model->pegar($id);
 			$retorno['nome'] = $this->nome;
 			$retorno['campos'] = $this->campos;	
 		}
+		$retorno['id'] = $id;
 		$this->dados($retorno);
 		$this->renderizar("CRUD/editar");
 	}

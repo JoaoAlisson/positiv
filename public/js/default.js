@@ -2,6 +2,7 @@ var PAGINA = 0;
 var CAMPOORDEM = "";
 var ORDENACAO = "ASC";
 var FILTROS = "";
+
 function carregando(){
 	load = "  <div class=\"ui inverted active dimmer\">"+
   				  "<div class=\"ui text loader\">Carregando...</div>"+
@@ -48,6 +49,7 @@ function navegacao(controller, action, menuPincipal){
     PAGINA = 1;
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
+	CONTROLLER_GLOBAl = controller;
 }
 
 function setOrdemPag(pagina, campo, ordem){
@@ -57,6 +59,7 @@ function setOrdemPag(pagina, campo, ordem){
 }
 
 function navegacaoSub(controller, action){
+
 	controller = controller || "";
 	action = action || ""; 
 
@@ -86,9 +89,13 @@ function navPaginacao(controller, action){
 		$.each(retorno.listagem, function(item, campos){
 			lista = lista + "<tr>";
 			$.each(campos, function(chave, valor){
-				lista = lista + "<td>" + valor + "</td>";
+				if(chave != "id")
+					lista = lista + "<td>" + valor + "</td>";
 			});
-			lista = lista + "</tr>";
+			lista = lista + "<td> " +
+                      "<div class=\"tiny ui icon button\" title='Editar' onClick='editarBt("+ campos.id +")'><i class=\"pencil icon\"></i></div>" +
+                      "<div class=\"tiny ui red icon button\" title='Deletar' onClick='alert("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
+              "</td></tr>";
 		});
 		$("#totalBusc").html("Total: "+retorno.total);
 		$("#listagem").html(lista);
@@ -97,6 +104,22 @@ function navPaginacao(controller, action){
 
 
 	window.history.pushState('Object', 'Teste', caminho);
+
+	PAGINA = 1;
+	CAMPOORDEM = "";
+	ORDENACAO = "ASC";
+}
+
+function editarBt(id){
+	controller = CONTROLLER_GLOBAl;
+	action = "editar"; 
+
+	caminho = URL+controller+action;
+	PAGINACAMINHO = caminho; 
+	$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true , idSet: id});
+
+
+	window.history.pushState('Object', 'Postiv', caminho);
 
 	PAGINA = 1;
 	CAMPOORDEM = "";

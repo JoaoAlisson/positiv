@@ -1,19 +1,14 @@
 <?php
-	// Library
-	require 'libs/Database.php';
-	require 'libs/Sessao.php';
+	define('SEPARADOR', DIRECTORY_SEPARATOR);
+	define('RAIZ', dirname(__FILE__));
 
-	//Use an autoloader!
-	require 'libs/bootstrap.php';
-	require 'libs/Html.php';
-	require 'libs/Controller.php';
-	require 'libs/ControllerCrud.php';
-	require 'libs/View.php';
-	require 'libs/Model.php';
+    function meu_autoloader($classe) {
+        include(RAIZ . SEPARADOR . "libs". SEPARADOR . $classe . ".php");
+    }
+    spl_autoload_register("meu_autoloader");
 
-
-	require 'config/config.php';
-	require 'config/tiposUsuarios.php';
+	require RAIZ . SEPARADOR . 'config' . SEPARADOR . 'config.php';
+	require RAIZ . SEPARADOR . 'config' . SEPARADOR . 'tiposUsuarios.php';
 
 	$app = new Bootstrap();
 ?>

@@ -1,10 +1,5 @@
 <?php
 /*
-	$valor = "746.356.346,34";
-
-		$retorno;
-		$valor = str_replace(".", "", $valor);
-		$valor = str_replace(",", ".", $valor);
 
     echo DIRECTORY_SEPARATOR. " ".dirname(__FILE__)."<br>";
 
@@ -21,8 +16,17 @@ echo "<br>".PATH_SEPARATOR;
 echo "<br>".php_sapi_name();
 echo "<br>--<br>";
 */
-$teste = array("joao", "eu", "raimunda", "vagabunda");
-$teste2 = array("sfbs", "sdfbsgb", "sdfbsfdb");
-print_r(array_diff($teste, $teste2));
+//echo dirname(__FILE__);
+//echo DIRECTORY_SEPARATOR;
+//echo $_SERVER['SERVER_NAME'];
+//echo $_SERVER ['REQUEST_URI'];
 
+$texto = "dfbs/\"'''9u021ro0'213-i124=9SELECT''";
+$link = mysql_connect('localhost', 'root', 'toor');
+ $test = mysql_real_escape_string($texto, $link);
+echo $test;
+echo '<br>';
+// echo htmlspecialchars($test);
+$test = '1';
+echo (int)$test;
 ?>

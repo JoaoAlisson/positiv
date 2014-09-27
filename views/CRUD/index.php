@@ -30,6 +30,7 @@ $paginacao = "";
 		<?php foreach ($dados['campos'] as $campo => $nome) {
 			echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
 		}?>
+    <th></th>
 		</tr>
 	</thead>
   <tbody id="listagem">
@@ -41,9 +42,13 @@ $paginacao = "";
 
       $listagem .= "<tr>";
       	foreach ($campos as $campo => $valor) {
-      		$listagem .= "<td>$valor</td>";
+            if($campo != 'id')
+      		    $listagem .= "<td>$valor</td>";
       	}
-      $listagem .= "</tr>";
+      $listagem .= "<td>
+                      <div class=\"tiny ui icon button\" title='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
+                      <div class=\"tiny ui red icon button\" title='Deletar' onClick='alert(".$campos['id'].")'><i class=\"trash icon\"></i></div>
+              </td></tr>";
     	} 
       //if(!isset($dados['filtro']))
           echo $listagem;

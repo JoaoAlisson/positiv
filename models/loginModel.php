@@ -4,7 +4,8 @@ class LoginModel extends Model{
 	public function verificaLogin($login = "", $senha = ""){
 
 		$tabela = PREFIXO."usuarios";
-		$sth = $this->prepare("SELECT id, login FROM $tabela WHERE login = :login AND senha = MD5(:senha)");
+		$senha = Hash::criar($senha, CHAVE_LOGIN);
+		$sth = $this->prepare("SELECT id, login FROM $tabela WHERE login = :login AND senha = :senha");
 
 		$sth->execute(array(
 				':login' => $login,

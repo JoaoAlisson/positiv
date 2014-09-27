@@ -38,7 +38,9 @@ class Model extends Database{
 				foreach ($campos as $campo => $valor) {
 					if($campo != "id"){
 						if($this->tipos[$campo] == "moeda")
-							$retorno[$item][$campo] = "R$ ". number_format($valor, 2, ',', '.');					
+							$retorno[$item][$campo] = "R$ ". number_format($valor, 2, ',', '.');
+						else
+							$retorno[$item][$campo]  = htmlentities(stripslashes($valor), ENT_QUOTES);			
 					}
 				}
 			}
@@ -46,7 +48,9 @@ class Model extends Database{
 			foreach ($retorno as $campo => $valor) {
 				if($campo != "id"){
 					if($this->tipos[$campo] == "moeda")
-						$retorno[$campo] = number_format($valor, 2, ',', '.');					
+						$retorno[$campo] = number_format($valor, 2, ',', '.');	
+					else
+						$retorno[$campo]  = htmlentities(stripslashes($valor), ENT_QUOTES);											
 				}				
 			}
 		}
@@ -117,8 +121,10 @@ class Model extends Database{
 		return $retorno;
 	}
 
-	public function validarTexto($texo){
+	public function validarTexto($texo, $campo = null){
 		$retorno = "ok";
+		//if($campo != null)
+			//$this->dados[$campo] = mysql_real_escape_string($texto);
 
 		return $retorno;
 	}

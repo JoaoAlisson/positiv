@@ -99,3 +99,47 @@ body:before {
     width:0;
     margin-top:-32767px;
 }
+
+.ui-tooltip, .arrow:after {
+  background: rgba(200, 200, 200, 0.9) !important;
+  border: 2px solid white !important;
+}
+.ui-tooltip {
+  padding: 10px 10px !important;
+  color: green !important;
+  border-radius: 10px !important;
+  font: bold 13px "Helvetica Neue", Sans-Serif !important;
+  box-shadow: 0 0 7px black !important;
+}
+.arrow {
+  width: 70px;
+  height: 16px;
+  overflow: hidden;
+  position: absolute;
+  left: 50%;
+  margin-left: -35px;
+  bottom: -16px;
+}
+.arrow.top {
+  top: -16px;
+  bottom: auto;
+}
+.arrow.left {
+  left: 20%;
+}
+.arrow:after {
+  content: "";
+  position: absolute;
+  left: 20px;
+  top: -20px;
+  width: 25px;
+  height: 25px;
+  box-shadow: 6px 5px 9px -9px black !important;
+  -webkit-transform: rotate(45deg) !important;
+  -ms-transform: rotate(45deg) !important;
+  transform: rotate(45deg) !important;
+}
+.arrow.top:after {
+  bottom: -20px;
+  top: auto;
+}

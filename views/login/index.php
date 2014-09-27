@@ -1,3 +1,7 @@
+<?php
+	$token = Hash::criar(time(), CHAVE_GERAL);
+	Sessao::inserir("token", $token);
+?>
 <!doctype html>
 <html>
 <head>
@@ -12,7 +16,8 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/semantic.min.css"/>
 
  <body>	
-	<form action="<?php echo URL;?>login" class="ui form formularioLogin" method="POST">	
+	<form action="<?php echo URL;?>login" class="ui form formularioLogin" method="POST">
+	<input name="token" value="<?php echo $token;?>" hidden/>
 	<div class="ui three column center aligned grid">
 	    <div class="column">
 	    	<h1>Login</h1>
