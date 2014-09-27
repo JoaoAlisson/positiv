@@ -2,6 +2,26 @@
 </div>
 </div>
 </div>
+
+<div class="ui small modal">
+  <i class="close icon"></i>
+  <div class="header">
+    Confirmação
+  </div>
+  <div class="content" id="msgConfirmacao">
+  </div>
+  <div class="actions">
+    <div class="ui positive labled icon button">
+      <i class="ui thumbs up icon"></i>
+      Sim
+    </div>    
+    <div class="ui negative labled icon button">
+      <i class="ui thumbs down icon"></i>
+      Não
+    </div>
+  </div>
+</div>
+
 <br><br>
 <div id="footer">
 <div class="ui corrodape inverted page fixed grid segment">

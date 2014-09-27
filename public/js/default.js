@@ -94,7 +94,7 @@ function navPaginacao(controller, action){
 			});
 			lista = lista + "<td> " +
                       "<div class=\"tiny ui icon button\" title='Editar' onClick='editarBt("+ campos.id +")'><i class=\"pencil icon\"></i></div>" +
-                      "<div class=\"tiny ui red icon button\" title='Deletar' onClick='alert("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
+                      "<div class=\"tiny ui red icon button\" title='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
               "</td></tr>";
 		});
 		$("#totalBusc").html("Total: "+retorno.total);
@@ -111,6 +111,7 @@ function navPaginacao(controller, action){
 }
 
 function editarBt(id){
+	
 	controller = CONTROLLER_GLOBAl;
 	action = "editar"; 
 
@@ -124,6 +125,18 @@ function editarBt(id){
 	PAGINA = 1;
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
+
+}
+
+function deletarBt(id){
+	mensagemConfirmacao("Deseja realmente deletar esse camarada?");
+	$('.small.modal').modal('setting', {
+    closable  : false,
+    onApprove : function() {
+      window.alert('Approved!');
+      //aqui vai a parte da deleção
+    }
+  }).modal('show');
 }
 
 function paginacao(controller, pag, campo){
@@ -352,4 +365,19 @@ function data(id){
 
 function textoLongo(id){
 	return "";
+}
+
+function mensagemConfirmacao(mensagem){
+	$("#msgConfirmacao").html(mensagem);
+}
+
+function deslogar(){
+	mensagemConfirmacao("Deseja realmente sair do sistema?");
+	logout = URL + "login/deslogar"; 
+	$('.small.modal').modal('setting', {
+		closable  : false,
+		onApprove : function() {
+		  $(window.document.location).attr('href',logout);
+		}
+	}).modal('show');	 
 }

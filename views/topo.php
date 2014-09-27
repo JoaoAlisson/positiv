@@ -135,7 +135,7 @@
        
       <div class="right menu">
              
-        <a class="popup icon item" data-content="View project on Github" title="Deslogar" href="<?php echo URL;?>login/deslogar">
+        <a class="popup icon item" data-content="View project on Github" title="Deslogar" onclick="deslogar();">
           <?php echo Sessao::pegar("usuario");?>
           <i class="icon sign out"></i>
         </a>
