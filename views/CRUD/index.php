@@ -45,9 +45,9 @@ $paginacao = "";
             if($campo != 'id')
       		    $listagem .= "<td>$valor</td>";
       	}
-      $listagem .= "<td>
-                      <div class=\"tiny ui icon button\" title='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
-                      <div class=\"tiny ui red icon button\" title='Deletar' onClick='deletarBt(".$campos['id'].")'><i class=\"trash icon\"></i></div>
+      $listagem .= "<td class='popup'>
+                      <div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
+                      <div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt(".$campos['id'].")'><i class=\"trash icon\"></i></div>
               </td></tr>";
     	} 
       //if(!isset($dados['filtro']))

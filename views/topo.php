@@ -9,13 +9,13 @@
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/default.js"></script>
   <script type="text/javascript" src="<?php echo URL; ?>public/js/chart.min.js"></script>
   <script type="text/javascript" src="<?php echo URL; ?>public/js/graficos.js"></script>
-  <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery.mask.min.js"></script>  
+  <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery.mask.min.js"></script> 
 
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/semantic.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/semantic.min.css"/>
 
-	<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/default.css"/>
-   <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/jquery-ui.min.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/default.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/jquery-ui.min.css"/>
 
 	
 	<script type="text/javascript">
@@ -24,7 +24,8 @@
     var CONTROLLER_GLOBAl = "<?php echo CONTROLLER.'/';?>";
 
 		$(document).ready(function(){
-
+      $('.balao').popup();
+/*
     $( document ).tooltip({
       position: {
         my: "center bottom-20",
@@ -38,7 +39,7 @@
             .appendTo( this );
         }
       }
-    });
+    }); */
 
 
         $('.ui.sidebar').sidebar('attach events', '.menuLateral');
@@ -135,11 +136,11 @@
        
       <div class="right menu">
              
-        <a class="popup icon item" data-content="View project on Github" title="Deslogar" onclick="deslogar();">
+        <a class="balao icon item" data-content="Deslogar" onclick="deslogar();">
           <?php echo Sessao::pegar("usuario");?>
           <i class="icon sign out"></i>
         </a>
-        <a class="popup icon item" data-content="View project on Github" href="<?php echo URL;?>logout">
+        <a class="balao icon item" data-content="Imprimir" href="#">
           <i class="icon print"></i>
         </a>      
       </div>
@@ -171,6 +172,7 @@
     </div>
   </div>
 </div>  
+
 <div id="conteudoConteiner">
 <div class="ui segment">
 <div id="conteudo">  

@@ -71,6 +71,81 @@ class HTML{
 
 //<<--------------- CAMPOS DE INPUT -------------------->>
 
+	function campoNome($campo, $valor = null, $validar){
+
+		if($valor == null)
+			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+
+		$validacaoJs = "";
+		if($validar == false){
+			$requerido =  "";			
+		}else{
+			$validacaoJs = "validar('$campo');";
+		}
+		
+		$incone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "user";
+		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
+		$incluir = "<div class='ui left labeled icon input'>";
+		$incluir .= "<input type='text' class='$requerido nome' value='$valor' id='input_$campo' style='text-transform: capitalize;' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs; limpaNome('$campo');\" onblur=\"$validacaoJs\">";
+		$incluir .= "<i class='$incone icon'></i>";
+		if($requerido == "validarObrigatorio")
+			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+		$incluir .= "</div>";		
+		$this->retornaCampo($campo, $incluir);
+	}
+
+	function campoLogin($campo, $valor = null, $validar){
+
+		if($valor == null)
+			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+
+		$validacaoJs = "";
+		if($validar == false){
+			$requerido =  "";			
+		}else{
+			$validacaoJs = "validar('$campo');";
+		}
+		
+		$incone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "user";
+		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
+		$incluir = "<div class='ui left labeled icon input'>";
+		$incluir .= "<input type='text' class='$requerido login soLetras' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs; \" maxlength='25' onblur=\"$validacaoJs\">";
+		$incluir .= "<i class='$incone icon'></i>";
+		if($requerido == "validarObrigatorio")
+			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+		$incluir .= "</div>";		
+		$this->retornaCampo($campo, $incluir);
+	}
+
+	function campoSenha($campo, $valor = null, $validar){
+
+		if($valor == null)
+			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+
+		$validacaoJs = "";
+		if($validar == false){
+			$requerido =  "";			
+		}else{
+			$validacaoJs = "validar('$campo');";
+		}
+		
+		$incone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "lock";
+		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "**********";
+		$incluir = "<div class='ui left labeled icon input'>";
+		$incluir .= "<input type='password' class='$requerido senha' value='$valor' id='input_$campo' maxlength='20' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs;\" onblur=\"$validacaoJs\">";
+		$incluir .= "<i class='$incone icon'></i>";
+		if($requerido == "validarObrigatorio")
+			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+		$incluir .= "</div>";		
+		$this->retornaCampo($campo, $incluir);
+	}
+
 	function campoTexto($campo, $valor = null, $validar){
 
 		if($valor == null)
@@ -174,10 +249,6 @@ class HTML{
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
 		$incluir .= "</div>";		
 		$this->retornaCampo($campo, $incluir);
-	}
-
-	function campoSenha($campo){
-
 	}
 
 	function campoData($campo, $valor = null, $validar){

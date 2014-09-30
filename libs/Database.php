@@ -170,7 +170,7 @@ class Database extends PDO{
 		$retorna['qtd'] = $quantidadeTodos;
 		$pagina++;
 		$retorna['pagina'] = $pagina;
-		$this->formataSaida($retorna[$controller]);
+		$this->formataSaida($retorna[$controller], true);
 
 		return $retorna;
 

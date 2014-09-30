@@ -21,12 +21,11 @@ echo "<br>--<br>";
 //echo $_SERVER['SERVER_NAME'];
 //echo $_SERVER ['REQUEST_URI'];
 
-$texto = "dfbs/\"'''9u021ro0'213-i124=9SELECT''";
-$link = mysql_connect('localhost', 'root', 'toor');
- $test = mysql_real_escape_string($texto, $link);
-echo $test;
-echo '<br>';
-// echo htmlspecialchars($test);
-$test = '1';
-echo (int)$test;
+
+if (preg_match("/^[a-zA-ZãÃáÁàÀêÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª ]+$/", 'ãÃáÁàÀ+    êÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª') ) {
+    echo 'SIM';
+}
+else {
+     echo 'NAO';
+}
 ?>

@@ -1,22 +1,38 @@
 <?php 
 class LoginModel extends Model{
-	
+
+	public $tipos = array("login" => "login",
+						  "senha" => "senha");	
+
+	public $obrigatorios = array("login", "senha");
+
 	public function verificaLogin($login = "", $senha = ""){
 
-		$tabela = PREFIXO."usuarios";
-		$senha = Hash::criar($senha, CHAVE_LOGIN);
-		$sth = $this->prepare("SELECT id, login FROM $tabela WHERE login = :login AND senha = :senha");
+		$dados = array("login" => $login, "senha" => $senha);
 
-		$sth->execute(array(
-				':login' => $login,
-				':senha' => $senha
-			));
+		$validar = $this->validar($dados);
 
-		$retorno = $sth->fetchAll();
-		if(empty($retorno))
-			return 0;
-		else
-			return $retorno[0];
+		if($validar[0] == "ok"){
+			$tabela = PREFIXO."usuarios";
+			$senha = Hash::criar($senha, CHAVE_LOGIN);
+			$sth = $this->prepare("SELECT id, login FROM $tabela WHERE login = :login AND senha = :senha");
+
+			$sth->execute(array(
+					':login' => $login,
+					':senha' => $senha
+				));
+
+			$retorno = $sth->fetchAll();
+			if(empty($retorno)){
+				$validar[0] = "erro";
+				$validar[1] = "inexistente";
+			}else{
+				$validar[0] = "ok";
+				$validar[1] = $retorno[0];
+			}
+		}
+
+		return $validar;
 	}	
 }
 ?>

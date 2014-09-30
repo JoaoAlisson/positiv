@@ -1,8 +1,8 @@
 <?php 
 class produtosModel extends Model{
  
-	public $tipos = array("nome"      => "texto",
-						  "imagem"    => "imagem", 
+	public $tipos = array("nome"      => "nome",
+						  "imagem"    => "imagem",
 					      "valor"     => "moeda",
 						  "descricao" => "textoLongo");
 

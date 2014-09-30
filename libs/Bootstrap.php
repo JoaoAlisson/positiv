@@ -20,6 +20,7 @@ class Bootstrap {
 		$controller = new login();
 		$controller->setViewRender("login/index");
 		$controller->index();
+		$controller->view->adicionarDados($controller->getDados());
 		$controller->view->render("login","login/index", false);			
 	}	
 

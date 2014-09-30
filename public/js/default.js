@@ -7,7 +7,8 @@ function carregando(){
 	load = "  <div class=\"ui inverted active dimmer\">"+
   				  "<div class=\"ui text loader\">Carregando...</div>"+
   		   "</div>";
-  	$("#conteudo").append(load);	   
+  	$("#conteudo").append(load);	
+   
 }
 
 function graficos(){
@@ -50,6 +51,7 @@ function navegacao(controller, action, menuPincipal){
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
 	CONTROLLER_GLOBAl = controller;
+	$('.balao').popup();
 }
 
 function setOrdemPag(pagina, campo, ordem){
@@ -83,7 +85,14 @@ function navPaginacao(controller, action){
 	PAGINACAMINHO = caminho; 
 	$.post(caminho, { ajaxPg: true, subClick: true, filtro: true }, function(retorno){
 
-		retorno = jQuery.parseJSON(retorno);
+		var retorno;
+		try{
+			retorno = jQuery.parseJSON(retorno);
+		}
+		catch(e){
+			$(window.document.location).attr('href', URL);
+		}
+
 
 		lista = "";
 		$.each(retorno.listagem, function(item, campos){
@@ -93,8 +102,8 @@ function navPaginacao(controller, action){
 					lista = lista + "<td>" + valor + "</td>";
 			});
 			lista = lista + "<td> " +
-                      "<div class=\"tiny ui icon button\" title='Editar' onClick='editarBt("+ campos.id +")'><i class=\"pencil icon\"></i></div>" +
-                      "<div class=\"tiny ui red icon button\" title='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
+                      "<div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt("+ campos.id +")'><i class=\"pencil icon\"></i></div>" +
+                      "<div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
               "</td></tr>";
 		});
 		$("#totalBusc").html("Total: "+retorno.total);
@@ -194,7 +203,13 @@ function submeter(controller, action){
 		        	classeMostrar = "";
 		        	imagem = "";
 					//alert(result);
-		        	retorno = jQuery.parseJSON(result);
+					var retorno;
+					try{
+		        		retorno = jQuery.parseJSON(result);
+		        	}
+		        	catch(e){
+						$(window.document.location).attr('href', URL);
+		        	}
 		        	
 		        	if(retorno.valido == "ok"){
 		            	navegacao(controller, action);
@@ -367,6 +382,37 @@ function textoLongo(id){
 	return "";
 }
 
+function nome(id){
+	if($("#input_"+id).val().length <= 2)
+		return "O nome deve ter no mínimo 3 caracteres."
+	else
+		return "";
+}
+
+function login(id){
+	if($("#input_"+id).val().length <= 2)
+		return "O login deve ter no mínimo 3 caracteres."
+	else
+		return "";
+}
+
+function soLetras(id){
+	texto = $("#input_"+id).val();
+	texto = texto.replace(/[^a-zA-ZãÃáÁàÀêÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª' ']+/g,'');
+
+	if(texto.length != $("#input_"+id).val().length)
+		return "O login só pode conter letras";
+	else
+		return "";
+}
+
+function senha(id){
+	if($("#input_"+id).val().length <= 3)
+		return "A senha deve ter no mínimo 4 caracteres."
+	else
+		return "";
+}
+
 function mensagemConfirmacao(mensagem){
 	$("#msgConfirmacao").html(mensagem);
 }
@@ -380,4 +426,23 @@ function deslogar(){
 		  $(window.document.location).attr('href',logout);
 		}
 	}).modal('show');	 
+}
+
+function limpaNome(id){
+
+	texto = $("#input_"+id).val();
+	if(texto.substr(0,1) == " ")
+		texto = texto.substring(0, texto.length-1);
+
+	texto = texto.replace(/[^a-zA-ZãÃáÁàÀêÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª' ']+/g,'');
+	texto = texto.replace(/\s{2,}/g, ' ');
+
+	$("#input_"+id).val(texto);
+}
+
+function logar(){
+	valido = validacao();
+	if(valido == true){
+		$('.formulario').submit();
+	}
 }

@@ -32,25 +32,39 @@ class Model extends Database{
 	//O motivo eh para que as funções de validação alterem o valores antes deles serem salvos
 	public $dados;
 
-	public function formataSaida(&$retorno){
+	public function formataSaida(&$retorno, $curto = false){
 		if(isset($retorno[0])){
 			foreach ($retorno as $item => $campos) {
 				foreach ($campos as $campo => $valor) {
 					if($campo != "id"){
-						if($this->tipos[$campo] == "moeda")
-							$retorno[$item][$campo] = "R$ ". number_format($valor, 2, ',', '.');
-						else
-							$retorno[$item][$campo]  = htmlentities(stripslashes($valor), ENT_QUOTES);			
+						if($this->tipos[$campo] == "moeda"){
+							$formatado = "R$ ". number_format($valor, 2, ',', '.');
+							if(strlen($valor) > 53)
+								$formatado = substr($formatado, 0, 50) . "...";
+							$retorno[$item][$campo] = $formatado;
+						}else{
+							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
+							if(strlen($valor) > 53)
+								$formatado = substr($formatado, 0, 50) . "...";
+							$retorno[$item][$campo] = $formatado;
+						}		
 					}
 				}
 			}
 		}else{
 			foreach ($retorno as $campo => $valor) {
 				if($campo != "id"){
-					if($this->tipos[$campo] == "moeda")
-						$retorno[$campo] = number_format($valor, 2, ',', '.');	
-					else
-						$retorno[$campo]  = htmlentities(stripslashes($valor), ENT_QUOTES);											
+						if($this->tipos[$campo] == "moeda"){
+							$formatado = "R$ ". number_format($valor, 2, ',', '.');
+							if(strlen($valor) > 53)
+								$formatado = substr($formatado, 0, 50) . "...";
+							$retorno[$item][$campo] = $formatado;
+						}else{
+							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
+							if(strlen($valor) > 53)
+								$formatado = substr($formatado, 0, 50) . "...";
+							$retorno[$item][$campo] = $formatado;
+						}						
 				}				
 			}
 		}
@@ -125,6 +139,48 @@ class Model extends Database{
 		$retorno = "ok";
 		//if($campo != null)
 			//$this->dados[$campo] = mysql_real_escape_string($texto);
+
+		return $retorno;
+	}
+
+	public function validarNome($nome, $campo = null){
+	
+		$retorno;
+		if(strlen($nome) <= 2){
+			$retorno[0] = "O nome deve ter mais de 3 caracteres";
+		}else{
+			$padrao = "/^[a-zA-ZãÃáÁàÀêÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª ]+$/";
+			if(preg_match($padrao, $nome))
+				$retorno = "ok";
+			else
+				$retorno[0] = "O nome digitado não é válido";
+		}
+		return $retorno;
+	}
+
+	public function validarLogin($nome, $campo = null){
+	
+		$retorno;
+		if(strlen($nome) <= 2){
+			$retorno[0] = "O LOGIN DEVE TER NO MÍNIMO 3 CARACTERES.";
+		}else{
+			$padrao = "/^[a-zA-ZãÃáÁàÀêÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª ]+$/";
+			if(preg_match($padrao, $nome))
+				$retorno = "ok";
+			else
+				$retorno[0] = "O login deve possuir apenas letras";
+		}
+		return $retorno;
+	}	
+
+	public function validarSenha($senha, $campo = null){
+
+		$retorno;
+
+		if(strlen($senha) <= 3)
+			$retorno[0] = "A SENHA DEVE TER NO MÍNIMO 4 CARACTERES.";
+		else
+			$retorno = "ok";
 
 		return $retorno;
 	}
