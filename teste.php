@@ -29,3 +29,16 @@ else {
      echo 'NAO';
 }
 ?>
+
+Array
+(
+    [imagem] => Array
+        (
+            [name] => dark-iron-man-1024x768.jpg
+            [type] => image/jpeg
+            [tmp_name] => /tmp/phpvsyKeT
+            [error] => 0
+            [size] => 90128
+        )
+
+)

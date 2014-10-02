@@ -15,6 +15,7 @@ class Database extends PDO{
 
 		if($validar[0] == "ok"){
 			ksort($dados);
+			$this->salvaImagens($dados);
 
 			if($tabela == null)
 				$tabela = str_replace("Model", "", get_class($this));
@@ -35,6 +36,71 @@ class Database extends PDO{
 		return $validar;
 	}
 
+	private function salvaImagens(&$dados){
+		$imagens = $this->pegaCamposImagens($dados);
+		foreach ($imagens as $key => $campo) {
+			if($dados[$campo] != "" && $dados[$campo] != null){
+				$dados[$campo] = $this->novoNome($dados[$campo]);
+				$this->uploadImg($campo, $dados[$campo]);
+			}
+		}
+	}
+
+	private function uploadImg($campo, $imagem){
+
+		$caminho = RAIZ . SEPARADOR . "public" . SEPARADOR . "imagens" . SEPARADOR;
+        move_uploaded_file(
+            $_FILES[$campo]['tmp_name'],
+            $caminho . $imagem
+        );
+	}
+
+	private function pegaCamposImagens(&$dados){
+		$imagens = array();
+		foreach ($dados as $campo => $valor) {
+			if($campo != "id"){
+				if($this->tipos[$campo] == "imagem"){
+					array_push($imagens, $campo);
+				}
+			}
+		}
+		return $imagens;
+	}
+
+	private function atualizaImagens($id, &$dados){
+		$imagens = $this->pegaCamposImagens($dados);
+		$nomesBanco = $this->pegar($id, $imagens);
+		$nomesBanco = $nomesBanco[str_replace("Model", "", get_class($this))];
+
+		foreach ($imagens as $key => $campo){
+
+			if($dados[$campo] == "" || $dados[$campo] == null)
+				$this->excluirImagem($id, $campo, $nomesBanco[$campo], $dados);
+			else
+				$this->novaImagem($id, $campo, $nomesBanco[$campo], $dados);
+		}
+	}
+
+	private function excluirImagem($id, $campo, $nomeBanco, &$dados){
+		if($nomeBanco != "" && $nomeBanco != null){
+			$this->deletarImagem($nomeBanco);
+			$dados[$campo] = "";
+		}
+	}
+
+	private function deletarImagem($imagem){
+		$caminho = RAIZ . SEPARADOR . "public" . SEPARADOR . "imagens" . SEPARADOR;
+		unlink($caminho.$imagem);
+	}
+
+	private function novaImagem($id, $campo, $nomeBanco, &$dados){
+		if($nomeBanco != "" && $nomeBanco != null){
+			$this->deletarImagem($nomeBanco);
+		}
+		$dados[$campo] = $this->novoNome($dados[$campo]);
+		$this->uploadImg($campo, $dados[$campo]);		
+	}
+
 	public function atualizar($dados, $id, $tabela = null){
 		$validar = array();
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
@@ -45,6 +111,7 @@ class Database extends PDO{
 		}
 		if($validar[0] == "ok"){
 			ksort($dados);
+			$this->atualizaImagens($id, $dados);
 
 			if($tabela == null)
 				$tabela = str_replace("Model", "", get_class($this));

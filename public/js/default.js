@@ -2,6 +2,7 @@ var PAGINA = 0;
 var CAMPOORDEM = "";
 var ORDENACAO = "ASC";
 var FILTROS = "";
+var files = {};
 
 function carregando(){
 	load = "  <div class=\"ui inverted active dimmer\">"+
@@ -28,7 +29,7 @@ function graficos(){
 }
 
 function navegacao(controller, action, menuPincipal){
-	//$( "#conteudo" ).load( "http://localhost/mvcPHP/"+controller+"/"+action, { ajaxPg: true }, function() {});
+
 	carregando();
 	menuPincipal = menuPincipal || "";
 
@@ -62,6 +63,7 @@ function setOrdemPag(pagina, campo, ordem){
 
 function navegacaoSub(controller, action){
 
+	files = {};
 	controller = controller || "";
 	action = action || ""; 
 
@@ -78,6 +80,7 @@ function navegacaoSub(controller, action){
 }
 
 function navPaginacao(controller, action){
+	files = {};
 	controller = controller || "";
 	action = action || ""; 
 
@@ -192,30 +195,48 @@ function submeter(controller, action){
 
 	valido = validacao();
 	if(valido == true){
+
 		$('.formulario').submit(function(event){
 
-	 		var data = $(".formulario").serialize();
-	  		data = data+"&ajaxPg=true";
+			event.preventDefault();
 
-		    $.post(caminho, data)
-		        .done(function(result){
+			var formularioData = new FormData(this);
+
+			//adiciona as imagems
+			$.each(files, function(key, campo){
+				formularioData.append(key, campo);
+			});
+
+		    $.ajax({
+				url: caminho,
+				type: 'POST',
+				data: formularioData,
+				mimeType:"multipart/form-data",
+				async: false,
+				cache: false,
+				contentType: false,
+				processData: false,
+    			success: function (result) {
 		        	
 		        	classeMostrar = "";
 		        	imagem = "";
-					//alert(result);
+					alert(result);
+					//$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);
 		        	}
 		        	catch(e){
-						$(window.document.location).attr('href', URL);
+						//$(window.document.location).attr('href', URL);
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){
 		            	navegacao(controller, action);
 		            	classeMostrar = "mensagem_ok";
 		            	imagem = "<i class='checkmark sign icon'></i>";
+		            	files = {};
 		            }else{
+		            
 						$(".mensagemErro").remove();
 						$(".field.error").removeClass("error");
 		            	$.each(retorno.erros, function(campo, erros){
@@ -230,11 +251,14 @@ function submeter(controller, action){
 					setTimeout(function(){
 					 	$("."+classeMostrar).slideUp();
 					}, 2000);
-		    })
-		    return false;
+				}	
+		    });
+			event.unbind();
+		    return false;		    
 		});	
 
 	    $('.formulario').submit();
+	    files.empty();
 	}    
 }
 
@@ -445,4 +469,9 @@ function logar(){
 	if(valido == true){
 		$('.formulario').submit();
 	}
+}
+
+function prepareUpload(id){
+	//adiciona as imagens
+	files[id] = ($("#input_"+id))[0].files[0].name;
 }

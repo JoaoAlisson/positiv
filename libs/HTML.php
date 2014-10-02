@@ -33,7 +33,7 @@ class HTML{
 	}
 
 	function formulario(){
-		echo "<form action=\"\" class=\"ui form formulario\" method=\"POST\">";
+		echo "<form action=\"\" enctype=\"multipart/form-data\" class=\"ui form formulario\" method=\"POST\">";
 	}
 
 	function formularioFim(){
@@ -187,7 +187,7 @@ class HTML{
 
 		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "photo";
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<input type='file' name='$campo' class='obrigatorio $requerido' value='$valor' >";	
+		$incluir .= "<input type='file' name='$campo' id='input_$campo' class='$requerido' onChange=\"prepareUpload('$campo');\">";	
 		$incluir .= "<i class='$icone icon'></i>";	
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";

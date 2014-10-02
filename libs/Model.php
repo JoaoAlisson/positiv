@@ -58,12 +58,12 @@ class Model extends Database{
 							$formatado = "R$ ". number_format($valor, 2, ',', '.');
 							if(strlen($valor) > 53)
 								$formatado = substr($formatado, 0, 50) . "...";
-							$retorno[$item][$campo] = $formatado;
+							$retorno[$campo] = $formatado;
 						}else{
 							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
 							if(strlen($valor) > 53)
 								$formatado = substr($formatado, 0, 50) . "...";
-							$retorno[$item][$campo] = $formatado;
+							$retorno[$campo] = $formatado;
 						}						
 				}				
 			}
@@ -208,8 +208,75 @@ class Model extends Database{
 		return $retorno;		
 	}
 
-	public function validarImagem(){
-		return "ok";
+	public function pegaExtensao($nomeImagem){
+		$info = new SplFileInfo($nomeImagem);
+		return strtolower($info->getExtension());
+	}
+
+	public function ehImagem($nomeImagem){
+		$extensao = $this->pegaExtensao($nomeImagem);
+		if($extensao == "jpg" || $extensao == "jpeg" || $extensao == "png" || $extensao == "gif")
+			return true;
+		else
+			return false;
+	}
+
+	public function nomeAleatorio($extensao){
+	    $characteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	    $stringAleatoria = '';
+	    for ($i = 0; $i < 15; $i++) {
+	        $stringAleatoria .= $characteres [rand(0, strlen($characteres) - 1)];
+	    }		
+		return "$stringAleatoria.".$extensao;
+	}
+
+	public function existeImagem($nomeImagem){
+		$caminho = RAIZ . SEPARADOR . "public" . SEPARADOR . "imagens" . SEPARADOR;
+		if(file_exists($caminho.$nomeImagem))
+			return true;
+		else
+			return false;
+	}
+
+	public function novoNome($nomeImagem){
+		$extensao = $this->pegaExtensao($nomeImagem);
+		$novoNome;
+		do{
+			$novoNome = $this->nomeAleatorio($extensao);
+
+		}while($this->existeImagem($novoNome));
+
+		return $novoNome;
+	}
+
+	public function validarImagem($valor = "", $campo = null){
+		
+		$retorno = "ok";
+
+		if($valor == "")
+			return "ok";
+
+		if(!isset($_FILES[$campo])){
+			$retorno = "Nenhum arquivo foi enviado!";
+		}else{
+			if($_FILES[$campo]["size"] >= 3000000){
+				$retorno = "A imagem deve ter no máximo 3 megas!";
+			}else{
+				if(!$this->ehImagem($_FILES[$campo]["name"]))
+					$retorno = "O arquivo selecionado não é uma imagem!";
+				if($_FILES[$campo]["error"] != 0 || $_FILES[$campo]["size"] == 0 || $_FILES[$campo]["size"] == "")
+					$retorno = "Houve um problema no envio da imagem, tende novamente.";
+			}	
+		}
+
+		$retornar;
+		if($retorno == "ok"){
+			$retornar = $retorno;
+		}else{
+			$retornar[0] = $retorno;
+		}
+
+		return $retornar;
 	}	
 
 	public function validarData($data){

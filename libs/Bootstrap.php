@@ -74,19 +74,20 @@ class Bootstrap {
 				$controller->setViewRender(strtolower(get_class($controller))."/".$url[1]);
 				$controller->GET = &$variaveisGet;
 				$controller->setAcao($url[1]);
-				try {
+
+				$metodo = new ReflectionMethod($controller->informacoes['nomeController'], $url[1]);
+				if($metodo->isPublic()) 
 					$controller->{$url[1]}();
-				}catch (Exception $e){
-					echo "rwarw";
+				else
 					header('location: '. URL);
-				}							
+						
 							
 				$controller->view->adicionarDados($controller->getDados());
 				$nomeController = (get_parent_class($controller) == "ControllerCRUD") ? "CRUD" : strtolower(get_class($controller));
 				$controller->view->render($nomeController, $controller->getViewRender(), $controller->getLayout());
 
 			}else{
-				echo 'erro'; 
+				header('location: '. URL);
 			}
 		}else{ 
 
