@@ -204,7 +204,8 @@ function submeter(controller, action){
 
 			//adiciona as imagems
 			$.each(files, function(key, campo){
-				formularioData.append(key, campo);
+				if(campo != "" && campo != null)
+					formularioData.append(key, campo);
 			});
 
 		    $.ajax({
@@ -219,7 +220,7 @@ function submeter(controller, action){
     			success: function (result) {
 		        	
 		        	classeMostrar = "";
-		        	imagem = "";
+		        	imagemm = "";
 					alert(result);
 					//$(".textoLongo").val(result);
 					var retorno;
@@ -233,7 +234,7 @@ function submeter(controller, action){
 		        	if(retorno.valido == "ok"){
 		            	navegacao(controller, action);
 		            	classeMostrar = "mensagem_ok";
-		            	imagem = "<i class='checkmark sign icon'></i>";
+		            	imagemm = "<i class='checkmark sign icon'></i>";
 		            	files = {};
 		            }else{
 		            
@@ -244,9 +245,9 @@ function submeter(controller, action){
 		          		});
 
 		            	classeMostrar = "mensagem_erro";
-		            	imagem = "<i class='warning sign icon'></i>";
+		            	imagemm = "<i class='warning sign icon'></i>";
 		            }
-		            $("#"+classeMostrar).html(imagem+retorno.mensagem);
+		            $("#"+classeMostrar).html(imagemm+retorno.mensagem);
 		            $("."+classeMostrar).slideDown();
 					setTimeout(function(){
 					 	$("."+classeMostrar).slideUp();
@@ -296,6 +297,7 @@ function erroValidacaoAoSubmeter(campo, mensagens){
 
 function validar(idCampo){
 
+	campo = idCampo;
 	idCampo = idCampo.split('input_');
 	if(idCampo[0] == "")
 		idCampo = idCampo[1];
@@ -312,12 +314,20 @@ function validar(idCampo){
 		mensagem = "";
 
 		$.each(classes, function(chave, tipoValidacao){
-			var texto =  eval(tipoValidacao+"('"+idCampo+"')");
-			if(texto != "") texto = "<i class='attention icon'></i>"+texto; 
-			if(mensagem != "")
-				mensagem = mensagem + "<br>" + texto;
-			else	
-				mensagem = mensagem + texto;
+			var funcao = tipoValidacao+"(\'"+idCampo+"\')";
+			var funcaoCompara = "(\'"+ idCampo +"\')";
+			if(funcao != funcaoCompara){
+				var texto = eval(funcao);
+				textoMantem = texto;
+				if(texto != "") texto = "<i class='attention icon'></i>"+texto; 
+				if(mensagem != ""){
+					if(textoMantem != campo)
+						mensagem = mensagem + "<br>" + texto;
+				}else{	
+					if(textoMantem != campo)
+						mensagem = mensagem + texto;
+				}
+			}
 		});
 
 
@@ -408,7 +418,7 @@ function textoLongo(id){
 
 function nome(id){
 	if($("#input_"+id).val().length <= 2)
-		return "O nome deve ter no mínimo 3 caracteres."
+		return "O nome deve ter no mínimo 3 caracteres.";
 	else
 		return "";
 }
@@ -472,6 +482,41 @@ function logar(){
 }
 
 function prepareUpload(id){
-	//adiciona as imagens
-	files[id] = ($("#input_"+id))[0].files[0].name;
+
+	if($("#input_"+id).val() != null && $("#input_"+id).val() != ""){
+		nnome = ($("#input_"+id))[0].files[0].name;
+		if(verificarImagem(nnome) && tamanhoImagemOk(id)) //se o arquivo for válido, adiciona as imagens
+			files[id] = nnome;
+	}else{
+		files[id] = "";
+	}
+}
+
+function verificarImagem(nnome){
+	var Extensao = nnome.substring(nnome.lastIndexOf('.') + 1);
+	Extensao = Extensao.toLowerCase();
+	if(Extensao == "jpg" || Extensao == "jpeg" || Extensao == "png")
+		return true;
+	else
+		return false;
+}
+
+function tamanhoImagemOk(id){
+	tamanho = ($("#input_"+id))[0].files[0].size;
+	if(tamanho <= 3000000)
+		return true;
+	else
+		return false;
+}
+
+function imagem(id){
+	retorno = "";
+	if($("#input_"+id).val() != null && $("#input_"+id).val() != "") {
+		nnome = ($("#input_"+id))[0].files[0].name;
+		if(!verificarImagem(nnome))
+			retorno = "O arquivo selecionado não é uma imagem!";
+		if(!tamanhoImagemOk(id))
+			retorno = "A imagem pode ter no máximo 3 megas!";
+	}
+	return retorno;
 }

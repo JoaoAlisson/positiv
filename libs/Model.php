@@ -32,20 +32,26 @@ class Model extends Database{
 	//O motivo eh para que as funções de validação alterem o valores antes deles serem salvos
 	public $dados;
 
-	public function formataSaida(&$retorno, $curto = false){
+	public function formataSaida(&$retorno, $integro = true){
 		if(isset($retorno[0])){
 			foreach ($retorno as $item => $campos) {
 				foreach ($campos as $campo => $valor) {
 					if($campo != "id"){
 						if($this->tipos[$campo] == "moeda"){
-							$formatado = "R$ ". number_format($valor, 2, ',', '.');
-							if(strlen($valor) > 53)
-								$formatado = substr($formatado, 0, 50) . "...";
+							$formatado = number_format($valor, 2, ',', '.');
+							if($integro == false){
+								
+								$formatado = "R$ ". $formatado;
+								if(strlen($valor) > 53)
+									$formatado = substr($formatado, 0, 50) . "...";
+							}
 							$retorno[$item][$campo] = $formatado;
 						}else{
 							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
-							if(strlen($valor) > 53)
-								$formatado = substr($formatado, 0, 50) . "...";
+							if($integro == false){
+								if(strlen($valor) > 53)
+									$formatado = substr($formatado, 0, 50) . "...";
+							}
 							$retorno[$item][$campo] = $formatado;
 						}		
 					}
@@ -55,14 +61,19 @@ class Model extends Database{
 			foreach ($retorno as $campo => $valor) {
 				if($campo != "id"){
 						if($this->tipos[$campo] == "moeda"){
-							$formatado = "R$ ". number_format($valor, 2, ',', '.');
-							if(strlen($valor) > 53)
-								$formatado = substr($formatado, 0, 50) . "...";
+							$formatado = number_format($valor, 2, ',', '.');
+							if($integro == false){
+								$formatado = "R$ ". $formatado;
+								if(strlen($valor) > 53)
+									$formatado = substr($formatado, 0, 50) . "...";
+							}
 							$retorno[$campo] = $formatado;
 						}else{
 							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
-							if(strlen($valor) > 53)
-								$formatado = substr($formatado, 0, 50) . "...";
+							if($integro == false){
+								if(strlen($valor) > 53)
+									$formatado = substr($formatado, 0, 50) . "...";
+							}
 							$retorno[$campo] = $formatado;
 						}						
 				}				
