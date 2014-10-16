@@ -146,7 +146,10 @@ class ControllerCRUD extends Controller{
 
 	public function editar(){
 
-		$id = isset($_POST['idSet']) ? $_POST['idSet'] : "842";
+		$id = isset($_POST['idSet']) ? $_POST['idSet'] : "";
+		if(isset($_POST['id']))
+			$id = $_POST['id'];
+
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
 			if(isset($_POST['ajaxPg'])){
 				require "views/erro/index.php";

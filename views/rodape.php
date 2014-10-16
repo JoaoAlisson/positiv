@@ -3,7 +3,7 @@
 </div>
 </div>
 
-<div class="ui small modal">
+<div class="ui small modal canfirmar">
   <i class="close icon"></i>
   <div class="header">
     Confirmação
@@ -21,6 +21,38 @@
     </div>
   </div>
 </div>
+
+<div class="ui small modal sucesso">
+  <i class="close icon"></i>
+  <div class="header">
+    Tudo Ok!
+  </div>
+  <div class="content" id="msgAlerta">
+  </div>
+  <div class="actions">
+    <div class="ui positive labled icon button">
+      <i class="ui thumbs up icon"></i>
+      OK
+    </div>    
+  </div>
+</div>
+
+<div class="ui small modal erro">
+  <i class="close icon"></i>
+  <div class="header">
+    Opa!
+  </div>
+  <div class="content" id="msgAlertaErro">
+  </div>
+  <div class="actions">
+    <div class="ui labled icon button">
+      <i class="ui thumbs up icon"></i>
+      OK
+    </div>    
+  </div>
+</div>
+
+
 
 <br><br>
 <div id="footer">

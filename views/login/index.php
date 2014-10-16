@@ -2,7 +2,7 @@
 	$token = Hash::criar(time(), CHAVE_GERAL);
 	Sessao::inserir("token", $token);
 ?>
-<?php if(!isset($_POST['ajaxPg'])) { ?>
+<?php if(!isset($_POST['ajaxPg']) && !Sessao::pegar("logado")) { ?>
 <!doctype html>
 <html>
 <head>
@@ -54,7 +54,7 @@
 		</div>
 	</div>		
 	</form>
-<?php if(!isset($_POST['ajaxPg'])) { ?>	
+<?php if(!isset($_POST['ajaxPg']) && Sessao::pegar("logado")) { ?>	
 </body>
 </html>
 <?php  } ?>

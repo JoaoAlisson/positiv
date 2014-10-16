@@ -233,7 +233,7 @@ class Model extends Database{
 	}
 
 	public function nomeAleatorio($extensao){
-	    $characteres = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	    $characteres = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	    $stringAleatoria = '';
 	    for ($i = 0; $i < 15; $i++) {
 	        $stringAleatoria .= $characteres [rand(0, strlen($characteres) - 1)];

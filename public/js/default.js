@@ -142,7 +142,7 @@ function editarBt(id){
 
 function deletarBt(id){
 	mensagemConfirmacao("Deseja realmente deletar esse camarada?");
-	$('.small.modal').modal('setting', {
+	$('.small.modal.canfirmar').modal('setting', {
     closable  : false,
     onApprove : function() {
       window.alert('Approved!');
@@ -221,21 +221,23 @@ function submeter(controller, action){
 		        	
 		        	classeMostrar = "";
 		        	imagemm = "";
-					alert(result);
+					//alert(result);
 					//$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);
 		        	}
 		        	catch(e){
-						//$(window.document.location).attr('href', URL);
+						$(window.document.location).attr('href', URL);
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){
 		            	navegacao(controller, action);
-		            	classeMostrar = "mensagem_ok";
-		            	imagemm = "<i class='checkmark sign icon'></i>";
 		            	files = {};
+
+						mensagemAlerta("Os dados foram salvos com sucesso!"); 
+						$('.small.modal.sucesso').modal('show');
+
 		            }else{
 		            
 						$(".mensagemErro").remove();
@@ -244,14 +246,13 @@ function submeter(controller, action){
 		          			erroValidacaoAoSubmeter(campo, erros);
 		          		});
 
-		            	classeMostrar = "mensagem_erro";
-		            	imagemm = "<i class='warning sign icon'></i>";
+						mensagemAlertaErro("Os dados não foram salvos!"); 
+						$('.small.modal.erro').modal('show');
 		            }
-		            $("#"+classeMostrar).html(imagemm+retorno.mensagem);
-		            $("."+classeMostrar).slideDown();
 					setTimeout(function(){
-					 	$("."+classeMostrar).slideUp();
-					}, 2000);
+					 	$('.small.modal.sucesso').modal('hide');
+					 	$('.small.modal.erro').modal('hide');
+					}, 2500);
 				}	
 		    });
 			event.unbind();
@@ -451,10 +452,18 @@ function mensagemConfirmacao(mensagem){
 	$("#msgConfirmacao").html(mensagem);
 }
 
+function mensagemAlerta(mensagem){
+	$("#msgAlerta").html(mensagem);
+}
+
+function mensagemAlertaErro(mensagem){
+	$("#msgAlertaErro").html(mensagem);
+}
+
 function deslogar(){
 	mensagemConfirmacao("Deseja realmente sair do sistema?");
 	logout = URL + "login/deslogar"; 
-	$('.small.modal').modal('setting', {
+	$('.small.modal.canfirmar').modal('setting', {
 		closable  : false,
 		onApprove : function() {
 		  $(window.document.location).attr('href',logout);

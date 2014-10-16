@@ -1,44 +1,20 @@
 <?php
-/*
+    
+    define('SEPARADOR', DIRECTORY_SEPARATOR);
+    define('RAIZ', dirname(__FILE__));
+    require RAIZ . SEPARADOR . 'config' . SEPARADOR . 'config.php';
+    require RAIZ . SEPARADOR . 'config' . SEPARADOR . 'bancoAdm.php';
 
-    echo DIRECTORY_SEPARATOR. " ".dirname(__FILE__)."<br>";
+    mysql_connect( DB_HOST, DB_USER, DB_PASS);
 
-    define('APP_DIR', 'app');
-define('DS', DIRECTORY_SEPARATOR);
-define('ROOT', dirname(__FILE__));
-define('WEBROOT_DIR', 'webroot');
-define('WWW_ROOT', ROOT . DS . APP_DIR . DS . WEBROOT_DIR . DS);
-echo WWW_ROOT."<br>";
-echo APP_DIR . DS . WEBROOT_DIR . DS . 'index.php<br>';
-echo dirname(dirname(dirname(__FILE__)));
-echo "<br>".basename(dirname(dirname(__FILE__)));
-echo "<br>".PATH_SEPARATOR;
-echo "<br>".php_sapi_name();
-echo "<br>--<br>";
-*/
-//echo dirname(__FILE__);
-//echo DIRECTORY_SEPARATOR;
-//echo $_SERVER['SERVER_NAME'];
-//echo $_SERVER ['REQUEST_URI'];
+    $bancoAdm = new BancoAdm();
 
+    $bancoAdm->criarBanco();
+    $bancoAdm->deletarTabela("teste");
+    if($bancoAdm->existeTabela("teste"))
+        echo "existe";
+    else
+        echo "naum";
 
-if (preg_match("/^[a-zA-ZãÃáÁàÀêÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª ]+$/", 'ãÃáÁàÀ+    êÊéÉèÈíÍìÌôÔõÕóÓòÒúÚùÙûÛçÇºª') ) {
-    echo 'SIM';
-}
-else {
-     echo 'NAO';
-}
 ?>
 
-Array
-(
-    [imagem] => Array
-        (
-            [name] => dark-iron-man-1024x768.jpg
-            [type] => image/jpeg
-            [tmp_name] => /tmp/phpvsyKeT
-            [error] => 0
-            [size] => 90128
-        )
-
-)

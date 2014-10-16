@@ -159,7 +159,8 @@ class Database extends PDO{
 		$query->execute();
 		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
 
-		$resultado[$controller] = $resultado[0];
+
+		$resultado[$controller] = (isset($resultado[0])) ? $resultado[0] : $resultado;
 		$this->formataSaida($resultado[$controller]);
 
 		return $resultado;

@@ -5,7 +5,8 @@ class login extends Controller {
 						   "senha" => "Senha");	
 
 	public function index() {
-		$this->usarLayout(false);
+		if(!Sessao::pegar("logado"))
+			$this->usarLayout(false);
 
 		if(isset($_POST['token'])){
 
