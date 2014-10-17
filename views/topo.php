@@ -17,6 +17,11 @@
   <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/default.css"/>
   <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/jquery-ui.min.css"/>
 
+  <?php
+    if(MODO_DESENVOLVIMENTO)
+      echo "<script type=\"text/javascript\" src=\"" . URL . "desenvolvimento/js\"></script>";
+  ?>
+
 	
 	<script type="text/javascript">
     var URL = <?php echo "'".URL ."'";?>;
@@ -135,7 +140,11 @@
       
        
       <div class="right menu">
-             
+        <?php if(MODO_DESENVOLVIMENTO) { ?>  
+        <a class="balao icon item" data-content="Atualizar o banco de dados" onclick="atualizarBanco();">     
+         <span id="iconeDesenvolvimento">Atualizar Banco <i class="icon refresh"></i></span>
+        </a>
+        <?php }?>
         <a class="balao icon item" data-content="Deslogar" onclick="deslogar();">
           <?php echo Sessao::pegar("usuario");?>
           <i class="icon sign out"></i>
