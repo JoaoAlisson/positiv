@@ -5,17 +5,24 @@
   <link rel="shortcut icon" href="<?php echo URL; ?>public/images/icons/favicon2.ico" />
   <meta charset="utf-8" />
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/jquery1-11.js"></script>
-  <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery-ui.min.js"></script>
+  <!-- <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery-ui.min.js"></script> -->
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/default.js"></script>
   <script type="text/javascript" src="<?php echo URL; ?>public/js/chart.min.js"></script>
   <script type="text/javascript" src="<?php echo URL; ?>public/js/graficos.js"></script>
   <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery.mask.min.js"></script> 
 
+  <script type="text/javascript" src="<?php echo URL; ?>public/js/picker.js"></script> 
+  <script type="text/javascript" src="<?php echo URL; ?>public/js/picker.date.js"></script> 
+
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/semantic.min.js"></script>
 	<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/semantic.min.css"/>
 
   <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/default.css"/>
-  <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/jquery-ui.min.css"/>
+  <!-- <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/jquery-ui.min.css"/> -->
+
+  <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/classic.css"/>
+  <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/classic.date.css"/>
+
 
   <?php
     if(MODO_DESENVOLVIMENTO)
@@ -44,9 +51,8 @@
             .appendTo( this );
         }
       }
-    }); */
-
-
+    }); 
+*/
         $('.ui.sidebar').sidebar('attach events', '.menuLateral');
 		});
 

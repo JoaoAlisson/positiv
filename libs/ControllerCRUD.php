@@ -71,11 +71,13 @@ class ControllerCRUD extends Controller{
 
 		$onde = array();
 		$filtrosValores = array();
-		foreach ($this->filtros as $key => $filtro) {
-			if (isset($this->GET[$filtro])) {
-				if ($this->GET[$filtro] != "") {
-					$onde[$filtro] = $this->GET[$filtro];
-					$filtrosValores[$filtro] = $this->GET[$filtro];
+		if(isset($this->filtros)){
+			foreach ($this->filtros as $key => $filtro) {
+				if (isset($this->GET[$filtro])) {
+					if ($this->GET[$filtro] != "") {
+						$onde[$filtro] = $this->GET[$filtro];
+						$filtrosValores[$filtro] = $this->GET[$filtro];
+					}
 				}
 			}
 		}

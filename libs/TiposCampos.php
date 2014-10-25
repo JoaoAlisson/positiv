@@ -27,6 +27,42 @@ class TiposCampos{
 
 	private function textoLongo(){
 		return "longtext";
+	}
+
+	private function login(){
+		return "varchar (100)";
+	}
+
+	private function senha(){
+		return "varchar (30)";
 	}	
+
+	private function numero(){
+		return "double";
+	}
+
+	private function data(){
+		return "date";
+	}
+
+	private function email(){
+		return "varchar (255)";
+	}
+
+	private function emailOff(){
+		return $this->email();
+	}
+
+	private function telefone(){
+		return "varchar (15)";
+	}
+
+	private function cpf(){
+		return "varchar (20)";
+	}
+
+	private function sexo(){
+		return "int(1)";
+	}
 }
 ?>

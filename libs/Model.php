@@ -2,6 +2,8 @@
 class Model extends Database{
 	public $tipoUsuario = array();
 	public $permissao = "";
+	public $obrigatorios = array();
+	
 	function __construct(){
 		parent::__construct();
 		//$this->tipoUsuario = $this->pegaTipoUsuario('1');
@@ -37,15 +39,11 @@ class Model extends Database{
 			foreach ($retorno as $item => $campos) {
 				foreach ($campos as $campo => $valor) {
 					if($campo != "id"){
-						if($this->tipos[$campo] == "moeda"){
-							$formatado = number_format($valor, 2, ',', '.');
-							if($integro == false){
-								
-								$formatado = "R$ ". $formatado;
-								if(strlen($valor) > 53)
-									$formatado = substr($formatado, 0, 50) . "...";
-							}
-							$retorno[$item][$campo] = $formatado;
+
+						$tipo = $this->tipos[$campo];
+						$funcaoFormatacao = "formata".ucfirst($tipo);
+						if(method_exists($this, $funcaoFormatacao)){
+							$retorno[$item][$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
 						}else{
 							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
 							if($integro == false){
@@ -53,32 +51,54 @@ class Model extends Database{
 									$formatado = substr($formatado, 0, 50) . "...";
 							}
 							$retorno[$item][$campo] = $formatado;
-						}		
+						}								
 					}
 				}
 			}
 		}else{
 			foreach ($retorno as $campo => $valor) {
 				if($campo != "id"){
-						if($this->tipos[$campo] == "moeda"){
-							$formatado = number_format($valor, 2, ',', '.');
-							if($integro == false){
-								$formatado = "R$ ". $formatado;
-								if(strlen($valor) > 53)
-									$formatado = substr($formatado, 0, 50) . "...";
-							}
-							$retorno[$campo] = $formatado;
-						}else{
-							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
-							if($integro == false){
-								if(strlen($valor) > 53)
-									$formatado = substr($formatado, 0, 50) . "...";
-							}
-							$retorno[$campo] = $formatado;
-						}						
+
+					$tipo = $this->tipos[$campo];
+					$funcaoFormatacao = "formata".$tipo;
+					if(method_exists($this, $funcaoFormatacao)){
+						$retorno[$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
+					}else{
+						$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
+						if($integro == false){
+							if(strlen($valor) > 53)
+								$formatado = substr($formatado, 0, 50) . "...";
+						}
+						$retorno[$campo] = $formatado;
+					}	
+												
 				}				
 			}
 		}
+	}
+
+	public function formataData($campo, $valor, $integro){
+		$retorna = "";
+		if($valor == "0000-00-00"){
+			$retorna = "";
+		}else{
+			$data = explode("-", $valor);
+			$ano = $data[0];
+			$mes = $data[1];
+			$dia = $data[2];
+			$retorna = "$dia/$mes/$ano";
+		}
+			return $retorna;
+	}
+
+	public function formataMoeda($campo, $valor, $integro){
+		$formatado = number_format($valor, 2, ',', '.');
+		if($integro == false){
+			$formatado = "R$ ". $formatado;
+			if(strlen($valor) > 53)
+				$formatado = substr($formatado, 0, 50) . "...";
+		}
+		return $formatado;
 	}
 
 	public function validar(&$dados, $validarObrig = "true"){
@@ -290,7 +310,11 @@ class Model extends Database{
 		return $retornar;
 	}	
 
-	public function validarData($data){
+	public function validarData($data, $campo = null){
+
+		if($data == "")
+			return "ok";
+
 		// 00/00/0000
 		$data = explode("/", $data);
 		$dia = isset($data[0]) ? $data[0] : "0";
@@ -313,8 +337,21 @@ class Model extends Database{
 			}	
 		}
 
+		if($retorno == "ok")
+			$this->dados[$campo] = $ano . "-" . $mes . "-" . $dia;
+
 		return $retorno; 
 	}		
+
+	public function validarSexo($valor, $campo = null){
+		$retorno;
+		if(!is_numeric($valor) || ($valor != 2 && $valor != 1))
+			$retorno[0] = "Sexo inválido";
+		else
+			$retorno = "ok";
+
+		return $retorno;
+	}
 
 	public function validarHora(){
 		return "ok";
@@ -404,33 +441,63 @@ class Model extends Database{
 
 		$cpf = str_replace(array(".", "-"), "", $cpf);
 
-		$valido;
-	    $cpf = str_pad(preg_replace('[^0-9]', '', $cpf), 11, '0', STR_PAD_LEFT);
-		
-	    if (strlen($cpf) != 11 || $cpf == '00000000000' || $cpf == '11111111111' || $cpf == '22222222222' || $cpf == '33333333333' || $cpf == '44444444444' || $cpf == '55555555555' || $cpf == '66666666666' || $cpf == '77777777777' || $cpf == '88888888888' || $cpf == '99999999999'){
-			$valido = false;
-	    }
-		else{
-	        for ($t = 9; $t < 11; $t++) {
-	            for ($d = 0, $c = 0; $c < $t; $c++) {
-	                $d += $cpf{$c} * (($t + 1) - $c);
-	            }
-	 
-	            $d = ((10 * $d) % 11) % 10;
-	 
-	            if ($cpf{$c} != $d) {
-	                return false;
-	            }
-	        }
-	 
-	        $valido = true;
-	    }
-	    $retorno;
-	    if($valido)
+		if($this->funcaoValidaCPF($cpf) || $cpf == "")
 	    	$retorno = "ok";
 	    else
 	    	$retorno[0] = "CPF inválido";
 	    return $retorno;
 	}		
+
+
+/**
+ * Esta função foi tirada do endereço: http://www.geradorcpf.com/script-validar-cpf-php.htm
+ */
+
+	function funcaoValidaCPF($cpf = null) {
+ 
+	    // Verifica se um número foi informado
+	    if(empty($cpf)) {
+	        return false;
+	    }
+ 
+	    // Elimina possivel mascara
+	    $cpf = ereg_replace('[^0-9]', '', $cpf);
+	    $cpf = str_pad($cpf, 11, '0', STR_PAD_LEFT);
+     
+	    // Verifica se o numero de digitos informados é igual a 11 
+	    if (strlen($cpf) != 11) {
+	        return false;
+	    }
+	    // Verifica se nenhuma das sequências invalidas abaixo 
+	    // foi digitada. Caso afirmativo, retorna falso
+	    else if ($cpf == '00000000000' || 
+	        $cpf == '11111111111' || 
+	        $cpf == '22222222222' || 
+	        $cpf == '33333333333' || 
+	        $cpf == '44444444444' || 
+	        $cpf == '55555555555' || 
+	        $cpf == '66666666666' || 
+	        $cpf == '77777777777' || 
+	        $cpf == '88888888888' || 
+	        $cpf == '99999999999') {
+	        return false;
+	     // Calcula os digitos verificadores para verificar se o
+	     // CPF é válido
+	     } else {   
+	         
+	        for ($t = 9; $t < 11; $t++) {
+	             
+	            for ($d = 0, $c = 0; $c < $t; $c++) {
+	                $d += $cpf{$c} * (($t + 1) - $c);
+	            }
+	            $d = ((10 * $d) % 11) % 10;
+	            if ($cpf{$c} != $d) {
+	                return false;
+	            }
+	        }
+	 
+	        return true;
+	    }
+}
 }
 ?>

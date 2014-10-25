@@ -88,7 +88,7 @@ class HTML{
 		$incone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "user";
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<input type='text' class='$requerido nome' value='$valor' id='input_$campo' style='text-transform: capitalize;' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs; limpaNome('$campo');\" onblur=\"$validacaoJs\">";
+		$incluir .= "<input type='text' class='$requerido nome' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs; limpaNome('$campo');\" onblur=\"$validacaoJs\">";
 		$incluir .= "<i class='$incone icon'></i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
@@ -266,7 +266,7 @@ class HTML{
 		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "empty calendar";
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "__/__/____";
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<input type='text' class='$requerido' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onfocus=\"calendario('input_$campo')\" onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs \" onfocusout=\"$validacaoJs\">";
+		$incluir .= "<input type='text' class='$requerido' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onfocus=\"datapick('input_$campo');\" onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs \" onfocusout=\"$validacaoJs\">";
 		$incluir .= "<i class='$icone icon'></i></div>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
@@ -400,15 +400,68 @@ class HTML{
 		}else{
 			$validacaoJs = "validar('$campo');";
 		}
-		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "pencil";
+		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "basic id";
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<input type='text' class='$requerido' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onfocus=\"cpfMask('input_$campo')\" onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs\">";
+		$incluir .= "<input type='text' class='$requerido cpf' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onfocus=\"cpfMask('input_$campo')\" onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs\">";
 		$incluir .= "<i class='$icone icon'></i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
 		$incluir .= "</div>";		
 		$this->retornaCampo($campo, $incluir);
 	}
+
+	function campoSexo($campo, $valor = null, $validar){
+		if($valor == null)
+			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+		$validacaoJs = "";
+		if($validar == false){
+			$requerido =  "";			
+		}else{
+			$validacaoJs = "validar('$campo');";
+		}
+
+		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "male";
+		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";		
+
+		$asterisco = "";
+		if($requerido == "validarObrigatorio")
+			$asterisco = "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+
+		$selecionado = "&nbsp;";
+		$mostrarInconeMas = "";
+		$mostrarInconeFem = "";
+		$value = "";
+		if($valor != null){
+			$selecionado = ($valor == 1) ? "Masculino" : "Feminino";
+			$mostrarInconeMas = ($valor != 1) ? "style='display:none;'" : "";
+			$mostrarInconeFem = ($valor != 2) ? "style='display:none;'" : "";
+			$value = "value=\"$valor\"";
+		}else{
+			$valor = "";
+		} 
+
+
+
+		$incluir = "<div class='ui left labeled icon input'>";
+		$incluir .= " <div class=\"ui dropdown selection\" onmouseover=\"$('.ui.selection.dropdown').dropdown();\">
+				      <input type=\"hidden\" name='$campo' $value id='input_$campo' class='$requerido' onChange=\"$validacaoJs trocaImgSexo('$campo');\">
+				      <i class='$icone icon disabled' $mostrarInconeMas id='masculino_$campo'></i><i class='female icon disabled' $mostrarInconeFem id='feminino_$campo'></i>
+				      <div class=\"default text\" data-value=\"$valor\">$selecionado</div>
+				      <i class=\"dropdown icon\"></i>
+				      <div class=\"menu\">
+				        <div class=\"item\" data-value=\"1\"><i class='male icon'></i>Masculino</div>
+				        <div class=\"item\" data-value=\"2\"><i class='female icon'></i>Feminino</div>
+				      </div>$asterisco
+				      </div>";
+		//$incluir .= "<i class='$icone icon'></i>";
+		//if($requerido == "validarObrigatorio")
+		//	$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+		$incluir .= "</div>";		
+		$this->retornaCampo($campo, $incluir);				
+	}
+
 }
 ?>

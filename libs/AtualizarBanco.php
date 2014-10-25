@@ -29,7 +29,7 @@ class AtualizarBanco {
 	private function editarTabela($tabela){
 		$modelClass = explode(PREFIXO, $tabela);
 		$modelClass = $modelClass[1]."Model";
-		include(RAIZ . SEPARADOR . "models". SEPARADOR . $modelClass . ".php");
+		include_once RAIZ . SEPARADOR . "models". SEPARADOR . $modelClass . ".php";
 		$modelClass = $modelClass;
 
 		$model = new $modelClass();
@@ -41,7 +41,7 @@ class AtualizarBanco {
 		if(!DESENVOLVIMENTO_SEGURO){
 			$todosOsCampos = $this->bancoAdm->campos($tabela);
 			foreach ($todosOsCampos as $key => $campo)
-				if(!isset($camposModel[$campo]))
+				if(!isset($camposModel[$campo]) && $campo != "id")
 					$this->bancoAdm->deletarCampo($campo, $tabela);
 		}
 

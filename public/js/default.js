@@ -347,27 +347,6 @@ function validar(idCampo){
 
 // -- FUNÇÕES DE VALIDAÇÃO -- //
 
-function calendario(id){
-	$("#"+id).mask("00/00/0000", {placeholder: "__/__/____"});
-    $("#"+id).datepicker({
-		showButtonPanel:true,
-		changeMonth: true,
-		changeYear: true,
-		closeText: 'Fechar',
-		prevText: 'Anterior',
-		nextText: 'Seguinte',
-		showAnim: 'drop',
-		currentText: 'Hoje',		
-        dateFormat: 'dd/mm/yy',
-        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-   });
-    $("#"+id).datepicker("show");
-}
-
 function cpfMask(id){
 	$('#'+id).mask('000.000.000-00', {reverse: true});
 }
@@ -415,6 +394,20 @@ function data(id){
 
 function textoLongo(id){
 	return "";
+}
+
+function picker__input(id){
+	return "";
+}
+
+function cpf(id){
+	cpff = $("#input_"+id).val();
+	cpff = cpff.replace(/[.,-]+/g, "");
+
+	if(funcaoValidarCPF(cpff) || cpff == "")
+		return "";
+	else
+		return "CPF inválido!.";
 }
 
 function nome(id){
@@ -528,4 +521,87 @@ function imagem(id){
 			retorno = "A imagem pode ter no máximo 3 megas!";
 	}
 	return retorno;
+}
+
+function trocaImgSexo(id){
+	if($("#input_"+id).val() == 1){
+		$("#masculino_"+id).show();
+		$("#feminino_"+id).hide();
+	}else{
+		$("#feminino_"+id).show();
+		$("#masculino_"+id).hide();		
+	}
+}
+
+function datapick(id){
+
+	$("#"+id).pickadate({
+		selectYears: true,
+   		selectMonths: true,
+   		format: 'd/mm/yyyy',
+   		formatSubmit: 'd/mm/yyyy',
+   		labelMonthNext: 'Próximo Mês',
+		labelMonthPrev: 'Mês Anterior',
+   		monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+   		weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+    	today: 'Hoje',
+    	clear: 'Limpar',
+    	close: 'Cancelar'
+	});
+}
+/**
+function calendario(id){
+	$("#"+id).mask("00/00/0000", {placeholder: "__/__/____"});
+    $("#"+id).datepicker({
+		showButtonPanel:true,
+		changeMonth: true,
+		changeYear: true,
+		closeText: 'Fechar',
+		prevText: 'Anterior',
+		nextText: 'Seguinte',
+		showAnim: 'drop',
+		currentText: 'Hoje',		
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+   });
+    $("#"+id).datepicker("show");
+}
+*/
+
+function funcaoValidarCPF(cpf){
+    var numeros, digitos, soma, i, resultado, digitos_iguais;
+    digitos_iguais = 1;
+    if (cpf.length < 11)
+          return false;
+    for (i = 0; i < cpf.length - 1; i++)
+          if (cpf.charAt(i) != cpf.charAt(i + 1))
+                {
+                digitos_iguais = 0;
+                break;
+                }
+    if (!digitos_iguais)
+          {
+          numeros = cpf.substring(0,9);
+          digitos = cpf.substring(9);
+          soma = 0;
+          for (i = 10; i > 1; i--)
+                soma += numeros.charAt(10 - i) * i;
+          resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+          if (resultado != digitos.charAt(0))
+                return false;
+          numeros = cpf.substring(0,10);
+          soma = 0;
+          for (i = 11; i > 1; i--)
+                soma += numeros.charAt(11 - i) * i;
+          resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+          if (resultado != digitos.charAt(1))
+                return false;
+          return true;
+          }
+    else
+        return false;		
 }

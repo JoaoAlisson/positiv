@@ -228,10 +228,12 @@ class Database extends PDO{
 
 		
 		$sql = "SELECT $campos FROM $tabela $where ORDER BY $ordem $ascend LIMIT $inicio, $quantidade";
+		
 
 		$query = $this->prepare($sql);
 		$query->execute();
 		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+
 
 		$retorna[$controller] = $resultado;
 		$retorna['qtdPaginas'] = $quantidadeDePaginas;
