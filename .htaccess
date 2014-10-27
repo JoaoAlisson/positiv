@@ -1,6 +1,24 @@
+<Files ~ "^\.(htaccess|htpasswd)$">
+  order allow,deny
+  deny from all
+</Files>
+
+<files *.php>
+  order allow,deny
+  deny from all
+</files>
+
+<Files index.php>
+    Order Allow,Deny
+    Allow from all
+</Files>
+
+Options -Indexes
+
 RewriteEngine on
+
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-l
 
-RewriteRule ^(.+)$ index.php?url=$1 
+RewriteRule ^(.*)$ index.php?url=$1
