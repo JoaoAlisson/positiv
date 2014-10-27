@@ -2,6 +2,7 @@ var PAGINA = 0;
 var CAMPOORDEM = "";
 var ORDENACAO = "ASC";
 var FILTROS = "";
+var files = {};
 
 function carregando(){
 	load = "  <div class=\"ui inverted active dimmer\">"+
@@ -28,7 +29,7 @@ function graficos(){
 }
 
 function navegacao(controller, action, menuPincipal){
-	//$( "#conteudo" ).load( "http://localhost/mvcPHP/"+controller+"/"+action, { ajaxPg: true }, function() {});
+
 	carregando();
 	menuPincipal = menuPincipal || "";
 
@@ -62,6 +63,7 @@ function setOrdemPag(pagina, campo, ordem){
 
 function navegacaoSub(controller, action){
 
+	files = {};
 	controller = controller || "";
 	action = action || ""; 
 
@@ -78,6 +80,7 @@ function navegacaoSub(controller, action){
 }
 
 function navPaginacao(controller, action){
+	files = {};
 	controller = controller || "";
 	action = action || ""; 
 
@@ -139,7 +142,7 @@ function editarBt(id){
 
 function deletarBt(id){
 	mensagemConfirmacao("Deseja realmente deletar esse camarada?");
-	$('.small.modal').modal('setting', {
+	$('.small.modal.canfirmar').modal('setting', {
     closable  : false,
     onApprove : function() {
       window.alert('Approved!');
@@ -192,19 +195,34 @@ function submeter(controller, action){
 
 	valido = validacao();
 	if(valido == true){
+
 		$('.formulario').submit(function(event){
 
-			//event.preventDefault();
+			event.preventDefault();
 
-	 		var data = $(".formulario").serialize();
-	  		data = data+"&ajaxPg=true";
+			var formularioData = new FormData(this);
 
-		    $.post(caminho, data)
-		        .done(function(result){
+			//adiciona as imagems
+			$.each(files, function(key, campo){
+				if(campo != "" && campo != null)
+					formularioData.append(key, campo);
+			});
+
+		    $.ajax({
+				url: caminho,
+				type: 'POST',
+				data: formularioData,
+				mimeType:"multipart/form-data",
+				async: false,
+				cache: false,
+				contentType: false,
+				processData: false,
+    			success: function (result) {
 		        	
 		        	classeMostrar = "";
-		        	imagem = "";
+		        	imagemm = "";
 					//alert(result);
+					//$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);
@@ -215,28 +233,34 @@ function submeter(controller, action){
 		        	
 		        	if(retorno.valido == "ok"){
 		            	navegacao(controller, action);
-		            	classeMostrar = "mensagem_ok";
-		            	imagem = "<i class='checkmark sign icon'></i>";
+		            	files = {};
+
+						mensagemAlerta("Os dados foram salvos com sucesso!"); 
+						$('.small.modal.sucesso').modal('show');
+
 		            }else{
+		            
 						$(".mensagemErro").remove();
 						$(".field.error").removeClass("error");
 		            	$.each(retorno.erros, function(campo, erros){
 		          			erroValidacaoAoSubmeter(campo, erros);
 		          		});
 
-		            	classeMostrar = "mensagem_erro";
-		            	imagem = "<i class='warning sign icon'></i>";
+						mensagemAlertaErro("Os dados não foram salvos!"); 
+						$('.small.modal.erro').modal('show');
 		            }
-		            $("#"+classeMostrar).html(imagem+retorno.mensagem);
-		            $("."+classeMostrar).slideDown();
 					setTimeout(function(){
-					 	$("."+classeMostrar).slideUp();
-					}, 2000);
-		    })
-		    return false;
+					 	$('.small.modal.sucesso').modal('hide');
+					 	$('.small.modal.erro').modal('hide');
+					}, 2500);
+				}	
+		    });
+			event.unbind();
+		    return false;		    
 		});	
 
 	    $('.formulario').submit();
+	    files.empty();
 	}    
 }
 
@@ -274,6 +298,7 @@ function erroValidacaoAoSubmeter(campo, mensagens){
 
 function validar(idCampo){
 
+	campo = idCampo;
 	idCampo = idCampo.split('input_');
 	if(idCampo[0] == "")
 		idCampo = idCampo[1];
@@ -290,12 +315,20 @@ function validar(idCampo){
 		mensagem = "";
 
 		$.each(classes, function(chave, tipoValidacao){
-			var texto =  eval(tipoValidacao+"('"+idCampo+"')");
-			if(texto != "") texto = "<i class='attention icon'></i>"+texto; 
-			if(mensagem != "")
-				mensagem = mensagem + "<br>" + texto;
-			else	
-				mensagem = mensagem + texto;
+			var funcao = tipoValidacao+"(\'"+idCampo+"\')";
+			var funcaoCompara = "(\'"+ idCampo +"\')";
+			if(funcao != funcaoCompara){
+				var texto = eval(funcao);
+				textoMantem = texto;
+				if(texto != "") texto = "<i class='attention icon'></i>"+texto; 
+				if(mensagem != ""){
+					if(textoMantem != campo)
+						mensagem = mensagem + "<br>" + texto;
+				}else{	
+					if(textoMantem != campo)
+						mensagem = mensagem + texto;
+				}
+			}
 		});
 
 
@@ -313,27 +346,6 @@ function validar(idCampo){
 }
 
 // -- FUNÇÕES DE VALIDAÇÃO -- //
-
-function calendario(id){
-	$("#"+id).mask("00/00/0000", {placeholder: "__/__/____"});
-    $("#"+id).datepicker({
-		showButtonPanel:true,
-		changeMonth: true,
-		changeYear: true,
-		closeText: 'Fechar',
-		prevText: 'Anterior',
-		nextText: 'Seguinte',
-		showAnim: 'drop',
-		currentText: 'Hoje',		
-        dateFormat: 'dd/mm/yy',
-        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-   });
-    $("#"+id).datepicker("show");
-}
 
 function cpfMask(id){
 	$('#'+id).mask('000.000.000-00', {reverse: true});
@@ -384,9 +396,23 @@ function textoLongo(id){
 	return "";
 }
 
+function picker__input(id){
+	return "";
+}
+
+function cpf(id){
+	cpff = $("#input_"+id).val();
+	cpff = cpff.replace(/[.,-]+/g, "");
+
+	if(funcaoValidarCPF(cpff) || cpff == "")
+		return "";
+	else
+		return "CPF inválido!.";
+}
+
 function nome(id){
 	if($("#input_"+id).val().length <= 2)
-		return "O nome deve ter no mínimo 3 caracteres."
+		return "O nome deve ter no mínimo 3 caracteres.";
 	else
 		return "";
 }
@@ -419,10 +445,18 @@ function mensagemConfirmacao(mensagem){
 	$("#msgConfirmacao").html(mensagem);
 }
 
+function mensagemAlerta(mensagem){
+	$("#msgAlerta").html(mensagem);
+}
+
+function mensagemAlertaErro(mensagem){
+	$("#msgAlertaErro").html(mensagem);
+}
+
 function deslogar(){
 	mensagemConfirmacao("Deseja realmente sair do sistema?");
 	logout = URL + "login/deslogar"; 
-	$('.small.modal').modal('setting', {
+	$('.small.modal.canfirmar').modal('setting', {
 		closable  : false,
 		onApprove : function() {
 		  $(window.document.location).attr('href',logout);
@@ -447,4 +481,127 @@ function logar(){
 	if(valido == true){
 		$('.formulario').submit();
 	}
+}
+
+function prepareUpload(id){
+
+	if($("#input_"+id).val() != null && $("#input_"+id).val() != ""){
+		nnome = ($("#input_"+id))[0].files[0].name;
+		if(verificarImagem(nnome) && tamanhoImagemOk(id)) //se o arquivo for válido, adiciona as imagens
+			files[id] = nnome;
+	}else{
+		files[id] = "";
+	}
+}
+
+function verificarImagem(nnome){
+	var Extensao = nnome.substring(nnome.lastIndexOf('.') + 1);
+	Extensao = Extensao.toLowerCase();
+	if(Extensao == "jpg" || Extensao == "jpeg" || Extensao == "png")
+		return true;
+	else
+		return false;
+}
+
+function tamanhoImagemOk(id){
+	tamanho = ($("#input_"+id))[0].files[0].size;
+	if(tamanho <= 3000000)
+		return true;
+	else
+		return false;
+}
+
+function imagem(id){
+	retorno = "";
+	if($("#input_"+id).val() != null && $("#input_"+id).val() != "") {
+		nnome = ($("#input_"+id))[0].files[0].name;
+		if(!verificarImagem(nnome))
+			retorno = "O arquivo selecionado não é uma imagem!";
+		if(!tamanhoImagemOk(id))
+			retorno = "A imagem pode ter no máximo 3 megas!";
+	}
+	return retorno;
+}
+
+function trocaImgSexo(id){
+	if($("#input_"+id).val() == 1){
+		$("#masculino_"+id).show();
+		$("#feminino_"+id).hide();
+	}else{
+		$("#feminino_"+id).show();
+		$("#masculino_"+id).hide();		
+	}
+}
+
+function datapick(id){
+
+	$("#"+id).pickadate({
+		selectYears: true,
+   		selectMonths: true,
+   		format: 'd/mm/yyyy',
+   		formatSubmit: 'd/mm/yyyy',
+   		labelMonthNext: 'Próximo Mês',
+		labelMonthPrev: 'Mês Anterior',
+   		monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
+   		weekdaysShort: ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'],
+    	today: 'Hoje',
+    	clear: 'Limpar',
+    	close: 'Cancelar'
+	});
+}
+/**
+function calendario(id){
+	$("#"+id).mask("00/00/0000", {placeholder: "__/__/____"});
+    $("#"+id).datepicker({
+		showButtonPanel:true,
+		changeMonth: true,
+		changeYear: true,
+		closeText: 'Fechar',
+		prevText: 'Anterior',
+		nextText: 'Seguinte',
+		showAnim: 'drop',
+		currentText: 'Hoje',		
+        dateFormat: 'dd/mm/yy',
+        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
+        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
+        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
+        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
+        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
+   });
+    $("#"+id).datepicker("show");
+}
+*/
+
+function funcaoValidarCPF(cpf){
+    var numeros, digitos, soma, i, resultado, digitos_iguais;
+    digitos_iguais = 1;
+    if (cpf.length < 11)
+          return false;
+    for (i = 0; i < cpf.length - 1; i++)
+          if (cpf.charAt(i) != cpf.charAt(i + 1))
+                {
+                digitos_iguais = 0;
+                break;
+                }
+    if (!digitos_iguais)
+          {
+          numeros = cpf.substring(0,9);
+          digitos = cpf.substring(9);
+          soma = 0;
+          for (i = 10; i > 1; i--)
+                soma += numeros.charAt(10 - i) * i;
+          resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+          if (resultado != digitos.charAt(0))
+                return false;
+          numeros = cpf.substring(0,10);
+          soma = 0;
+          for (i = 11; i > 1; i--)
+                soma += numeros.charAt(11 - i) * i;
+          resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+          if (resultado != digitos.charAt(1))
+                return false;
+          return true;
+          }
+    else
+        return false;		
 }

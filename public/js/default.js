@@ -41,10 +41,18 @@ function navegacao(controller, action, menuPincipal){
 
 	caminho = URL+controller+action;
 	PAGINACAMINHO = caminho; 
+
+	$.post(caminho, { ajaxPg: true}, function(retorno) {
+		$( "#conteudo" ).html(retorno);
+		$('.balao').popup({ on: 'hover' });
+		graficos();
+	});	
+
+/*
 	$( "#conteudo" ).load(caminho, { ajaxPg: true}, function() {
 		graficos();
 	});
-	
+*/
 	window.history.pushState('Object', 'Positv', caminho);
 
     //history.pushState(null, null, url);
@@ -52,7 +60,7 @@ function navegacao(controller, action, menuPincipal){
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
 	CONTROLLER_GLOBAl = controller;
-	$('.balao').popup();
+	
 }
 
 function setOrdemPag(pagina, campo, ordem){
@@ -69,14 +77,19 @@ function navegacaoSub(controller, action){
 
 	caminho = URL+controller+action;
 	PAGINACAMINHO = caminho; 
-	$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true });
 
+	$.post(caminho, { ajaxPg: true, subClick: true }, function(retorno){
+		$( "#subconteudo" ).html(retorno);
+		$('.balao').popup({ on: 'hover' });	
+	});
+	//$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true });
 
 	window.history.pushState('Object', 'Teste', caminho);
 
 	PAGINA = 1;
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
+	
 }
 
 function navPaginacao(controller, action){
@@ -96,6 +109,7 @@ function navPaginacao(controller, action){
 			$(window.document.location).attr('href', URL);
 		}
 
+		$("#listagem").html("");
 
 		lista = "";
 		$.each(retorno.listagem, function(item, campos){
@@ -105,13 +119,16 @@ function navPaginacao(controller, action){
 					lista = lista + "<td>" + valor + "</td>";
 			});
 			lista = lista + "<td> " +
-                      "<div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt("+ campos.id +")'><i class=\"pencil icon\"></i></div>" +
-                      "<div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
+                      "<div class=\"tiny ui icon button balao \" id=\"btEditar\" data-content='Editar' onClick='editarBt("+ campos.id +")'><i class=\"pencil icon\"></i></div>" +
+                      "<div class=\"tiny ui red icon button balao btDeletar\" data-content='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
               "</td></tr>";
 		});
+
 		$("#totalBusc").html("Total: "+retorno.total);
 		$("#listagem").html(lista);
 		$("#paginacao").html(retorno.paginacao);
+
+		$('.balao').popup({ on: 'hover' });
 	});
 
 
@@ -123,7 +140,8 @@ function navPaginacao(controller, action){
 }
 
 function editarBt(id){
-	
+
+	$('.balao').popup('hide');
 	controller = CONTROLLER_GLOBAl;
 	action = "editar"; 
 
@@ -141,6 +159,7 @@ function editarBt(id){
 }
 
 function deletarBt(id){
+	$('.balao').popup('hide');
 	mensagemConfirmacao("Deseja realmente deletar esse camarada?");
 	$('.small.modal.canfirmar').modal('setting', {
     closable  : false,

@@ -23,7 +23,7 @@ $paginacao = "";
   </form>
 <?php } ?>
   
-<table class="ui table segment">
+<table class="ui table segment" id="tabelaListagem">
   <div class="ui green circular label"><strong id="totalBusc">Total: <?php echo $dados['qtd']; ?></strong></div>
 	<thead>
 		<tr>
@@ -45,7 +45,7 @@ $paginacao = "";
             if($campo != 'id')
       		    $listagem .= "<td>$valor</td>";
       	}
-      $listagem .= "<td class='popup'>
+      $listagem .= "<td>
                       <div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
                       <div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt(".$campos['id'].")'><i class=\"trash icon\"></i></div>
               </td></tr>";
