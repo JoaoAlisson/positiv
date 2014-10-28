@@ -6,25 +6,52 @@ $paginacao = "";
       $filtrosValores .= "/$campo:$valor";
   }
   echo "<script type='text/javascript'>setOrdemPag('".$dados['pagina']."','".$dados['ordem']."', '".$dados['ordenacao']."'); FILTROS = '$filtrosValores';</script>"; ?>
-<h2><?php echo $dados['nome'][1];?></h2>
-
+<div style="width:100%; text-align:center; text-transform: uppercase;"><h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?><?php echo $dados['nome'][1];?></h2>
+  <?php 
+    $nomeSingular = "";
+    if(isset($dados['nome'][0]))
+      $nomeSingular = $dados['nome'][0];
+    else
+      $nomeSingular = $dados['nomeController'];
+  ?>
+  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
+    <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
+  </div>
+</div>    
 <?php if(isset($dados['filtros'])){ ?>
   <form class="formulario">
-  <?php  
+    <div class="ui column center aligned grid">
+       <div class="column" style="width: auto;">
+    <div class="ui <?php echo $dados['cor']; ?> segment" style="width: auto;">
+
+  <?php
       foreach ($dados['filtros'] as $campo => $nome) {
+        echo "<div style='width:auto; float: left; margin-right: 20px;'>";
           $valorFiltros = isset($dados['filtrosValores'][$campo]) ? $dados['filtrosValores'][$campo] : null;
           $this->html->campo($campo, false, $valorFiltros);
-          echo "<br>";
+        echo "</div>";
       }
   ?>
-    <div class="ui inverted blue vertical labeled circular icon submit button" style="" onClick="filtrar('<?php echo $dados['controller'];?>')">
+    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button" style="margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
       <i class=" search icon"></i>Filtrar
     </div>
+
+  </div>
+    <div class="ui <?php echo $dados['cor']; ?> circular label" style="float:left;">
+      <strong id="totalBusc">Total: <?php echo $dados['qtd']; ?></strong>
+    </div>
+  </div></div>
   </form>
+<?php }?>
+    <div class="ui column center aligned grid">
+       <div class="column" style="width: auto;">
+        <?php if(!isset($dados['filtros'])) { ?>
+    <div class="ui <?php echo $dados['cor']; ?> circular label" style="float:left;">
+      <strong id="totalBusc">Total: <?php echo $dados['qtd']; ?></strong>
+    </div>
+    <br>
 <?php } ?>
-  
-<table class="ui table segment" id="tabelaListagem">
-  <div class="ui green circular label"><strong id="totalBusc">Total: <?php echo $dados['qtd']; ?></strong></div>
+<table class="ui table segment" id="tabelaListagem" style="width:auto;">
 	<thead>
 		<tr>
 		<?php foreach ($dados['campos'] as $campo => $nome) {
@@ -57,9 +84,10 @@ $paginacao = "";
  </div>  
   </tbody>
 </table>
+
 <?php } ?>
 <?php if($dados['qtdPaginas'] > 1) { ?>
-<?php if(!isset($dados['filtro'])) echo "<div class=\"ui pagination menu\" id=\"paginacao\">"; ?> 
+<?php if(!isset($dados['filtro'])) echo "<div class=\"ui pagination menu\" id=\"paginacao\" style='float:left;'>"; ?> 
   <?php  
     $qtdPgV = ceil($dados['qtdPaginas']/10);
     $pgV = ceil($dados['pagina']/10);
@@ -105,6 +133,8 @@ $paginacao = "";
   ?>
 
 <?php } ?>
+<?php  if(!isset($dados['filtro'])) echo "</div></div>"; ?>
+
 <?php 
 
   //print_r($dados['itens']);

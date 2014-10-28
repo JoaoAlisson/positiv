@@ -70,9 +70,10 @@ class HTML{
 	}
 
 	function subMenuCor($cor = ""){
+		$corFinal = (isset($this->dados['cor']) && $this->dados['cor'] != "") ? $this->dados['cor'] : $cor;
 		echo "<div class=\"ui column center aligned grid\" style=\"width: auto;\">
   				<div class=\"column\"  style=\"width: auto;\">
-   					<div class=\"ui $cor inverted fluid menu\" style=\"width: auto;\">";
+   					<div class=\"ui $corFinal inverted fluid menu\" style=\"width: auto;\">";
 	}
 
 	function subMenuItem($nome, $controller = "", $view = "", $icone = ""){

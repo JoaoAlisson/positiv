@@ -21,6 +21,8 @@ class Controller{
 		$this->informacoes['placeholders'] = isset($this->placeholders) ? $this->placeholders : "";
 		$this->informacoes['nomeController'] = strtolower(get_class($this));
 		$this->informacoes['nomeView'] = "";
+		$this->informacoes['cor'] = isset($this->cor) ? $this->cor : "";
+		$this->informacoes['icone'] = isset($this->icone) ? $this->icone : "";
 
 		$this->view = new View($this->informacoes);
 

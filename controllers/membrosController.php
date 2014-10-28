@@ -3,6 +3,10 @@ class membros extends ControllerCRUD{
 
 	public $nome = array("Membro","Membros");
 
+	public $cor = "teal";
+
+	public $icone = "users";
+
 	public $campos = array("nome"     	=> "Nome", 
 						   "cpf"		=> "CPF",
 						   "sexo"		=> "Sexo",
@@ -23,10 +27,6 @@ class membros extends ControllerCRUD{
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;
-	
-	//private $filtro1 = array("grupo", array("chaveEstr" => "grupo"));
-	//private $filtro2 = array("tipo" => array("doce", "salgado"));
-	private $pesquisar = "nome";
 
 }
 ?>

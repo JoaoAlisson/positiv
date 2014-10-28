@@ -90,6 +90,8 @@ class ControllerCRUD extends Controller{
 
 		$retorno['itens'] = $busca[$this->informacoes['nomeController']];
 		$retorno['controller'] = $this->informacoes['nomeController'];
+		$retorno['cor'] = $this->informacoes['cor'];
+		$retorno['icone'] = $this->informacoes['icone'];
 		$retorno['qtdPaginas'] = $busca['qtdPaginas'];
 		$retorno['qtd'] = $busca['qtd'];
 		$retorno['pagina'] = $busca['pagina'];

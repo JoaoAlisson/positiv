@@ -71,9 +71,11 @@ function setOrdemPag(pagina, campo, ordem){
 
 function navegacaoSub(controller, action, id){
 
-	$(".submenu.active").removeClass("active");
-	$("#subMenu_"+id).addClass("active");
-
+	if(id != ""){
+		$(".submenu.active").removeClass("active");
+		$("#subMenu_"+id).addClass("active");
+	}
+	
 	files = {};
 	controller = controller || "";
 	action = action || ""; 
@@ -92,6 +94,7 @@ function navegacaoSub(controller, action, id){
 	PAGINA = 1;
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
+	CONTROLLER_GLOBAl = controller;
 	
 }
 
