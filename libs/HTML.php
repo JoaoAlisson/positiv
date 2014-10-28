@@ -40,7 +40,7 @@ class HTML{
 		echo "</form>";
 	}
 
-	function menuPrincialItem($nome = "", $controller = "", $view = "", $icone = "", $cor = ""){
+	function menuPrincialItem($nome = "", $controller = "", $view = "", $icone = "", $cor = "", $normal = false){
 		$active = "";
 		if($this->dados['nomeController']  == "index")
 			$active = ($controller == "" || $controller == "index") ? "active" : "";
@@ -49,8 +49,12 @@ class HTML{
 
 		$controller = ($controller != "") ? $controller."/" : "";
 
+		$invertido = "inverted";
+		if($normal)
+			$invertido = "";
+
 		echo "<a class=\"$cor $active item menuprin\" id=\"menu_$nome\" onClick=\"navegacao('$controller','$view', '$nome')\" style=\"width:100px;\">
-  				<i class=\"circular $cor inverted big $icone icon\"></i>$nome
+  				<i class=\"circular $cor $invertido big $icone icon\"></i>$nome
 			  </a>";
 	}
 
@@ -59,14 +63,15 @@ class HTML{
 	}
 
 	function subMenuCor($cor = ""){
-		echo "<div class=\"ui three column center aligned grid\">
-  				<div class=\"column\">
-   					<div class=\"ui $cor inverted fluid three item menu\">";
+		echo "<div class=\"ui column center aligned grid\" style=\"width: auto;\">
+  				<div class=\"column\"  style=\"width: auto;\">
+   					<div class=\"ui $cor inverted fluid menu\" style=\"width: auto;\">";
 	}
 
-	function subMenuItem($nome, $controller, $view, $icone){
+	function subMenuItem($nome, $controller, $view, $icone = ""){
+		$imgIcone = ($icone != "") ? "<i class=\"$icone icon\"></i>" : "";
 		$controller .= ($controller != "") ? "/" : "";
-		echo "<a class=\"item\" onClick=\"navegacaoSub('$controller','$view');\"><i class=\"$icone icon\"></i>$nome</a>";
+		echo "<a class=\"item\"style=\"min-width:120px;\" onClick=\"navegacaoSub('$controller','$view');\">$imgIcone$nome</a>";
 	}
 
 //<<--------------- CAMPOS DE INPUT -------------------->>

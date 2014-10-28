@@ -1,8 +1,10 @@
 <?php 
-  $this->html->menuPrincialItem("Home", "", "", "home", "green");
-  $this->html->menuPrincialItem("Comercial", "login", "", "users", "blue");
-  $this->html->menuPrincialItem("Produtos", "produtos", "", "barcode", "teal");
-  $this->html->menuPrincialItem("Estoque", "", "", "truck", "red");
-  $this->html->menuPrincialItem("Financeiro", "", "", "dollar", "orange");
-  $this->html->menuPrincialItem("Relatórios", "relatorios", "", "table", "purple");
+  $this->html->menuPrincialItem("Home", "", "", "home", "gray", true);
+  $this->html->menuPrincialItem("Igreja", "igreja", "", "building", "teal");
+  $this->html->menuPrincialItem("Usuários", "login", "", "basic users", "green");
+  $this->html->menuPrincialItem("Calendário", "produtos", "", "basic date", "blue");
+  $this->html->menuPrincialItem("Patrimônio", "", "", "suitcase", "red");
+  $this->html->menuPrincialItem("Finanças", "", "", "dollar", "orange");
+  $this->html->menuPrincialItem("Relatórios", "relatorios", "", "basic chart", "purple");
+  $this->html->menuPrincialItem("Documentos", "relatorios", "", "text file", "purple", true);  
 ?>
