@@ -67,7 +67,6 @@ class Bootstrap {
 		$controller = new $url[0];
 		
 		//$controller->loadModel($url[0]);
-
 		if(isset($url[1])){
 
 			if(method_exists($controller, $url[1])){
@@ -75,6 +74,7 @@ class Bootstrap {
 				$controller->GET = &$variaveisGet;
 				$controller->setAcao($url[1]);
 
+				define("VIEW", $url[1]);
 				$metodo = new ReflectionMethod($controller->informacoes['nomeController'], $url[1]);
 				if($metodo->isPublic()) 
 					$controller->{$url[1]}();
@@ -98,7 +98,9 @@ class Bootstrap {
 			$nomeController = (get_parent_class($controller) == "ControllerCRUD") ? "CRUD" : strtolower(get_class($controller));
 			$controller->view->render($nomeController, $controller->getViewRender(), $controller->getLayout());
 
-		}		
+		}	
+		if(!defined("VIEW"))
+			define("VIEW", "");	
 	}
 }
 

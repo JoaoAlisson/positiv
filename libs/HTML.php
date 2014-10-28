@@ -42,13 +42,20 @@ class HTML{
 
 	function menuPrincialItem($nome = "", $controller = "", $view = "", $icone = "", $cor = "", $normal = false){
 		$active = "";
-		if($this->dados['nomeController']  == "index")
-			$active = ($controller == "" || $controller == "index") ? "active" : "";
-		else
-			$active = ($this->dados['nomeController'] == $controller) ? "active" : "";
+		if(!is_array($controller)){
+			if($this->dados['nomeController']  == "index")
+				$active = ($controller == "" || $controller == "index") ? "active" : "";
+			else
+				$active = ($this->dados['nomeController'] == $controller) ? "active" : "";
+			$controller = ($controller != "") ? $controller."/" : "";
+		}else{
+			if(in_array($this->dados['nomeController'], $controller))
+				$active = "active";
 
-		$controller = ($controller != "") ? $controller."/" : "";
+			$controller = $controller[0]."/";
+		}
 
+		
 		$invertido = "inverted";
 		if($normal)
 			$invertido = "";
@@ -68,10 +75,13 @@ class HTML{
    					<div class=\"ui $cor inverted fluid menu\" style=\"width: auto;\">";
 	}
 
-	function subMenuItem($nome, $controller, $view, $icone = ""){
+	function subMenuItem($nome, $controller = "", $view = "", $icone = ""){
+		$active = "";
+		if($this->dados['nomeController'] == $controller && $this->dados['nomeView'] == $view)
+			$active = "active";
 		$imgIcone = ($icone != "") ? "<i class=\"$icone icon\"></i>" : "";
 		$controller .= ($controller != "") ? "/" : "";
-		echo "<a class=\"item\"style=\"min-width:120px;\" onClick=\"navegacaoSub('$controller','$view');\">$imgIcone$nome</a>";
+		echo "<a class=\"item submenu $active\" id=\"subMenu_$nome\" style=\"min-width:120px;\" onClick=\"navegacaoSub('$controller','$view', '$nome');\">$imgIcone$nome</a>";
 	}
 
 //<<--------------- CAMPOS DE INPUT -------------------->>

@@ -69,7 +69,10 @@ function setOrdemPag(pagina, campo, ordem){
 	ORDENACAO = ordem;
 }
 
-function navegacaoSub(controller, action){
+function navegacaoSub(controller, action, id){
+
+	$(".submenu.active").removeClass("active");
+	$("#subMenu_"+id).addClass("active");
 
 	files = {};
 	controller = controller || "";

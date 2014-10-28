@@ -13,15 +13,17 @@ class View {
 	}
 
 	private function adicionarSubMenu($controller){
-
-		require "views/". $controller . "/subMenu.php";
+		if(file_exists("views/". CONTROLLER . "/subMenu.php"))
+			require "views/". CONTROLLER . "/subMenu.php";
+		else
+			require "views/". $controller . "/subMenu.php";
 		echo "</div>
 			 </div>
 			</div>";						
 	}
 
 	public function render($controller, $view, $noInclude = false){
-	
+		
 		$paginacaoAjax = false;
 		if(isset($_POST['ajaxPg']))
 			$paginacaoAjax = true;
