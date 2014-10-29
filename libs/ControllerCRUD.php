@@ -142,7 +142,9 @@ class ControllerCRUD extends Controller{
 		}else{
 
 			$retorno['nome'] = $this->nome;
-			$retorno['campos'] = $this->campos;			
+			$retorno['campos'] = $this->campos;
+			$retorno['cor'] = $this->informacoes['cor'];
+			$retorno['icone'] = $this->informacoes['icone'];						
 		}
 		$this->dados($retorno);
 		$this->renderizar("CRUD/cadastrar");
@@ -178,6 +180,8 @@ class ControllerCRUD extends Controller{
 			$retorno = $this->model->pegar($id);
 			$retorno['nome'] = $this->nome;
 			$retorno['campos'] = $this->campos;	
+			$retorno['cor'] = $this->informacoes['cor'];
+			$retorno['icone'] = $this->informacoes['icone'];
 		}
 		$retorno['id'] = $id;
 		$this->dados($retorno);
