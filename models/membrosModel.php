@@ -5,10 +5,21 @@ class membrosModel extends Model{
 						  "cpf"		   => "cpf",
 						  "sexo"	   => "sexo",
 						  "foto"       => "imagem",
+						  "conjuge"	   => "texto",
 					      "nascimento" => "data",
-						  "descricao"  => "textoLongo");
+					      "igrejaanterior" => "texto",
+					      "telefone"   => "telefone",
+					      "celular"	   => "telefone",
+					      "profissao"  => "texto",
+					      "email"	   => "email",
+					      "estado"     => "estado",
+					      "cidade"	   => "cidade",
+					      "bairro"     => "texto",
+					      "rua"		   => "texto",
+					      "numero"	   => "texto",
+						  "observacoes"=> "textoLongo");
 
-	public $obrigatorios = array("nome", "sexo");
+	public $obrigatorios = array("nome", "sexo", "estado");
 
 }
 ?>

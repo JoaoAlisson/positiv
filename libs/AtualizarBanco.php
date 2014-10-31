@@ -19,6 +19,17 @@ class AtualizarBanco {
 		$this->criarTabelas();
 		$this->editarTabelas();
 
+		$this->delEstadosCidades();
+	}
+
+	private function delEstadosCidades(){
+		$estados = PREFIXO."estados";
+		if(!$this->bancoAdm->getUtilizaEstados())
+			$this->bancoAdm->deletarTabela($estados);
+
+		$cidades = PREFIXO."cidades";
+		if(!$this->bancoAdm->getUtilizaCidades())
+			$this->bancoAdm->deletarTabela($cidades);
 	}
 
 	private function editarTabelas(){
@@ -85,6 +96,14 @@ class AtualizarBanco {
 	private function separaTabelas(){
 		$tabelas = $this->bancoAdm->tabelas();
 		$models = $this->pegarModels();
+
+		$estados = PREFIXO."estados";
+		if(in_array($estados, $tabelas))
+			unset($tabelas[array_search($estados, $tabelas)]);
+
+		$cidades = PREFIXO."cidades";
+		if(in_array($cidades, $tabelas))
+			unset($tabelas[array_search($cidades, $tabelas)]);
 
 		$this->tabelasCriar = array_diff($models, $tabelas);
 		$this->tabelasDeletar = array_diff($tabelas, $models);

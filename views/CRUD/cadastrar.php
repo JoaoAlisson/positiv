@@ -65,6 +65,7 @@ function fim(){
 			inicio();
 		}		
 	}
+	
 	if($quantidade > 6)
 		fim();
 

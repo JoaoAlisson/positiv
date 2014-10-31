@@ -11,17 +11,27 @@ class membros extends ControllerCRUD{
 						   "cpf"		=> "CPF",
 						   "sexo"		=> "Sexo",
  						   "foto"   	=> "Foto",
+ 						   "conjuge"	=> "Conjugue",
+ 						   "igrejaanterior" => "Igreja Anterior",
+ 						   "telefone"   => "Telefone",
+ 						   "celular"	=> "Celular",
+ 						   "profissao"  => "Profissão",
+ 						   "email"	    => "Email",
+ 						   "estado"     => "Estado",
+ 						   "cidade"	    => "Cidade",
+ 						   "bairro"     => "Bairro",
+ 						   "rua"	    => "Rua",
+ 						   "numero"	    => "Numero",
 					       "nascimento" => "Data de Nascimento",
-						   "descricao"  => "Descrição");
+						   "observacoes"=> "Observações");
 
 	public $icones = array("nome" => "user");
 
-	public $placeholders = array("nome"     => "Isira seu nome", 
-								 "descricao"=> "Insira uma descrição");
+	public $placeholders = array("nome"     => "Isira seu nome");
 
-	public $listar = array("nome", "foto", "descricao");
+	public $listar = array("nome", "telefone", "celular", "nascimento");
 
-	public $filtros = array("nome", "nascimento");
+	public $filtros = array("nome", "sexo");
 
 	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
 

@@ -381,8 +381,8 @@ function moedaMask(id){
 }
 
 function telefoneMask(id){
-	telefone = $("#"+id).val();
-	if(telefone.length < 15)
+	telefoneM = $("#"+id).val();
+	if(telefoneM.length < 15)
 		$('#'+id).mask('(00) 0000-00000');
 	else
 		$('#'+id).unmask().mask('(00) 00000-0000');
@@ -553,8 +553,13 @@ function trocaImgSexo(id){
 		$("#masculino_"+id).show();
 		$("#feminino_"+id).hide();
 	}else{
-		$("#feminino_"+id).show();
-		$("#masculino_"+id).hide();		
+		if($("#input_"+id).val() == 2){
+			$("#feminino_"+id).show();
+			$("#masculino_"+id).hide();
+		}else{
+			$("#feminino_"+id).show();
+			$("#masculino_"+id).show();
+		}
 	}
 }
 
@@ -629,4 +634,40 @@ function funcaoValidarCPF(cpf){
           }
     else
         return false;		
+}
+
+function mudarCidade(campo){
+	estadoo = $('#input_'+campo).val();
+	caminho = URL+"/estadoscidades/cidades";
+	if(estadoo != ""){
+		$('#cidadeInput').html("<div class=\"default text\" data-value=\"0\" style=\'min-width:50px;'>&nbsp&nbsp&nbsp...</div>");
+		$.post(caminho, { estado : estadoo}, function(retorno){
+
+			try{
+				retorno = jQuery.parseJSON(retorno);
+			}
+			catch(e){
+				$(window.document.location).attr('href', URL);
+			}
+
+			todasCidades = "<div class=\"item\" data-value=\"\"></div>";
+			$.each(retorno, function(id, cidadeVal){
+				todasCidades = todasCidades + "<div class=\"item\" data-value=\""+ cidadeVal.id +"\" style=\'min-width:50px;'>"+ cidadeVal.cidade +"</div>";
+			});
+
+			$('#cidadeInput').html("");
+			$('#cidadeInput').html(todasCidades);
+		});
+	}else{
+		$('#cidadeInput').html("");
+	}
+}
+
+function enterSubmit(e){
+	if(e.which == 13 || e.keyCode == 13)
+		$(".submeterForm").click();
+}
+
+function registraSelect(id){
+	$("#"+id).dropdown();
 }

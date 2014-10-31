@@ -3,6 +3,8 @@ class BancoAdm{
 
 	private $banco;
 	private $campo;
+	private $utilizaEstados = false;
+	private $utilizaCidades = false;
 
 	function __construct(){
 		mysql_connect( DB_HOST, DB_USER, DB_PASS);
@@ -48,11 +50,45 @@ class BancoAdm{
 			mysql_query("ALTER TABLE $tabela DROP COLUMN $campo");
 	}
 
-	public function criarCampo($campo, $tabela, $tipo, $complemento = ""){
-		if(!$this->existeCampo($campo, $tabela))
-			mysql_query("ALTER TABLE $tabela ADD COLUMN $campo ". $this->campo->tipo($tipo) ." $complemento");
-
+	public function getUtilizaEstados(){
+		return $this->utilizaEstados;
 	}
+
+	public function getUtilizaCidades(){
+		return $this->utilizaCidades;
+	}	
+
+	public function criarCampo($campo, $tabela, $tipo, $complemento = ""){
+		if($tipo == "estado" || $tipo == "cidade"){
+			if($tipo == "estado"){
+				$this->criarEstados();
+				$this->utilizaEstados = true;
+			}else{
+				$this->criarCidades();
+				$this->utilizaCidades = true;
+			}
+		}
+			if(!$this->existeCampo($campo, $tabela))
+				mysql_query("ALTER TABLE $tabela ADD COLUMN $campo ". $this->campo->tipo($tipo) ." NOT NULL $complemento");
+	}
+
+	public function criarEstados(){
+		$tabela = PREFIXO."estados";
+		if(!$this->existeTabela($tabela)){
+			include_once(RAIZ . SEPARADOR . "libs". SEPARADOR . "Estados.php");
+			$estados = new Estados();
+			$estados->criarEstados();
+		}
+	}
+
+	public function criarCidades(){
+		$tabela = PREFIXO."cidades";
+		if(!$this->existeTabela($tabela)){
+			include_once(RAIZ . SEPARADOR . "libs". SEPARADOR . "Cidades.php");
+			$cidades = new Cidades();
+			$cidades->criarCidades();
+		}
+	}	
 
 	public function existeCampo($campo, $tabela){
 		return $this->pesquisa("SHOW COLUMNS FROM $tabela LIKE '$campo'");
@@ -60,6 +96,15 @@ class BancoAdm{
 	}
 
 	public function alterarCampo($campo, $tabela, $novoTipo, $complemento = ""){
+		if($novoTipo == "estado" || $novoTipo == "cidade"){
+			if($novoTipo == "estado"){
+				$this->utilizaEstados = true;
+				$this->criarEstados();
+			}else{
+				$this->utilizaCidades = true;
+				$this->criarCidades();
+			}
+		}		
 		if($this->existeCampo($campo, $tabela))
 			mysql_query("ALTER TABLE $tabela MODIFY COLUMN $campo ". $this->campo->tipo($novoTipo) ." NOT NULL ". $complemento);
 	}

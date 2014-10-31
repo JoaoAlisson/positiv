@@ -189,6 +189,28 @@ class Model extends Database{
 		return $retorno;
 	}
 
+	public function validarEstado($valor, $campo = null){
+	
+		$retorno;
+		if(is_numeric($valor) || $valor == "")
+			$retorno = "ok";
+		else
+			$retorno[0] = "Estado Inválido";
+	
+		return $retorno;
+	}
+
+	public function validarCidade($valor, $campo = null){
+	
+		$retorno;
+		if(is_numeric($valor) || $valor == "")
+			$retorno = "ok";
+		else
+			$retorno[0] = "Cidade Inválida";
+	
+		return $retorno;
+	}	
+
 	public function validarLogin($nome, $campo = null){
 	
 		$retorno;
@@ -387,6 +409,9 @@ class Model extends Database{
 	}
 
 	public function validarEmailOff($email){
+		if($email == "")
+			return "ok";
+
 		$valido = $this->padraoEmail($email);
 
 		$retorno;
@@ -399,8 +424,10 @@ class Model extends Database{
 	}
 
 	public function validarEmail($email){
+		if($email == "")
+			return "ok";
 
-		$valido = $this->padraoEmail($email);
+			$valido = $this->padraoEmail($email);
 
 		if($valido){
 			$dominio = explode('@',$email);
@@ -419,7 +446,9 @@ class Model extends Database{
 
 	public function validarTelefone($telefone){
 		// (00) 00000-0000 ou (00) 00000-0000
-	
+		if($telefone == "")
+			return "ok";
+
 		$telNormal = false;
 		if(preg_match("/\([0-9]{2}\) [0-9]{4}-[0-9]{4}$/", $telefone))
 			$telNormal = true;

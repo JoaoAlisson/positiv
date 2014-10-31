@@ -47,7 +47,7 @@
 			  <div class="ui error message">
 			    <div class="header">We noticed some issues</div>
 			  </div>
-			  <div class="ui green vertical labeled icon submit button" onclick="logar();">
+			  <div class="ui green vertical labeled icon submit button submeterForm" onclick="logar();">
 			  	<i class="sign in icon"></i>
 			  	Logar</div>
 			</div>

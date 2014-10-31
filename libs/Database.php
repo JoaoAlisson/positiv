@@ -276,6 +276,38 @@ class Database extends PDO{
 		return $retorna;
 	}
 
+	/*
+		OBS: esta função não trata as entradas antes da pesquisa, nem as saídas. CUIDADO!!
+	 */
+	public function pegarTodosGenerico($tabela = null){
+		return $this->pegarOndeGenerico(null, null, $tabela);
+	}
+	/*
+		OBS: esta função não trata as entradas antes da pesquisa, nem as saídas. CUIDADO!!
+	 */
+	public function pegarOndeGenerico($onde = null, $campos = null, $tabela = null){
+
+		if($campos == null)
+			$campos = "*";
+		elseif($campos != "*")
+			$campos = implode(", ", $campos);
+
+		$onde = ($onde == null) ? "" : "WHERE ".$onde;
+
+		if($tabela == null)
+			$tabela = str_replace("Model", "", get_class($this));
+
+		$tabela = PREFIXO."$tabela";
+
+		$sql = "SELECT $campos FROM $tabela $onde";
+
+		$query = $this->prepare($sql);
+		$query->execute();
+		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $resultado;
+	}
+
 	public function deletar(){
 
 	}

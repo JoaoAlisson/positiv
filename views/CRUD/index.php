@@ -32,7 +32,7 @@ $paginacao = "";
         echo "</div>";
       }
   ?>
-    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button" style="margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
+    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
       <i class=" search icon"></i>Filtrar
     </div>
 

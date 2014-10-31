@@ -9,6 +9,14 @@ class TiposCampos{
 		return "int(11)";
 	}
 
+	private function estado(){
+		return "int(2)";
+	}	
+
+	private function cidade(){
+		return "int(4)";
+	}
+
 	private function texto(){
 		return "varchar (255)";
 	}
