@@ -7,7 +7,7 @@ class HTML{
 	private $cidadesEstados;
 	private $cidades;
 	private $estados;
-	private $estado;
+	private $estado = "";
 	private $tabindex = 0;
 
 	public $dados;
@@ -29,9 +29,9 @@ class HTML{
 
 	function pegarCidades(){
 		if($this->cidades == null){
-			if($this->cidadesEstados == null)
 				$this->cidadesEstados = new CidadesEstadosModel();
-			$this->cidades = $this->cidadesEstados->pegarCidades($this->estado);
+			$estado = $this->estado;
+			$this->cidades = $this->cidadesEstados->pegarCidades($estado);
 		}
 
 		return $this->cidades;
@@ -48,8 +48,12 @@ class HTML{
 
 	function campo($campo, $validar = true, $valor = null){
 		if(isset($this->dados['tipos'][$campo])){
-			$funcao = "campo".ucfirst($this->dados['tipos'][$campo]);
-			$this->{$funcao}($campo, $valor, $validar);
+			if(is_array($this->dados['tipos'][$campo])){
+				$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo]);
+			}else{
+				$funcao = "campo".ucfirst($this->dados['tipos'][$campo]);
+				$this->{$funcao}($campo, $valor, $validar);
+			}
 		}else{
 			$this->campoTexto($campo, $valor, $validar);
 		}
@@ -516,8 +520,11 @@ class HTML{
 	}
 
 	function campoEstado($campo, $valor = "", $validar){
-		if($valor == null)
+
+		if($valor == "")
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$this->estado = $valor;
 
 		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
 		$validacaoJs = "";
@@ -534,9 +541,7 @@ class HTML{
 		if($requerido == "validarObrigatorio")
 			$asterisco = "<div class='ui corner label'><i class='icon asterisk'></i></div>";
 
-		$selecionado = "&nbsp;";
-		$mostrarInconeMas = "";
-		$mostrarInconeFem = "";
+		$selecionado = "&nbsp;"; 
 		$value = "";
 
 		$estados = $this->pegarEstados();
@@ -548,8 +553,6 @@ class HTML{
 				$selecionado = $estado['estado'];
 			}
 		}
-		if($valor != "")
-			$this->estado = $valor;
 
 		$incluir = "<div class='ui left labeled icon input'>";
 		$incluir .= " <div class=\"ui dropdown selection\" id=\"select_$campo\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
@@ -585,14 +588,13 @@ class HTML{
 			$asterisco = "<div class='ui corner label'><i class='icon asterisk'></i></div>";
 
 		$selecionado = "";
-		$mostrarInconeMas = "";
-		$mostrarInconeFem = "";
 		$value = "";
 	
 
 		$estados = $this->pegarCidades();
 		$opcoes = "";
-		if($valor != ""){
+		if($valor != "" && $valor != "0"){
+			$opcoes .= "<div class=\"item\" data-value=\"\"></div>";
 			foreach ($estados as $key => $cidade){
 				$opcoes .= "<div class=\"item\" data-value=\"".$cidade['id']."\">".$cidade['cidade']."</div>";
 				if($valor == $cidade['id']){
@@ -603,15 +605,80 @@ class HTML{
 		}
 
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<div class=\"ui dropdown selection\" id=\"select_$campo\"  ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
+		$incluir .= "<div class=\"ui dropdown selection\" id=\"select_$campo\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
 				      <input type=\"hidden\" name='$campo' $value id='input_$campo' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
 				      <i class='triangle down icon disabled'></i>
 				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>$selecionado</div>
-				      <div class=\"menu\" id='cidadeInput'>$opcoes
+				      <div class=\"menu\" id='cidadeInput'>
+				      $opcoes
+				      </div>$asterisco
+				      </div>";
+		$incluir .= "</div>";
+		$this->retornaCampo($campo, $incluir);				
+	}
+
+	function enum($campo, $validar, $valor = "", $valores){
+		if($valor == null)
+			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+		$validacaoJs = "";
+		if($validar == false){
+			$requerido =  "";			
+		}else{
+			$validacaoJs = "validar('$campo');";
+		}
+
+		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "triangle down";
+		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";		
+
+		$asterisco = "";
+		if($requerido == "validarObrigatorio")
+			$asterisco = "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+
+		$selecionado = "";
+		$value = "";
+	
+
+		$estados = $this->pegarCidades();
+		$opcoes = "<div class=\"item\" data-value=\"\"></div>";
+
+		foreach ($valores as $key => $descricao){
+			$val = $this->removeAcentos($descricao);
+			$opcoes .= "<div class=\"item\" data-value=\"$val\">$descricao</div>";
+			if($valor == $val){
+				$value = "value=\"$valor\"";
+				$selecionado = $descricao;
+			}			
+		}
+
+		$incluir = "<div class='ui left labeled icon input'>";
+		$incluir .= "<div class=\"ui dropdown selection\" id=\"select_$campo\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
+				      <input type=\"hidden\" name='$campo' $value id='input_$campo' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
+				      <i class='$icone icon disabled'></i>
+				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>$selecionado</div>
+				      <div class=\"menu\">$opcoes
 				      </div>$asterisco
 				      </div>";
 		$incluir .= "</div>";		
 		$this->retornaCampo($campo, $incluir);				
 	}
+
+/*
+	Esta função foi tirada do site: http://www.douglaspasqua.com/2013/09/17/removendo-acentuacao-no-php-utf-8/
+ */
+    public function removeAcentos($value){   
+        $from = "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ";
+        $to = "aaaaeeiooouucAAAAEEIOOOUUC";
+                 
+        $keys = array();
+        $values = array();
+        preg_match_all('/./u', $from, $keys);
+        preg_match_all('/./u', $to, $values);
+        $mapping = array_combine($keys[0], $values[0]);
+        $value = strtr($value, $mapping);
+                 
+        return $value;
+    }
 }
 ?>

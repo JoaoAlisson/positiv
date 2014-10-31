@@ -5,6 +5,7 @@ class membrosModel extends Model{
 						  "cpf"		   => "cpf",
 						  "sexo"	   => "sexo",
 						  "foto"       => "imagem",
+						  "estadocivil"=> array("Solteiro", "Casado", "Divorciado"),
 						  "conjuge"	   => "texto",
 					      "nascimento" => "data",
 					      "igrejaanterior" => "texto",
@@ -19,7 +20,7 @@ class membrosModel extends Model{
 					      "numero"	   => "texto",
 						  "observacoes"=> "textoLongo");
 
-	public $obrigatorios = array("nome", "sexo", "estado");
+	public $obrigatorios = array("nome", "sexo");
 
 }
 ?>

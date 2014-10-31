@@ -60,20 +60,32 @@ class Model extends Database{
 				if($campo != "id"){
 
 					$tipo = $this->tipos[$campo];
-					$funcaoFormatacao = "formata".$tipo;
-					if(method_exists($this, $funcaoFormatacao)){
-						$retorno[$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
-					}else{
-						$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
-						if($integro == false){
-							if(strlen($valor) > 53)
-								$formatado = substr($formatado, 0, 50) . "...";
-						}
-						$retorno[$campo] = $formatado;
-					}	
-												
+					if(!is_array($tipo)){
+						$funcaoFormatacao = "formata".$tipo;
+						if(method_exists($this, $funcaoFormatacao)){
+							$retorno[$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
+						}else{
+							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
+							if($integro == false){
+								if(strlen($valor) > 53)
+									$formatado = substr($formatado, 0, 50) . "...";
+							}
+							$retorno[$campo] = $formatado;
+						}	
+					}												
 				}				
 			}
+		}
+	}
+
+	public function formataSexo($campo, $valor, $integro){
+		if(!$integro){
+			if($valor == "1")
+				return "Masculino";
+			else
+				return "Feminino";
+		}else{
+			return $valor;
 		}
 	}
 
@@ -132,7 +144,11 @@ class Model extends Database{
 				}else{
 					//realiza as validações dos tipos de dados
 					$var = $this->validacoes[$chave];
-					$retornouValid = $this->$var($valor);
+					$retornouValid = "";
+					if(is_array($var))
+						$retornouValid = $this->enum($valor);
+					else
+						$retornouValid = $this->$var($valor);
 					if($retornouValid != "ok"){
 						if(isset($validacoes[$chave][0]))
 							array_push($validacoes[$chave], $retornouValid);
@@ -142,7 +158,15 @@ class Model extends Database{
 				}	
 			}
 
-			$funcaoValidacao = isset($this->tipos[$chave]) ? 'validar'.ucfirst($this->tipos[$chave]) : 'validarTexto';
+			$funcaoValidacao = "";
+			if(isset($this->tipos[$chave])){
+				if(is_array($this->tipos[$chave]))
+					$funcaoValidacao = "enum";
+			}
+			
+			if($funcaoValidacao == "")
+				$funcaoValidacao = isset($this->tipos[$chave]) ? 'validar'.ucfirst($this->tipos[$chave]) : 'validarTexto';
+	
 			$validacaoRetorno = $this->$funcaoValidacao($valor, $chave);
 			if(is_array($validacaoRetorno)){
 				if(isset($validacoes[$chave][0]))
@@ -165,6 +189,40 @@ class Model extends Database{
 		}
 		return $retorno;
 	}
+
+	public function enum($texto, $campo = null){
+	
+		$temNoArray = false;
+		foreach ($this->tipos[$campo] as $key => $valor) {
+			$val = $this->removeAcentos($valor);
+			if($texto == $val)
+				$temNoArray = true;
+		}
+		$retorno;
+		if($temNoArray)
+			$retorno = "ok";
+		else
+			$retorno[0] = "O valor selecionado é inválido";
+
+		return $retorno;
+	}
+
+/*
+	Esta função foi tirada do site: http://www.douglaspasqua.com/2013/09/17/removendo-acentuacao-no-php-utf-8/
+ */
+    public function removeAcentos($value){   
+        $from = "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ";
+        $to = "aaaaeeiooouucAAAAEEIOOOUUC";
+                 
+        $keys = array();
+        $values = array();
+        preg_match_all('/./u', $from, $keys);
+        preg_match_all('/./u', $to, $values);
+        $mapping = array_combine($keys[0], $values[0]);
+        $value = strtr($value, $mapping);
+                 
+        return $value;
+    }	
 
 	public function validarTexto($texo, $campo = null){
 		$retorno = "ok";

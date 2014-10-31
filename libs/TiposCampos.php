@@ -1,8 +1,19 @@
 <?php
 class TiposCampos{
 	public function tipo($tipo){
-		if(method_exists($this, $tipo))
-			return $this->$tipo();
+		if(is_array($tipo))
+			return $this->enum($tipo);
+		else
+			if(method_exists($this, $tipo))
+				return $this->$tipo();
+	}
+
+	private function enum($tipo){
+		$tamanho = strlen($this->removeAcentos($tipo[0]));
+		foreach ($tipo as $key => $valor)
+			$tamanho = (strlen($this->removeAcentos($valor)) > $tamanho) ? strlen($this->removeAcentos($valor)) : $tamanho;
+
+		return "varchar ($tamanho)";
 	}
 
 	private function inteiro(){
@@ -72,5 +83,22 @@ class TiposCampos{
 	private function sexo(){
 		return "int(1)";
 	}
+
+/*
+	Esta função foi tirada do site: http://www.douglaspasqua.com/2013/09/17/removendo-acentuacao-no-php-utf-8/
+ */
+    public function removeAcentos($value){   
+        $from = "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ";
+        $to = "aaaaeeiooouucAAAAEEIOOOUUC";
+                 
+        $keys = array();
+        $values = array();
+        preg_match_all('/./u', $from, $keys);
+        preg_match_all('/./u', $to, $values);
+        $mapping = array_combine($keys[0], $values[0]);
+        $value = strtr($value, $mapping);
+                 
+        return $value;
+    }		
 }
 ?>

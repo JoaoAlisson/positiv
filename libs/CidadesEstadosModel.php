@@ -4,10 +4,8 @@ class CidadesEstadosModel extends Model{
 	public function pegarCidades($estado = null){
 		$tabela = "cidades";
 		$retorna = "";
-		if($estado != null)	
+		if($estado != null || $estado != "")	
 			$retorna = $this->pegarOndeGenerico("estado = $estado", array('id', 'cidade'), $tabela);
-		else
-			$retorna = $this->pegarTodosGenerico($tabela);
 				
 		return $retorna;
 	}

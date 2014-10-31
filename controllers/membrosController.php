@@ -9,8 +9,10 @@ class membros extends ControllerCRUD{
 
 	public $campos = array("nome"     	=> "Nome", 
 						   "cpf"		=> "CPF",
+						   "nascimento" => "Data de Nascimento",
 						   "sexo"		=> "Sexo",
  						   "foto"   	=> "Foto",
+ 						   "estadocivil"=> "Estado Civil",
  						   "conjuge"	=> "Conjugue",
  						   "igrejaanterior" => "Igreja Anterior",
  						   "telefone"   => "Telefone",
@@ -22,14 +24,13 @@ class membros extends ControllerCRUD{
  						   "bairro"     => "Bairro",
  						   "rua"	    => "Rua",
  						   "numero"	    => "Numero",
-					       "nascimento" => "Data de Nascimento",
 						   "observacoes"=> "Observações");
 
 	public $icones = array("nome" => "user");
 
 	public $placeholders = array("nome"     => "Isira seu nome");
 
-	public $listar = array("nome", "telefone", "celular", "nascimento");
+	public $listar = array("nome", "sexo", "celular", "nascimento");
 
 	public $filtros = array("nome", "sexo");
 

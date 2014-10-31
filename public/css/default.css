@@ -111,3 +111,12 @@ body:before {
   font: bold 13px "Helvetica Neue", Sans-Serif !important;
   box-shadow: 0 0 7px black !important;
 }
+
+select{
+  margin: 0;
+  padding: .65em 1em;
+  font-size: 1em;
+  background-color: #FFF;
+  border: 1px solid rgba(0,0,0,.15);
+  height: 40px;
+}
