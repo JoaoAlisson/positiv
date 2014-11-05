@@ -671,3 +671,18 @@ function enterSubmit(e){
 function registraSelect(id){
 	$("#"+id).dropdown();
 }
+
+function redir(controller, id){
+
+	action = "/editar"; 
+
+	caminho = URL+controller+action;
+	PAGINACAMINHO = caminho; 
+	$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true , idSet: id});
+
+	window.history.pushState('Object', 'Postiv', caminho);
+
+	PAGINA = 1;
+	CAMPOORDEM = "";
+	ORDENACAO = "ASC";
+}

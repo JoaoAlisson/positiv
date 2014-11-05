@@ -1,4 +1,5 @@
 <?php 
+//print_r($dados['itens']);
 $paginacao = "";
  if(!isset($dados['filtro'])){
   $filtrosValores = "";

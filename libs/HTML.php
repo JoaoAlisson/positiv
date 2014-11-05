@@ -9,10 +9,17 @@ class HTML{
 	private $estados;
 	private $estado = "";
 	private $tabindex = 0;
+	private $banco;
 
 	public $dados;
 	function __construct(&$informacoes){
 		$this->dados = &$informacoes;
+	}
+
+	private function getBanco(){
+		if($this->banco == null)
+			$this->banco = new Database();
+		return $this->banco;
 	}
 
 	private function getTabindex(){
@@ -49,7 +56,10 @@ class HTML{
 	function campo($campo, $validar = true, $valor = null){
 		if(isset($this->dados['tipos'][$campo])){
 			if(is_array($this->dados['tipos'][$campo])){
-				$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo]);
+				if(isset($this->dados['tipos'][$campo]["relacao"]))
+					$this->chaveEstrangeira($campo, $validar, $valor, $this->dados['tipos'][$campo]);
+				else
+					$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo]);
 			}else{
 				$funcao = "campo".ucfirst($this->dados['tipos'][$campo]);
 				$this->{$funcao}($campo, $valor, $validar);
@@ -99,7 +109,7 @@ class HTML{
 		if($normal)
 			$invertido = "";
 
-		echo "<a class=\"$cor $active item menuprin\" id=\"menu_$nome\" onClick=\"navegacao('$controller','$view', '$nome')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
+		echo "<a class=\"$cor $active item menuprin esconder\" id=\"menu_$nome\" onClick=\"navegacao('$controller','$view', '$nome')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
   				<i class=\"circular $cor $invertido big $icone icon\"></i>$nome
 			  </a>";
 	}
@@ -298,7 +308,7 @@ class HTML{
 		$placeholder = isset($dadosArray['placeholders'][$campo]) ?  $dadosArray['placeholders'][$campo] : "";
 
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<textarea type='text' class='$requerido textoLongo' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' placeholder='$placeholder' name='$campo' $requerido>$valor</textarea>";	
+		$incluir .= "<textarea type='text' class='$requerido textoLongo' ".$this->getTabindex()." style='height:10px; max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' placeholder='$placeholder' name='$campo' $requerido>$valor</textarea>";	
 		$incluir .= "<i class='$icone icon'></i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
@@ -345,7 +355,7 @@ class HTML{
 		$this->retornaCampo($campo, $incluir);
 	}
 
-	function campoInteiro($campo, $value = null, $validar){
+	function campoInteiro($campo, $valor = null, $validar){
 
 		if($valor == null)
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
@@ -640,7 +650,7 @@ class HTML{
 		$value = "";
 	
 
-		$estados = $this->pegarCidades();
+		//$estados = $this->pegarCidades();
 		$opcoes = "<div class=\"item\" data-value=\"\"></div>";
 
 		foreach ($valores as $key => $descricao){
@@ -663,6 +673,54 @@ class HTML{
 		$incluir .= "</div>";		
 		$this->retornaCampo($campo, $incluir);				
 	}
+
+	function chaveEstrangeira($campo, $validar, $valor = "", $informacoes){
+		if($valor == null)
+			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+		$validacaoJs = "";
+		if($validar == false){
+			$requerido =  "";			
+		}else{
+			$validacaoJs = "validar('$campo');";
+		}
+
+		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "triangle down";
+		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";		
+
+		$asterisco = "";
+		if($requerido == "validarObrigatorio")
+			$asterisco = "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+
+		$selecionado = "";
+		$value = "";
+	
+		//$estados = $this->pegarCidades();
+		$banco = $this->getBanco();
+		$valores = $banco->pegarTodosGenerico($informacoes['model']);
+		$opcoes = "<div class=\"item\" data-value=\"\"></div>";
+
+		foreach ($valores as $key => $descricao){
+			$opcoes .= "<div class=\"item\" data-value=\"".  $descricao['id'] ."\">".$descricao[$informacoes['campo']]."</div>";
+			if($valor == $descricao['id']){
+				$value = "value=\"$valor\"";
+				$selecionado = $descricao[$informacoes['campo']];
+			}			
+		}
+
+		$incluir = "<div class='ui left labeled icon input'>";
+		$incluir .= "<div class=\"ui dropdown selection\" id=\"select_$campo\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
+				      <input type=\"hidden\" name='$campo' $value id='input_$campo' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
+				      <i class='$icone icon disabled'></i>
+				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>$selecionado</div>
+				      <div class=\"menu\">$opcoes
+				      </div>$asterisco
+				      </div>";
+		$incluir .= "</div>";		
+		$this->retornaCampo($campo, $incluir);				
+	}
+
 
 /*
 	Esta função foi tirada do site: http://www.douglaspasqua.com/2013/09/17/removendo-acentuacao-no-php-utf-8/

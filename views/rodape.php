@@ -52,8 +52,6 @@
   </div>
 </div>
 
-
-
 <br><br>
 <div id="footer">
 <div class="ui corrodape inverted page fixed grid segment">
@@ -65,14 +63,6 @@
             <a class="item">Registration</a>
             <a class="item">Course Calendar</a>
             <a class="item">Professors</a>
-          </div>
-        </div>
-        <div class="column">
-          <div class="ui header">Livraria</div>
-          <div class="ui inverted link list">
-            <a class="item">A-Z</a>
-            <a class="item">Most Popular</a>
-            <a class="item">Recently Changed</a>
           </div>
         </div>
         <div class="column">

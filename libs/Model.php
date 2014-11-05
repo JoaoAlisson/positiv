@@ -40,17 +40,26 @@ class Model extends Database{
 				foreach ($campos as $campo => $valor) {
 					if($campo != "id"){
 
-						$tipo = $this->tipos[$campo];
-						$funcaoFormatacao = "formata".ucfirst($tipo);
-						if(method_exists($this, $funcaoFormatacao)){
-							$retorno[$item][$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
-						}else{
-							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
-							if($integro == false){
-								if(strlen($valor) > 53)
-									$formatado = substr($formatado, 0, 50) . "...";
+						$tipo = isset($this->tipos[$campo]) ? $this->tipos[$campo] : "";
+						if(is_array($tipo)){
+							if(!$integro){
+								$campoEstrangeiro = $tipo['model']."_".$tipo['campo'];
+								$retorno[$item][$campo] = "<a onclick=\"redir('".$tipo['model']."', '".$retorno[$item][$campo]."')\">".$retorno[$item][$campoEstrangeiro]."</a>";
+							}else{
+								$retorno[$item][$campo] = $valor;
 							}
-							$retorno[$item][$campo] = $formatado;
+						}else{
+							$funcaoFormatacao = "formata".ucfirst($tipo);
+							if(method_exists($this, $funcaoFormatacao)){
+								$retorno[$item][$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
+							}else{
+								$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
+								if($integro == false){
+									if(strlen($valor) > 53)
+										$formatado = substr($formatado, 0, 50) . "...";
+								}
+								$retorno[$item][$campo] = $formatado;
+							}
 						}								
 					}
 				}
@@ -72,6 +81,8 @@ class Model extends Database{
 							}
 							$retorno[$campo] = $formatado;
 						}	
+					}else{
+						$retorno[$campo] = $valor;
 					}												
 				}				
 			}
@@ -160,8 +171,13 @@ class Model extends Database{
 
 			$funcaoValidacao = "";
 			if(isset($this->tipos[$chave])){
-				if(is_array($this->tipos[$chave]))
-					$funcaoValidacao = "enum";
+				if(is_array($this->tipos[$chave])){
+					if(isset($this->tipos[$chave]["relacao"]))
+						$funcaoValidacao = "chaveEstrangeira";
+					else
+						$funcaoValidacao = "enum";
+				}
+					
 			}
 			
 			if($funcaoValidacao == "")
@@ -190,7 +206,31 @@ class Model extends Database{
 		return $retorno;
 	}
 
+	public function chaveEstrangeira($texto, $campo = null){
+
+		if($texto == "")
+			return "ok";
+
+		$valor = str_replace(",", ".", $texto);
+		$valor = (float) $valor;
+		$int = (int) $valor;
+
+		$retorno;
+		if(($valor - $int) == 0){
+			$retorno = "ok";
+			if($campo != null)
+				$this->dados[$campo] = $valor;
+		}else{
+			$retorno[0] = "O valor selecionado é inválido.";
+		}
+
+		return $retorno;
+	}	
+
 	public function enum($texto, $campo = null){
+
+		if($texto == "")
+			return "ok";
 	
 		$temNoArray = false;
 		foreach ($this->tipos[$campo] as $key => $valor) {

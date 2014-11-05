@@ -7,7 +7,8 @@ class membros extends ControllerCRUD{
 
 	public $icone = "users";
 
-	public $campos = array("nome"     	=> "Nome", 
+	public $campos = array("nome"     	=> "Nome",
+						   "consagracao"=> "Consagração",
 						   "cpf"		=> "CPF",
 						   "nascimento" => "Data de Nascimento",
 						   "sexo"		=> "Sexo",
@@ -15,6 +16,8 @@ class membros extends ControllerCRUD{
  						   "estadocivil"=> "Estado Civil",
  						   "conjuge"	=> "Conjugue",
  						   "igrejaanterior" => "Igreja Anterior",
+ 						   "dataConversao"  => "Data de Conversão",
+ 						   "dataBatismo"=> "Data de Batismo",
  						   "telefone"   => "Telefone",
  						   "celular"	=> "Celular",
  						   "profissao"  => "Profissão",
@@ -28,9 +31,9 @@ class membros extends ControllerCRUD{
 
 	public $icones = array("nome" => "user");
 
-	public $placeholders = array("nome"     => "Isira seu nome");
+	public $placeholders = array("nome" => "Isira seu nome");
 
-	public $listar = array("nome", "sexo", "celular", "nascimento");
+	public $listar = array("nome", "consagracao", "celular", "nascimento");
 
 	public $filtros = array("nome", "sexo");
 
@@ -38,6 +41,5 @@ class membros extends ControllerCRUD{
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;
-
 }
 ?>

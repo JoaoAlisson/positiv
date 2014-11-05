@@ -3,7 +3,8 @@ class cargos extends ControllerCRUD{
 
 	public $nome = array("Cargo","Cargos");
 
-	public $campos = array("nome"     	=> "text", 
+	public $campos = array("nome"     	=> "Cargo", 
+						   "salario"    => "Salário",
 						   "descricao"  => "Descrição");
 
 	public $cor = "teal";

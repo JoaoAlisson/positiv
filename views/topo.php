@@ -4,6 +4,9 @@
 	<title>Positiv</title>
   <link rel="shortcut icon" href="<?php echo URL; ?>public/images/icons/favicon2.ico" />
   <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/jquery1-11.js"></script>
   <!-- <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery-ui.min.js"></script> -->
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/default.js"></script>
@@ -147,15 +150,15 @@
        
       <div class="right menu">
         <?php if(MODO_DESENVOLVIMENTO) { ?>  
-        <a class="balao icon item" data-content="Atualizar o banco de dados" onclick="atualizarBanco();">     
+        <a class="balao icon item esconder" data-content="Atualizar o banco de dados" onclick="atualizarBanco();">     
          <span id="iconeDesenvolvimento">Atualizar Banco <i class="icon refresh"></i></span>
         </a>
         <?php }?>
         <a class="balao icon item" data-content="Deslogar" onclick="deslogar();">
-          <?php echo Sessao::pegar("usuario");?>
+         <div class="esconder" style="float:left;"> <?php echo Sessao::pegar("usuario");?> </div>
           <i class="icon sign out"></i>
         </a>
-        <a class="balao icon item" data-content="Imprimir" href="#">
+        <a class="balao icon item esconder" data-content="Imprimir" href="#">
           <i class="icon print"></i>
         </a>      
       </div>

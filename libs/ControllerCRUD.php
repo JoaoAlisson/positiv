@@ -88,7 +88,16 @@ class ControllerCRUD extends Controller{
 		$qtdPorPg = isset($this->qtdPorPagina) ? $this->qtdPorPagina : 8;
 		$busca = $this->model->pegarPagina($pagina, $qtdPorPg, $camposPegar, $onde, null, $ordem, $ordenacao);
 
-		$retorno['itens'] = $busca[$this->informacoes['nomeController']];
+		$itens = $busca[$this->informacoes['nomeController']];
+
+		foreach ($itens as $linha => $campos) {
+			foreach ($campos as $campo => $valor) {
+				if(!isset($retorno['campos'][$campo]) && $campo != "id")
+					unset($itens[$linha][$campo]);
+			}
+		}
+
+		$retorno['itens'] = $itens;
 		$retorno['controller'] = $this->informacoes['nomeController'];
 		$retorno['cor'] = $this->informacoes['cor'];
 		$retorno['icone'] = $this->informacoes['icone'];

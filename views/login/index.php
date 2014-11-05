@@ -8,7 +8,10 @@
 <head>
   <title>Positiv</title>
   <link rel="shortcut icon" href="<?php echo URL; ?>public/images/icons/favicon2.ico" />
-  <meta charset="utf-8" />
+	<meta charset="utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+
 	<script type="text/javascript" src="<?php echo URL; ?>public/js/jquery1-11.js"></script>
   <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery-ui.min.js"></script>
   <script type="text/javascript" src="<?php echo URL; ?>public/js/jquery.mask.min.js"></script>  
@@ -38,8 +41,8 @@
 <?php  } ?>
 	<form class="ui form formulario" action="<?php echo URL;?>login" method="POST">
 	<input name="token" value="<?php echo $token;?>" hidden/>
-	<div class="ui three column center aligned grid">
-	    <div class="column">
+	<div class="ui column center aligned grid" >
+	    <div class="column" style="width:auto;">
 	    	<h1>Login</h1>
 			<div class="ui form segment">
 			<?php $this->html->campo("login");?>
@@ -49,7 +52,8 @@
 			  </div>
 			  <div class="ui green vertical labeled icon submit button submeterForm" onclick="logar();">
 			  	<i class="sign in icon"></i>
-			  	Logar</div>
+			  	Logar
+			  </div>
 			</div>
 		</div>
 	</div>		

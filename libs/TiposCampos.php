@@ -1,11 +1,15 @@
 <?php
 class TiposCampos{
 	public function tipo($tipo){
-		if(is_array($tipo))
-			return $this->enum($tipo);
-		else
+		if(is_array($tipo)){
+			if(isset($tipo["relacao"]))
+				return $this->chaveEstrangeira($tipo);
+			else
+				return $this->enum($tipo);
+		}else{
 			if(method_exists($this, $tipo))
 				return $this->$tipo();
+		}
 	}
 
 	private function enum($tipo){
@@ -14,6 +18,10 @@ class TiposCampos{
 			$tamanho = (strlen($this->removeAcentos($valor)) > $tamanho) ? strlen($this->removeAcentos($valor)) : $tamanho;
 
 		return "varchar ($tamanho)";
+	}
+
+	private function chaveEstrangeira($tipo){
+		return "int(11)";
 	}
 
 	private function inteiro(){

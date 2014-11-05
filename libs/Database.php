@@ -172,8 +172,16 @@ class Database extends PDO{
 
 	public function pegarPagina($pagina = 1, $quantidade = 5, $campos = "*", $onde = null, $tabela = null, $ordem = null, $ascend = null){
 
+		if($tabela == null)
+			$tabela = str_replace("Model", "", get_class($this));
+
+		$controller = $tabela;
+		$tabela = PREFIXO."$tabela";
+
 		if($campos != "*")
-			$campos = implode(", ", $campos);
+			$campos = implode("`, `$tabela`.`", $campos);
+
+		$campos = "`$tabela`.`$campos`";	
 
 		$where = "";
 		$validar = "";
@@ -187,19 +195,24 @@ class Database extends PDO{
 					$valor = mysql_real_escape_string($valor);
 					if($valor != ""){
 						if($this->tipos[$campo] == "numero" || $this->tipos[$campo] == "moeda" || $this->tipos[$campo] == "inteiro")
-							$where .= ($i > 0) ? "AND ".$campo." = '".$valor."' " : $campo." = '".$valor."' ";
+							$where .= ($i > 0) ? "AND `$tabela`.`".$campo."` = '".$valor."' " : "`$tabela`.".$campo."` = '".$valor."' ";
 						else
-							$where .= ($i > 0) ? "AND ".$campo." LIKE '%".$valor."%' " : $campo." LIKE '%".$valor."%' ";
+							$where .= ($i > 0) ? "AND `$tabela`.`".$campo."` LIKE '%".$valor."%' " : "`$tabela`.`".$campo."` LIKE '%".$valor."%' ";
 						$i++;
 					}
 				}
 			}
 		}
 
-		if($tabela == null)
-			$tabela = str_replace("Model", "", get_class($this));
+		if($ordem != null){
+			if(is_array($this->tipos[$ordem])){
+				if(isset($this->tipos[$ordem]['relacao']))
+					$ordem = "`".PREFIXO.$this->tipos[$ordem]['model']."`.`".$this->tipos[$ordem]['campo']."`";
+			}
+		}
 
-		$ordem = ($ordem == null) ? "id" : $ordem;
+		if($ordem == null)
+			$ordem = "`$tabela`.`id`";
 
 		if($ascend != null){
 			$ascend = ($ascend == "ASC") ? "ASC" : "DESC";
@@ -210,8 +223,7 @@ class Database extends PDO{
 		$pagina = (is_numeric($pagina)) ? $pagina : 1;
 		$pagina = ($pagina < 1) ? 1 : $pagina;		
 
-		$controller = $tabela;
-		$tabela = PREFIXO."$tabela";
+
 
 		//pega a quantidade total
 		$quantidadeTodos;
@@ -226,9 +238,13 @@ class Database extends PDO{
 		$pagina--;
 		$inicio = $pagina*$quantidade;
 
+		$joins = $this->separaJoin($tabela);
+		$joinCampos = $joins['joinCampos'];
+		$joinTabela = $joins['joinTabela'];
 		
-		$sql = "SELECT $campos FROM $tabela $where ORDER BY $ordem $ascend LIMIT $inicio, $quantidade";
-		
+		$sql = "SELECT $campos $joinCampos FROM `$tabela` $joinTabela $where ORDER BY $ordem $ascend LIMIT $inicio, $quantidade";
+		//$sql = "SELECT `pstv_membros`.`nome`, `pstv_membros`.`estado`, `pstv_membros`.`celular`, `pstv_membros`.`nascimento`, `pstv_membros`.`id `pstv_consagracoes`.`nome` AS `consagracoes_nome` FROM `pstv_membros` INNER JOIN `pstv_consagracoes` ON `pstv_membros`.`consagracao` = `pstv_consagracoes`.`nome` ORDER BY `pstv_membros`.`id` LIMIT 0, 10";
+		//echo $sql;
 
 		$query = $this->prepare($sql);
 		$query->execute();
@@ -246,6 +262,25 @@ class Database extends PDO{
 
 	}
 
+	private function separaJoin($tabela){
+		$joinCampos = "";
+		$joinTabela = "";
+		if(isset($this->tipos)){
+			$campos = $this->tipos;
+			foreach ($campos as $campo => $tipo) {
+				if(is_array($tipo)){
+					if(isset($tipo['relacao'])){
+						$joinCampos .= ", `".PREFIXO.$tipo['model']."`.`".$tipo['campo']."` AS `".$tipo['model']."_".$tipo['campo']."`";
+						$joinTabela .= " INNER JOIN `".PREFIXO.$tipo['model']."` ON `$tabela`.`$campo` = `".PREFIXO.$tipo['model']."`.`id` ";
+					}
+				}
+			}
+		}
+		$retorna['joinCampos'] = $joinCampos;
+		$retorna['joinTabela'] = $joinTabela;
+
+		return $retorna;
+	}
 	/*
 		OBS: esta função não trata as entradas antes da pesquisa. CUIDADO!!
 	 */

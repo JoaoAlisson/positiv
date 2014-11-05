@@ -6,6 +6,7 @@ class AtualizarBanco {
 	private $tabelasCriar;
 	private $tabelasDeletar;
 	private $tabelasAlterar;
+	private $relacionamentos = array();
 
 	function __construct(){
 		$this->bancoAdm = new BancoAdm();
@@ -20,6 +21,7 @@ class AtualizarBanco {
 		$this->editarTabelas();
 
 		$this->delEstadosCidades();
+
 	}
 
 	private function delEstadosCidades(){

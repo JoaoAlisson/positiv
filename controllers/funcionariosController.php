@@ -3,14 +3,16 @@ class funcionarios extends ControllerCRUD{
 
 	public $nome = array("Funcionário","Funcionários");
 
-	public $campos = array("nome"     	=> "text", 
+	public $campos = array("nome"     	=> "Nome", 
+						   "membro"		=> "Membro",
+						   "cargo"		=> "Cargo",
 						   "descricao"  => "Descrição");
 
 	public $cor = "teal";
 
 	public $icone = "male";
 
-	public $listar = array("nome", "descricao");
+	public $listar = array("nome", "membro", "cargo");
 
 	//public $filtros = array("nome", "nascimento");
 
