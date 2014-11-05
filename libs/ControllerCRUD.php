@@ -151,7 +151,14 @@ class ControllerCRUD extends Controller{
 		}else{
 
 			$retorno['nome'] = $this->nome;
-			$retorno['campos'] = $this->campos;
+			$campos =  $this->campos;
+			foreach ($campos as $campo => $value) {
+				if(isset($this->inalteraveis)){
+					if(in_array($campo, $this->inalteraveis))
+						unset($campos[$campo]);
+				}
+			}
+			$retorno['campos'] = $campos;
 			$retorno['cor'] = $this->informacoes['cor'];
 			$retorno['icone'] = $this->informacoes['icone'];						
 		}
@@ -188,7 +195,16 @@ class ControllerCRUD extends Controller{
 
 			$retorno = $this->model->pegar($id);
 			$retorno['nome'] = $this->nome;
-			$retorno['campos'] = $this->campos;	
+
+			$campos =  $this->campos;
+			foreach ($campos as $campo => $value) {
+				if(isset($this->inalteraveis)){
+					if(in_array($campo, $this->inalteraveis))
+						unset($campos[$campo]);
+				}
+			}			
+
+			$retorno['campos'] = $campos;	
 			$retorno['cor'] = $this->informacoes['cor'];
 			$retorno['icone'] = $this->informacoes['icone'];
 		}
@@ -199,6 +215,16 @@ class ControllerCRUD extends Controller{
 
 	public function deletar(){
 		
+		$retorno;
+		if(!isset($_POST['id']) || !isset($_POST['model'])){
+			$retorno['flag'] = "erro";
+			$retorno['mensagem'] = "Não foi possível deletar";
+		}else{
+			$id = $_POST['id'];	
+			$retorno = $this->model->deletar($id);
+		}
+	
+		echo json_encode($retorno);
 	}
 
 	public function filtro($acao){
@@ -208,10 +234,6 @@ class ControllerCRUD extends Controller{
 
 			//$this->getAcao() = $acao;
 		}
-	}
-
-	private function teste(){
-		echo "teste";
 	}
 
 	public function buscas($acao){

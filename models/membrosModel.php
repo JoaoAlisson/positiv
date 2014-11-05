@@ -24,5 +24,36 @@ class membrosModel extends Model{
 						  "dataBatismo"=> "data");
 
 	public $obrigatorios = array("nome", "sexo");
+
+	public function depoisDeCadastrar($dados){
+		$id = $dados['consagracao'];
+		if($id != "" && $id != "0"){
+			$banco = new Database();
+			$tabela = PREFIXO."consagracoes";
+			$sth = $banco->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $id");
+			$sth->execute();
+		}
+
+	}
+
+	public function antesDeDeletar($id){
+		
+		$banco = new Database();
+		$tabela = PREFIXO."membros";
+		$consulta = $banco->prepare("SELECT consagracao FROM $tabela WHERE id = {$id}");
+		$consulta->execute();
+
+		$consagracao = $consulta->fetchAll(PDO::FETCH_ASSOC);
+		$consagracao = $consagracao[0];
+		$consagracao = $consagracao['consagracao'];
+
+		if($consagracao != 0){
+
+			$tabela = PREFIXO."consagracoes";
+			$sth = $banco->prepare("UPDATE $tabela SET qtd = qtd - 1 WHERE id = $consagracao");
+			$sth->execute();
+		}
+
+	}	
 }
 ?>

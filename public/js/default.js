@@ -164,16 +164,54 @@ function editarBt(id){
 
 }
 
-function deletarBt(id){
+function deletarBt(idd){
 	$('.balao').popup('hide');
 	mensagemConfirmacao("Deseja realmente deletar esse camarada?");
 	$('.small.modal.canfirmar').modal('setting', {
     closable  : false,
     onApprove : function() {
-      window.alert('Approved!');
-      //aqui vai a parte da deleção
+
+     	deletar(idd);
     }
   }).modal('show');
+}
+
+function deletar(idd){
+    	$('.small.modal.canfirmar').modal("hide");
+    	controller = CONTROLLER_GLOBAl;
+    	caminho = URL+controller+"deletar";
+
+		$.post(caminho, { model : controller, id : idd }, function(retorno){
+
+			try{
+				retorno = jQuery.parseJSON(retorno);
+			}
+			catch(e){
+				$(window.document.location).attr('href', URL);
+			}
+
+        	if(retorno.flag == "ok"){
+            	//navegacao(controller, action);
+
+				mensagemAlerta(retorno.mensagem);
+				setTimeout(function(){
+					$('.small.modal.sucesso').modal('show');
+				}, 500);            
+		
+				navegacao(controller, "");
+            }else{
+
+				mensagemAlertaErro(retorno.mensagem); 
+				setTimeout(function(){
+					$('.small.modal.erro').modal('show');
+				}, 500);   
+            }
+			setTimeout(function(){
+			 	$('.small.modal.sucesso').modal('hide');
+			 	$('.small.modal.erro').modal('hide');
+			}, 2500);            			
+
+		});
 }
 
 function paginacao(controller, pag, campo){
@@ -685,4 +723,5 @@ function redir(controller, id){
 	PAGINA = 1;
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
+	CONTROLLER_GLOBAl = controller;
 }

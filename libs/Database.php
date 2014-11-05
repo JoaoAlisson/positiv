@@ -14,6 +14,9 @@ class Database extends PDO{
 		}
 
 		if($validar[0] == "ok"){
+			if(method_exists($this, "antesDeCadastrar"))
+				$this->antesDeCadastrar($dados);
+
 			ksort($dados);
 			$this->salvaImagens($dados);
 
@@ -32,6 +35,9 @@ class Database extends PDO{
 			}
 
 			$sth->execute();
+
+			if(method_exists($this, "depoisDeCadastrar"))
+				$this->depoisDeCadastrar($dados);
 		}
 		return $validar;
 	}
@@ -110,6 +116,10 @@ class Database extends PDO{
 			$validar = $this->validar($dados);
 		}
 		if($validar[0] == "ok"){
+
+			if(method_exists($this, "antesDeEditar"))
+				$this->antesDeEditar($dados);
+
 			ksort($dados);
 			$this->atualizaImagens($id, $dados);
 
@@ -135,6 +145,9 @@ class Database extends PDO{
 
 			$validar[1] = "Editado com Sucesso";
 			$sth->execute();
+
+			if(method_exists($this, "depoisDeEditar"))
+				$this->depoisDeEditar($dados);
 		}
 		return $validar;		
 	}
@@ -343,8 +356,32 @@ class Database extends PDO{
 		return $resultado;
 	}
 
-	public function deletar(){
+	public function deletar($id, $tabela = null){
 
+		if($tabela == null)
+				$tabela = str_replace("Model", "", get_class($this));
+
+		$retorna = array();
+		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
+			$retorna['flag'] = "erro";
+			$retorna['mensagem'] = "Você não tem permissao para deletar";
+		}else{
+
+			if(method_exists($this, "antesDeDeletar"))
+				$this->antesDeDeletar($id);
+
+			$tabela = PREFIXO.$tabela;			
+			$stmt = $this->prepare("DELETE FROM $tabela WHERE id = :id");
+			$stmt->bindParam(':id', $id, PDO::PARAM_INT);   
+			$stmt->execute();	
+
+			if(method_exists($this, "depoisDeDeletar"))
+				$this->depoisDeDeletar($id);
+
+			$retorna['flag'] = "ok";
+			$retorna['mensagem'] = "Deletado com sucesso";
+		}
+		return $retorna;
 	}
 }
 ?>
