@@ -40,6 +40,10 @@ class TiposCampos{
 		return "varchar (255)";
 	}
 
+	private function facebook(){
+		return "varchar (255)";
+	}
+
 	private function nome(){
 		return "varchar (255)";
 	}	

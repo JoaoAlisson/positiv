@@ -8,6 +8,7 @@ class membros extends ControllerCRUD{
 	public $icone = "users";
 
 	public $campos = array("nome"     	=> "Nome",
+						   "face"	    => "Facebook (http://facebook.com/exemplo)",
 						   "consagracao"=> "Consagração",
 						   "cpf"		=> "CPF",
 						   "nascimento" => "Data de Nascimento",
@@ -33,7 +34,7 @@ class membros extends ControllerCRUD{
 
 	public $placeholders = array("nome" => "Isira seu nome");
 
-	public $listar = array("nome", "consagracao", "celular", "nascimento");
+	public $listar = array("face","nome", "consagracao", "celular", "nascimento");
 
 	public $filtros = array("nome", "sexo");
 

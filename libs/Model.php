@@ -124,6 +124,17 @@ class Model extends Database{
 		return $formatado;
 	}
 
+	public function formataFacebook($campo, $valor, $integro){
+		if($integro == false){
+			if($valor != "")
+				return "<a href=\"http://facebook.com/$valor\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/$valor/picture\"/></a>";
+			else
+				return $valor;
+		}else{
+			return "http://facebook.com/".$valor;
+		}
+	}
+
 	public function validar(&$dados, $validarObrig = "true"){
 
 		$this->dados = &$dados;
@@ -625,6 +636,23 @@ class Model extends Database{
 	 
 	        return true;
 	    }
-}
+	}
+
+	public function validarFacebook($valor = "", $campo = null){
+		if($valor == "")
+			return "ok";
+
+		$retorno;
+		$json_face = file_get_contents("https://graph.facebook.com/$valor");
+		$array_face = json_decode($json_face, true);
+		if(isset($array_face['first_name'])){
+			$this->dados[$campo] = $array_face['username'];
+			$retorno = "ok";
+		}else{
+			$retorno[0] = "Esta conta não existe";
+		}
+
+		return $retorno;
+	}
 }
 ?>

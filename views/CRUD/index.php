@@ -56,7 +56,10 @@ $paginacao = "";
 	<thead>
 		<tr>
 		<?php foreach ($dados['campos'] as $campo => $nome) {
-			echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
+      if($nome == "facebook")
+        echo "<th><i class=\"facebook sign big purple icon\" style='margin-left: 6px;'></i></th>";
+      else
+			 echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
 		}?>
     <th></th>
 		</tr>

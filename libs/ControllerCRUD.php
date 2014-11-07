@@ -14,7 +14,10 @@ class ControllerCRUD extends Controller{
 		$campos = array();
 		if(isset($this->listar)){
 			foreach ($this->listar as $key => $campo) {
-				$campos[$campo] = $this->campos[$campo];
+				if($this->model->tipos[$campo] == "facebook")
+					$campos[$campo] = "facebook";
+				else
+					$campos[$campo] = $this->campos[$campo];
 			}
 		}else{
 			foreach ($this->campos as $campo => $nomeDoCampo) {

@@ -738,5 +738,30 @@ class HTML{
                  
         return $value;
     }
+
+	function campoFacebook($campo, $valor = null, $validar){
+
+		if($valor == null)
+			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
+
+		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+
+		$validacaoJs = "";
+		if($validar == false){
+			$requerido =  "";			
+		}else{
+			$validacaoJs = "validar('$campo');";
+		}
+		
+		$incone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "facebook";
+		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
+		$incluir = "<div class='ui left labeled icon input'>";
+		$incluir .= "<input type='text' class='$requerido facebook' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$campo' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs\">";
+		$incluir .= "<i class='$incone icon'></i>";
+		if($requerido == "validarObrigatorio")
+			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+		$incluir .= "</div>";		
+		$this->retornaCampo($campo, $incluir);
+	}    
 }
 ?>

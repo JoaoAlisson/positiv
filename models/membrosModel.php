@@ -1,7 +1,10 @@
 <?php 
 class membrosModel extends Model{
+
+	private $bancoModel;
  
 	public $tipos = array("nome"       => "nome",
+						  "face"	   => "facebook",
 						  "consagracao"=> array("relacao" => "muitosParaUm", "model" => "consagracoes", "campo" => "nome"),
 						  "cpf"		   => "cpf",
 						  "sexo"	   => "sexo",
@@ -36,6 +39,16 @@ class membrosModel extends Model{
 
 	}
 
+	public function antesDeEditar($id, $dados){
+		$idConsAntigo = $this->pegarCampo($id, "consagracao");
+		if($dados['consagracao'] != $idConsAntigo){
+			if($idConsAntigo != "0")
+				$this->incrementaConsag(false, $idConsAntigo);
+			if($dados['consagracao'] != "" && $dados['consagracao'] != null)
+				$this->incrementaConsag(true, $dados['consagracao']);
+		}
+	}	
+
 	public function antesDeDeletar($id){
 		
 		$banco = new Database();
@@ -54,6 +67,33 @@ class membrosModel extends Model{
 			$sth->execute();
 		}
 
-	}	
+	}
+
+	private function incrementaConsag($incrementa, $consagracao){
+		$this->setaBancoModel();
+		$tabela = PREFIXO."consagracoes";
+
+		$sinal = ($incrementa == true) ? "+" : "-";
+		$sth = $this->bancoModel->prepare("UPDATE $tabela SET qtd = qtd $sinal 1 WHERE id = $consagracao");
+		$sth->execute();
+	}
+
+	private function pegarCampo($id, $campo){
+		$this->setaBancoModel();
+		$tabela = PREFIXO."membros";
+		$consulta = $this->bancoModel->prepare("SELECT $campo FROM $tabela WHERE id = {$id}");
+		$consulta->execute();
+
+		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+		$resultado = $resultado[0];
+		$resultado = $resultado[$campo];
+
+		return $resultado;
+	}
+
+	private function setaBancoModel(){
+		if($this->bancoModel == null)
+			$this->bancoModel = new Database();
+	}
 }
 ?>

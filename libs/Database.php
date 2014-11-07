@@ -1,9 +1,10 @@
 <?php 
 class Database extends PDO{
 	function __construct(){
-		parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);	
+		parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET character_set_client = utf8; SET character_set_results = utf8;"));	
+		//array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8; SET character_set_client = utf8; SET character_set_results = utf8; SET character_set_connection = utf8;"));
 	}  
-
+	
 	public function inserir($dados, $tabela = null){
 		$validar = array();
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
@@ -118,7 +119,7 @@ class Database extends PDO{
 		if($validar[0] == "ok"){
 
 			if(method_exists($this, "antesDeEditar"))
-				$this->antesDeEditar($dados);
+				$this->antesDeEditar($id, $dados);
 
 			ksort($dados);
 			$this->atualizaImagens($id, $dados);
@@ -147,7 +148,7 @@ class Database extends PDO{
 			$sth->execute();
 
 			if(method_exists($this, "depoisDeEditar"))
-				$this->depoisDeEditar($dados);
+				$this->depoisDeEditar($id, $dados);
 		}
 		return $validar;		
 	}
@@ -284,7 +285,7 @@ class Database extends PDO{
 				if(is_array($tipo)){
 					if(isset($tipo['relacao'])){
 						$joinCampos .= ", `".PREFIXO.$tipo['model']."`.`".$tipo['campo']."` AS `".$tipo['model']."_".$tipo['campo']."`";
-						$joinTabela .= " INNER JOIN `".PREFIXO.$tipo['model']."` ON `$tabela`.`$campo` = `".PREFIXO.$tipo['model']."`.`id` ";
+						$joinTabela .= " LEFT JOIN `".PREFIXO.$tipo['model']."` ON `$tabela`.`$campo` = `".PREFIXO.$tipo['model']."`.`id` ";
 					}
 				}
 			}

@@ -725,3 +725,23 @@ function redir(controller, id){
 	ORDENACAO = "ASC";
 	CONTROLLER_GLOBAl = controller;
 }
+
+function facebook(face){
+	facebk = $("#input_"+face).val();
+	if(facebk == "" || facebk == null)
+		return "";
+	urlFace = "https://graph.facebook.com/" + facebk;
+	digitado =  facebk.toLowerCase();
+	
+	$.get(urlFace, function(retorno){
+			retorno.first_name;
+			resposta = "ok";
+	}).error(function (){
+		resposta = "erro";
+	});
+
+	if(resposta == "ok")
+		return "";
+	else
+		return "Esta conta não existe";	
+}
