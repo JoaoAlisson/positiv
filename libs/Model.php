@@ -53,7 +53,7 @@ class Model extends Database{
 							if(method_exists($this, $funcaoFormatacao)){
 								$retorno[$item][$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
 							}else{
-								$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
+								$formatado = htmlentities(stripslashes($valor), ENT_QUOTES, 'UTF-8');
 								if($integro == false){
 									if(strlen($valor) > 53)
 										$formatado = substr($formatado, 0, 50) . "...";
@@ -74,7 +74,7 @@ class Model extends Database{
 						if(method_exists($this, $funcaoFormatacao)){
 							$retorno[$campo] = $this->$funcaoFormatacao($campo, $valor, $integro);
 						}else{
-							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES);
+							$formatado = htmlentities(stripslashes($valor), ENT_QUOTES, 'UTF-8');
 							if($integro == false){
 								if(strlen($valor) > 53)
 									$formatado = substr($formatado, 0, 50) . "...";

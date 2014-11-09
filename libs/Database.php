@@ -1,7 +1,7 @@
 <?php 
 class Database extends PDO{
 	function __construct(){
-		parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS,array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET character_set_client = utf8; SET character_set_results = utf8;"));	
+		parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);	
 		//array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8; SET character_set_client = utf8; SET character_set_results = utf8; SET character_set_connection = utf8;"));
 	}  
 	
@@ -55,7 +55,8 @@ class Database extends PDO{
 
 	private function uploadImg($campo, $imagem){
 
-		$caminho = RAIZ . SEPARADOR . "public" . SEPARADOR . "imagens" . SEPARADOR;
+		//$caminho = RAIZ . SEPARADOR . "public" . SEPARADOR . "imagens" . SEPARADOR;
+		$caminho = PASTA_ARQUIVOS.SEPARADOR."imagens".SEPARADOR.str_replace("Model", "", get_class($this)).SEPARADOR;
         move_uploaded_file(
             $_FILES[$campo]['tmp_name'],
             $caminho . $imagem

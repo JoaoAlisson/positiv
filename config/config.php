@@ -4,6 +4,8 @@
 	define('DB_NAME', 'mvcphp');
 	define('DB_USER', 'root');
 	define('DB_PASS', 'toor');
+
+	define('PASTA_ARQUIVOS', '/var/www/igrejas/');
 	
 	define('URL', 'http://localhost/mvcPHP/');
 

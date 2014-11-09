@@ -698,7 +698,6 @@ class HTML{
 		$selecionado = "";
 		$value = "";
 	
-		//$estados = $this->pegarCidades();
 		$banco = $this->getBanco();
 		$valores = $banco->pegarTodosGenerico($informacoes['model']);
 		$opcoes = "<div class=\"item\" data-value=\"\"></div>";

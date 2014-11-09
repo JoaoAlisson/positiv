@@ -270,5 +270,19 @@ class ControllerCRUD extends Controller{
 			$this->valNome = $valor;
 		}
 	}
+
+	public function imagens(){
+
+		if(!isset($this->GET['img']))
+			exit();
+
+		if($this->GET['img'] == "")
+			exit();
+
+		$this->usarLayout(false);
+		$imagem['img'] = $this->GET['img'];
+		$this->dados($imagem);
+		$this->renderizar("CRUD/imagens");
+	}
 }
 ?>

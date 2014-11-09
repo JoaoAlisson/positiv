@@ -19,4 +19,5 @@
 		define('DESENVOLVIMENTO_SEGURO', false);
 
 	$app = new Bootstrap();
+	//echo  dirname(__FILE__);
 ?>
