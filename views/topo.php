@@ -40,6 +40,10 @@
 
 		$(document).ready(function(){
       $('.balao').popup();
+      $('.escondeMenu').click(function(){
+         $('.ui.sidebar').sidebar("hide");
+      });
+      
 /*
     $( document ).tooltip({
       position: {
@@ -76,68 +80,10 @@
 <div id="wrap">
 <div class="ui large vertical corlateral inverted labeled icon sidebar menu" id="menu">
 
-    <a class="item" href="/build/semantic.zip">
-      <i class="inverted circular red awesome download cloud icon"></i> <b>Download</b>
+    <a class="item" onclick="navegacao('','', 'Home');">
+      <i class="inverted circular red awesome download home icon"></i> <b>Home</b>
     </a>
-    <div class="item">
-      <a href="/">
-        <b>Introduction</b>
-      </a>
-      <div class="menu">
-    
-          <a class="item" href="/introduction/definitions.html">Definitions</a>
-        
-      </div>
-    </div>
-    <div class="item">
-      <b>Project</b>
-      <div class="menu">
-        
-          <a class="item" href="/project/contributing.html">Contributing</a>
-
-      </div>
-    </div>
-    <div class="item">
-      <a href="/element.html"><b>Elements</b></a>
-      <div class="menu">
-        
-          <a class="item" href="/elements/button.html">Button</a>
-                
-      </div>
-    </div>
-    <div class="item">
-      <a href="/collection.html"><b>Collections</b></a>
-      <div class="menu">
-        
-          <a class="item" href="/collections/breadcrumb.html">Breadcrumb</a>
-        
-          <a class="item" href="/collections/form.html">Form</a>
-        
-      </div>
-    </div>
-    <div class="item">
-      <a href="/module.html"><b>Modules</b></a>
-      <div class="menu">
-        
-          <a class="item" href="/modules/accordion.html">Accordion</a>
-        
-      </div>
-    </div>
-    <div class="item">
-      <b>Behavior</b>
-      <div class="menu">
-        
-          <a class="item" href="/modules/form.html">Form Validation</a>
-        
-      </div>
-    </div>
-
-<!--     <div class="item">
-      <b>Specification</b>
-      <div class="menu">
-        
-      </div>
-    </div> -->
+    <?php $this->html->menuLateral(); ?>
   </div>
 
 <div class="ui fixed cortopo transparent inverted main menu">

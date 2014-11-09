@@ -8,7 +8,7 @@ function carregando(){
 	load = "  <div class=\"ui inverted active dimmer\">"+
   				  "<div class=\"ui text loader\">Carregando...</div>"+
   		   "</div>";
-  	$("#conteudo").append(load);	
+  	$("#conteudo").append(load);
    
 }
 

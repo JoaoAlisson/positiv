@@ -10,6 +10,8 @@ class HTML{
 	private $estado = "";
 	private $tabindex = 0;
 	private $banco;
+	public $menu = array();
+	public $subMenu;
 
 	public $dados;
 	function __construct(&$informacoes){
@@ -120,7 +122,7 @@ class HTML{
 
 	function subMenuCor($cor = ""){
 		$corFinal = (isset($this->dados['cor']) && $this->dados['cor'] != "") ? $this->dados['cor'] : $cor;
-		echo "<div class=\"ui column center aligned grid\" style=\"width: auto;\">
+		echo "<div class=\"ui column center aligned grid esconder\" style=\"width: auto;\">
   				<div class=\"column\"  style=\"width: auto;\">
    					<div class=\"ui $corFinal inverted fluid menu\" style=\"width: auto;\">";
 	}
@@ -739,7 +741,7 @@ class HTML{
         return $value;
     }
 
-	function campoFacebook($campo, $valor = null, $validar){
+	public function campoFacebook($campo, $valor = null, $validar){
 
 		if($valor == null)
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
@@ -762,6 +764,42 @@ class HTML{
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
 		$incluir .= "</div>";		
 		$this->retornaCampo($campo, $incluir);
-	}    
+	}   
+
+	public function menu($nome, $controller, $view, $icone, $cor,$naoInvertido, $submenus){
+		$array["nome"] = $nome;
+		$array["controller"] = $controller;
+		$array["view"] = $view;
+		$array["icone"] = $icone;
+		$array["cor"] = $cor;
+		$array["subMenus"] = $submenus;
+		$array["naoInvertido"] = $naoInvertido;
+
+		array_push($this->menu, $array);
+	}
+
+	public function menuLateral(){
+		foreach ($this->menu as $key => $item) {
+			if($item["controller"] == CONTROLLER){
+				$this->subMenu['itens'] = $item["subMenus"];
+				$this->subMenu['cor'] = $item["cor"]; 	
+			}
+				
+			$icone = ($item["icone"] != "") ? "<i class=\"".$item["icone"]." icon\"></i>" : "";
+			echo "<div class=\"item escondeMenu\">
+					<a onclick=\"navegacao('".$item["controller"]."/','". $item["view"]."', '". $item["nome"]."')\"><b>".$icone.$item["nome"]."</b></a>";
+			echo 	"<div class=\"menu\">";
+			foreach ($item["subMenus"] as $nomeSub => $submenu) {
+				if($submenu[0] == CONTROLLER){
+					$this->subMenu['itens'] = $item["subMenus"];
+					$this->subMenu['cor'] = $item["cor"]; 
+				}
+				$icone = ($submenu[2] != "") ? "<i class=\"".$submenu[2]." icon\"></i>" : "";
+				echo "<a class=\"item escondeMenu\" onclick=\"navegacao('".$submenu[0]."/','".$submenu[1]."', '".$item["nome"]."')\">".$icone.$nomeSub."</a>";
+			}
+
+			echo "</div></div>";
+		}
+	}
 }
 ?>

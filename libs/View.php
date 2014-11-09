@@ -31,6 +31,7 @@ class View {
 		$arquivo = $controller . "/". $view;
 		$dados = $this->dados;
 		
+		require "views/menu.php";
 		if(!$noInclude || $paginacaoAjax){
 
 			if(!$noInclude){
