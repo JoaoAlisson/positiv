@@ -73,10 +73,15 @@ $paginacao = "";
 
       $listagem .= "<tr>";
       	foreach ($campos as $campo => $valor) {
-            if($campo != 'id')
-      		    $listagem .= "<td>$valor</td>";
+            if($campo != 'id'){
+              if($dados['tipos'][$campo] == "facebook" && $valor != "")
+                $listagem .= "<td><a href=\"http://facebook.com/$valor\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/$valor/picture\"/></a></td>";
+              else
+      		      $listagem .= "<td>$valor</td>";
+            }
       	}
       $listagem .= "<td>
+                      <div class=\"tiny ui icon button balao\" data-content='Visualizar' onClick='verBt(".$campos['id'].")'><i class=\"unhide icon\"></i></div>
                       <div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
                       <div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt(".$campos['id'].")'><i class=\"trash icon\"></i></div>
               </td></tr>";

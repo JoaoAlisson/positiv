@@ -175,11 +175,48 @@ class Database extends PDO{
 		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
 
 
-		$resultado[$controller] = (isset($resultado[0])) ? $resultado[0] : $resultado;
-		$this->formataSaida($resultado[$controller]);
+		$resultado = (isset($resultado[0])) ? $resultado[0] : $resultado;
+		$retorna[$controller] = $resultado;
+		$this->formataSaida($retorna[$controller]);
 
-		return $resultado;
+		return $retorna;
 	}
+
+	public function visualizar($id, $campos = null, $tabela = null){
+
+		if($tabela == null)
+			$tabela = str_replace("Model", "", get_class($this));
+
+		$controller = $tabela;
+		$tabela = PREFIXO."$tabela";
+
+		if($campos != null){
+			$campos = implode("`, `$tabela`.`", $campos);
+			$campos = "`$tabela`.`$campos`";
+		}else{
+			$campos = implode("`, `$tabela`.`", array_keys($this->tipos));
+			$campos = "`$tabela`.`$campos`";			
+		}
+
+		$id = (int)$id;
+
+		$joins = $this->separaJoin($tabela);
+		$joinCampos = $joins['joinCampos'];
+		$joinTabela = $joins['joinTabela'];
+
+		$sql = "SELECT $campos $joinCampos FROM `$tabela` $joinTabela WHERE `$tabela`.`id` = {$id}";
+		//echo $sql;
+
+		$query = $this->prepare($sql);
+		$query->execute();
+		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		$resultado = (isset($resultado[0])) ? $resultado[0] : $resultado;
+		$retorna[$controller] = $resultado;
+		$this->formataSaida($retorna[$controller],false);
+
+		return $retorna;
+	}	
 
 	public function pegarTodos($campos = null){
 		return $this->pegarOnde(null, $campos);

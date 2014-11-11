@@ -42,5 +42,6 @@ class membros extends ControllerCRUD{
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;
+
 }
 ?>

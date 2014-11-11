@@ -125,7 +125,8 @@ function navPaginacao(controller, action){
 					lista = lista + "<td>" + valor + "</td>";
 			});
 			lista = lista + "<td> " +
-                      "<div class=\"tiny ui icon button balao \" id=\"btEditar\" data-content='Editar' onClick='editarBt("+ campos.id +")'><i class=\"pencil icon\"></i></div>" +
+					  "<div class=\"tiny ui icon button balao \" id=\"btEditar\" data-content='Editar' onClick='verBt("+ campos.id +")'><i class=\"unhide icon\"></i></div>" +
+                      "<div class=\"tiny ui icon button balao \" id=\"btEditar\" data-content='Editar' onClick='editarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"pencil icon\"></i></div>" +
                       "<div class=\"tiny ui red icon button balao btDeletar\" data-content='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
               "</td></tr>";
 		});
@@ -162,6 +163,23 @@ function editarBt(id){
 	CAMPOORDEM = "";
 	ORDENACAO = "ASC";
 
+}
+
+function verBt(id){
+	$('.balao').popup('hide');
+	controller = CONTROLLER_GLOBAl;
+	action = "visualizar"; 
+
+	caminho = URL+controller+action;
+	PAGINACAMINHO = caminho; 
+	$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true , idSet: id});
+
+
+	window.history.pushState('Object', 'Postiv', caminho);
+
+	PAGINA = 1;
+	CAMPOORDEM = "";
+	ORDENACAO = "ASC";	
 }
 
 function deletarBt(idd){
@@ -712,7 +730,7 @@ function registraSelect(id){
 
 function redir(controller, id){
 
-	action = "/editar"; 
+	action = "/visualizar"; 
 
 	caminho = URL+controller+action;
 	PAGINACAMINHO = caminho; 

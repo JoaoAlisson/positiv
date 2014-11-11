@@ -101,6 +101,7 @@ class ControllerCRUD extends Controller{
 		}
 
 		$retorno['itens'] = $itens;
+		$retorno['tipos'] = $this->model->tipos;
 		$retorno['controller'] = $this->informacoes['nomeController'];
 		$retorno['cor'] = $this->informacoes['cor'];
 		$retorno['icone'] = $this->informacoes['icone'];
@@ -115,7 +116,10 @@ class ControllerCRUD extends Controller{
 	}
 
 	public function nomeController(){
-		return get_class($this);
+		if($this->getAcao() == "nomeController" || $this->getAcao() == "nomecontroller")
+			header('location: '. URL);
+		else		
+			return get_class($this);
 	}
 
 	public function cadastrar(){
@@ -214,6 +218,28 @@ class ControllerCRUD extends Controller{
 		$retorno['id'] = $id;
 		$this->dados($retorno);
 		$this->renderizar("CRUD/editar");
+	}
+
+	public function visualizar(){
+		//if(!isset($_POST['idSet']))
+		//	header('location: '. URL . $this->nomeController());
+		//if($_POST['idSet'] == "")
+		//	header('location: '. URL . $this->nomeController());
+
+		$id = $_POST['idSet'];
+		//$id= 2;
+		$retorno = $this->model->visualizar($id);
+		$retorno['nome'] = $this->nome;
+		$retorno['id'] = $id;
+		$campos =  $this->campos;
+
+		$retorno['campos'] = $campos;
+		$retorno['tipos'] = $this->model->tipos;	
+		$retorno['cor'] = $this->informacoes['cor'];
+		$retorno['icone'] = $this->informacoes['icone'];
+
+		$this->dados($retorno);		
+		$this->renderizar("CRUD/visualizar");
 	}
 
 	public function deletar(){

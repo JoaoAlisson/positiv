@@ -68,7 +68,7 @@ class Model extends Database{
 			foreach ($retorno as $campo => $valor) {
 				if($campo != "id"){
 
-					$tipo = $this->tipos[$campo];
+					$tipo = isset($this->tipos[$campo]) ? $this->tipos[$campo] : "";
 					if(!is_array($tipo)){
 						$funcaoFormatacao = "formata".$tipo;
 						if(method_exists($this, $funcaoFormatacao)){
@@ -82,7 +82,15 @@ class Model extends Database{
 							$retorno[$campo] = $formatado;
 						}	
 					}else{
-						$retorno[$campo] = $valor;
+						if(isset($tipo['model'])){
+							$campoEstrangeiro = $tipo['model']."_".$tipo['campo'];
+							if($retorno[$campoEstrangeiro] != "")
+								$retorno[$campo] = "<a onclick=\"redir('".$tipo['model']."', '".$retorno[$campo]."')\">".$retorno[$campoEstrangeiro]."</a>";
+							else
+								$retorno[$campo] = $valor;
+						}else{
+							$retorno[$campo] = $valor;
+						}
 					}												
 				}				
 			}
@@ -123,17 +131,22 @@ class Model extends Database{
 		}
 		return $formatado;
 	}
-
+/**
 	public function formataFacebook($campo, $valor, $integro){
+		/**
 		if($integro == false){
 			if($valor != "")
-				return "<a href=\"http://facebook.com/$valor\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/$valor/picture\"/></a>";
+				return "<a href=\"http://facebook.com/$valor\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/$valor/picture?height=50\"/></a>";
 			else
 				return $valor;
 		}else{
+			
 			return "http://facebook.com/".$valor;
 		}
+		
+		return $valor;
 	}
+**/
 
 	public function validar(&$dados, $validarObrig = "true"){
 
