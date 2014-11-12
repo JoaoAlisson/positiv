@@ -4,7 +4,7 @@ class patrimonioModel extends Model{
 	public $tipos = array( "codigo" => "texto",
 						   "nome"	=> "nome",
 						   "descricao" => "descricao",
-						   "ministerio"=> array("relacao" => "muitosParaUm", "model" => "ministerio", "campo" => "nome"),
+						   "ministerio"=> array("relacao" => "muitosParaUm", "model" => "ministerios", "campo" => "nome"),
 						   "aquisicao" => "data",
 						   "valor"     => "moeda",
 						   "quantidade"=> "inteiro",

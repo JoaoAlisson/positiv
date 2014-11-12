@@ -179,6 +179,10 @@ class ControllerCRUD extends Controller{
 		if(isset($_POST['id']))
 			$id = $_POST['id'];
 
+		if($id == "")
+			header('location: '. URL . $this->nomeController());
+
+
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
 			if(isset($_POST['ajaxPg'])){
 				require "views/erro/index.php";
@@ -221,10 +225,10 @@ class ControllerCRUD extends Controller{
 	}
 
 	public function visualizar(){
-		//if(!isset($_POST['idSet']))
-		//	header('location: '. URL . $this->nomeController());
-		//if($_POST['idSet'] == "")
-		//	header('location: '. URL . $this->nomeController());
+		if(!isset($_POST['idSet']))
+			header('location: '. URL . $this->nomeController());
+		if($_POST['idSet'] == "")
+			header('location: '. URL . $this->nomeController());
 
 		$id = $_POST['idSet'];
 		//$id= 2;

@@ -6,6 +6,8 @@ class saidas extends ControllerCRUD{
 	public $campos = array("saida"   => "Saída", 
 						   "categoria" => "Categoria",
 						   "valor"	   => "Valor",
+						   "vencimento"=> "Vencimento",
+						   "pago"	   => "Pagamento",
 						   "descricao" => "Descrição");
 
 	public $cor = "orange";

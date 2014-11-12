@@ -148,6 +148,15 @@ $paginacao = "";
 
   //print_r($dados['itens']);
   if(isset($dados['filtro'])){
+    
+    if(in_array("facebook", $dados['tipos'])){
+      $campo = array_search("facebook", $dados['tipos']);
+      foreach ($dados['itens'] as $chave => $campos) {
+        if($dados['itens'][$chave][$campo] != "")
+          $dados['itens'][$chave][$campo] = "<a href=\"http://facebook.com/".$campos[$campo]."\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/".$campos[$campo]."/picture\"/></a>";
+      } 
+    }
+
     $retorna["listagem"] = $dados['itens'];
     $retorna["paginacao"] = $paginacao;
     $retorna['total'] = $dados['qtd'];

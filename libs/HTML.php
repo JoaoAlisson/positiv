@@ -71,13 +71,13 @@ class HTML{
 		}
 	}
 
-	function submeter($controller = null, $view = null, $nomeBotao = null, $icone = null){
+	function submeter($controller = null, $view = null, $nomeBotao = null, $icone = null, $id = ""){
 
 		$controller = isset($controller) ? $controller : $this->dados['nomeController'];
 		$view = isset($view) ? $view : $this->dados['nomeView'];
 		$nomeBotao = isset($nomeBotao) ? $nomeBotao : "Cadastrar";
 		$icone = isset($icone) ? $icone : "save";
-		echo    "<div class=\"ui cortopo inverted vertical labeled icon submit button submeterForm\" ".$this->getTabindex()." style=\"margin-top:10px;\" onClick=\"submeter('$controller/', '$view')\">
+		echo    "<div class=\"ui cortopo inverted vertical labeled icon submit button submeterForm\" ".$this->getTabindex()." style=\"margin-top:10px;\" onClick=\"submeter('$controller/', '$view', '$id')\">
 					<i class=\"$icone icon\"></i>$nomeBotao
 				</div>";
 	}
@@ -757,7 +757,7 @@ class HTML{
 		$incone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "facebook";
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<input type='text' class='$requerido facebook' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$campo' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs\">";
+		$incluir .= "<input type='text' class='$requerido facebook' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$campo' placeholder='$placeholder' name='$campo' onfocusout=\"$validacaoJs\">";
 		$incluir .= "<i class='$incone icon'></i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";

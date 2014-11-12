@@ -11,11 +11,13 @@ class patrimonio extends ControllerCRUD{
 						   "valor"	   => "Valor Unitário",
 						   "quantidade"=> "Quantidade",
 						   "situacao"  => "Situação",
-						   "obs" => "Observação",);
+						   "obs" 	   => "Observação",);
 
 	public $cor = "red";
 
 	public $icone = "suitcase";
+
+	public $filtros = array("ministerio");
 
 	public $listar = array("nome", "valor");
 

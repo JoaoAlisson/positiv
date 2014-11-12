@@ -70,7 +70,7 @@ function fim(){
 		fim();
 
 	echo "<div style='clear: both;'>";
-	$this->html->submeter(null , "editar", "salvar alteração"); 
+	$this->html->submeter(null , "editar", "salvar alteração", null, $dados['id']); 
 	echo "</div>";
 	fim();
 	echo "</div>";	

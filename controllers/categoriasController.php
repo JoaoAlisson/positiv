@@ -3,7 +3,7 @@ class categorias extends ControllerCRUD{
 
 	public $nome = array("Categoria","Categorias");
 
-	public $campos = array("nome" => "Nome");
+	public $campos = array("nome" => "Nome", "tipo" => "Tipo");
 
 	public $cor = "orange";
 

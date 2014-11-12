@@ -84,10 +84,14 @@ class Model extends Database{
 					}else{
 						if(isset($tipo['model'])){
 							$campoEstrangeiro = $tipo['model']."_".$tipo['campo'];
+							if(isset($retorno[$campoEstrangeiro])){
 							if($retorno[$campoEstrangeiro] != "")
 								$retorno[$campo] = "<a onclick=\"redir('".$tipo['model']."', '".$retorno[$campo]."')\">".$retorno[$campoEstrangeiro]."</a>";
 							else
 								$retorno[$campo] = $valor;
+							}else{
+								$retorno[$campo] = $valor;
+							}
 						}else{
 							$retorno[$campo] = $valor;
 						}

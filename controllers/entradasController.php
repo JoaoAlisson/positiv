@@ -6,6 +6,8 @@ class entradas extends ControllerCRUD{
 	public $campos = array("entrada"   => "Entrada", 
 						   "categoria" => "Categoria",
 						   "valor"	   => "Valor",
+						   "vencimento"=> "Vencimento",
+						   "pago"	   => "Pagamento",						   
 						   "descricao" => "Descrição");
 
 	public $cor = "orange";

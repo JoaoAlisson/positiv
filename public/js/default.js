@@ -28,13 +28,16 @@ function graficos(){
 	}
 }
 
-function navegacao(controller, action, menuPincipal){
+function navegacao(controller, action, menuPincipal, id){
 
 	carregando();
 	menuPincipal = menuPincipal || "";
+	id = id || "";
 
-	$(".menuprin.active").removeClass("active");
-	$("#menu_"+menuPincipal).addClass("active");
+	if(menuPincipal != ""){
+		$(".menuprin.active").removeClass("active");
+		$("#menu_"+menuPincipal).addClass("active");
+	}
 
 	controller = controller || "";
 	action = action || ""; 
@@ -42,7 +45,7 @@ function navegacao(controller, action, menuPincipal){
 	caminho = URL+controller+action;
 	PAGINACAMINHO = caminho; 
 
-	$.post(caminho, { ajaxPg: true}, function(retorno) {
+	$.post(caminho, { ajaxPg: true, idSet: id}, function(retorno) {
 		$( "#conteudo" ).html(retorno);
 		$('.balao').popup({ on: 'hover' });
 		graficos();
@@ -267,10 +270,11 @@ function filtrar(controller){
 	paginacao(controller+"/", '1');
 }
 
-function submeter(controller, action){
+function submeter(controller, action, id){
 
 	controller = controller || "";
 	action = action || "";
+	id = id || "";
 
 	caminho = URL+controller+action;
 
@@ -313,7 +317,7 @@ function submeter(controller, action){
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){
-		            	navegacao(controller, action);
+		            	navegacao(controller, action, "", id);
 		            	files = {};
 
 						mensagemAlerta("Os dados foram salvos com sucesso!"); 
@@ -745,20 +749,27 @@ function redir(controller, id){
 }
 
 function facebook(face){
+
 	facebk = $("#input_"+face).val();
 	if(facebk == "" || facebk == null)
 		return "";
 	urlFace = "https://graph.facebook.com/" + facebk;
-	digitado =  facebk.toLowerCase();
 	
-	$.get(urlFace, function(retorno){
-			retorno.first_name;
-			resposta = "ok";
-	}).error(function (){
-		resposta = "erro";
-	});
+	result = null;
+    $.ajax({
+        url: urlFace,
+        type: 'get',
+        dataType: 'json',
+        async: false,
+        success: function(data) {
+            result = "ok";
+        },
+  		error: function(XMLHttpRequest, textStatus, errorThrown){
+        	result = "erro";
+  		}
+     });
 
-	if(resposta == "ok")
+	if(result == "ok")
 		return "";
 	else
 		return "Esta conta não existe";	
