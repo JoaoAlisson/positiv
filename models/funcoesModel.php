@@ -1,5 +1,5 @@
 <?php 
-class cargosModel extends Model{
+class funcoesModel extends Model{
  
 	public $tipos = array( "nome"     	=> "nome",
 						   "qtd"		=> "inteiro",

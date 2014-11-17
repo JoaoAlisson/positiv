@@ -27,7 +27,7 @@ $paginacao = "";
 
   <?php
       foreach ($dados['filtros'] as $campo => $nome) {
-        echo "<div style='width:auto; float: left; margin-right: 20px;'>";
+        echo "<div style='width:auto; float: left; text-align:left; margin-right: 20px;'>";
           $valorFiltros = isset($dados['filtrosValores'][$campo]) ? $dados['filtrosValores'][$campo] : null;
           $this->html->campo($campo, false, $valorFiltros);
         echo "</div>";

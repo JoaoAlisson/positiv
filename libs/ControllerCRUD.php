@@ -197,7 +197,13 @@ class ControllerCRUD extends Controller{
 		if(isset($_POST['id'])){
 			$campos = array();
 			foreach ($this->campos as $key => $value) {
-				$campos[$key] = isset($_POST[$key]) ? $_POST[$key] : "";
+				$inalt = false;
+				if(isset($this->inalteraveis)){
+					if(in_array($key, $this->inalteraveis))
+						$inalt = true;
+				}
+				if($inalt == false)
+					$campos[$key] = isset($_POST[$key]) ? $_POST[$key] : "";
 			}
 			$this->usarLayout(false);
 			$retornou = $this->model->atualizar($campos, $_POST['id']);

@@ -213,7 +213,7 @@ class Database extends PDO{
 
 		$resultado = (isset($resultado[0])) ? $resultado[0] : $resultado;
 		$retorna[$controller] = $resultado;
-		$this->formataSaida($retorna[$controller],false);
+		$this->formataSaida($retorna[$controller], true);
 
 		return $retorna;
 	}	
@@ -222,7 +222,7 @@ class Database extends PDO{
 		return $this->pegarOnde(null, $campos);
 	}
 
-	public function pegarPagina($pagina = 1, $quantidade = 5, $campos = "*", $onde = null, $tabela = null, $ordem = null, $ascend = null){
+	public function pegarPagina($pagina = 1, $quantidade = "", $campos = "*", $onde = null, $tabela = null, $ordem = null, $ascend = null, $integro = false){
 
 		if($tabela == null)
 			$tabela = str_replace("Model", "", get_class($this));
@@ -269,7 +269,7 @@ class Database extends PDO{
 		if($ascend != null){
 			$ascend = ($ascend == "ASC") ? "ASC" : "DESC";
 		}else{
-			$ascend = "";
+			$ascend = "DESC";
 		}
 
 		$pagina = (is_numeric($pagina)) ? $pagina : 1;
@@ -284,7 +284,8 @@ class Database extends PDO{
 		$quantidadeTodos = $resposta->fetchColumn();
 
 		//quantidade de páginas
-		$quantidadeDePaginas = ceil($quantidadeTodos/$quantidade);
+		$quantidade = ($quantidade == "") ? $quantidadeTodos : $quantidade;
+		$quantidadeDePaginas = ($quantidadeTodos == 0) ? 1 : ceil($quantidadeTodos/$quantidade);
 
 		//início
 		$pagina--;
@@ -308,7 +309,7 @@ class Database extends PDO{
 		$retorna['qtd'] = $quantidadeTodos;
 		$pagina++;
 		$retorna['pagina'] = $pagina;
-		$this->formataSaida($retorna[$controller], false);
+		$this->formataSaida($retorna[$controller], $integro);
 
 		return $retorna;
 

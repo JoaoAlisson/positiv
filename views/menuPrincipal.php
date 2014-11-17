@@ -1,11 +1,18 @@
 <?php
   $this->html->menuPrincialItem("Home", "", "", "home", "gray", true);
+  $cont = 0;
   foreach ($this->html->menu as $key => $array) {
   	$controllers = array($array["controller"]);
   	foreach ($array["subMenus"] as $chave => $valor)
   		array_push($controllers, $valor[0]);
-  	$this->html->menuPrincialItem($array["nome"], $controllers, $array["view"], $array["icone"], $array["cor"], $array["naoInvertido"]);
+
+    if($cont == 1)
+      funcionarios();
+    else
+  	 $this->html->menuPrincialItem($array["nome"], $controllers, $array["view"], $array["icone"], $array["cor"], $array["naoInvertido"]);
+    $cont++;
   }	
+    
   /**
   $this->html->menuPrincialItem("Igreja", array("igreja", "membros", "consagracoes", "cargos", "funcionarios"), "", "building", "teal");
   $this->html->menuPrincialItem("Usuários", "login", "", "basic users", "green");
@@ -15,4 +22,14 @@
   $this->html->menuPrincialItem("Relatórios", "relatorios", "", "basic chart", "purple");
   $this->html->menuPrincialItem("Documentos", "relatorios", "", "text file", "purple", true);  
   */
+;
+?>
+
+<?php
+  function funcionarios(){
+    $ativo = (CONTROLLER == "funcionarios") ? "active" : "";
+    echo "<a class=\"item $ativo menuprin esconder\" id=\"menu_funcionarios\" onClick=\"navegacao('funcionarios','', 'funcionarios')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
+  <img class=\"circular ui inverted image\" style=\"width:60px; height:30;\" src=\"". URL ."public/images/icons/funcionario.png\">Funcionários
+</a>";
+  }
 ?>

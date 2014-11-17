@@ -1,16 +1,16 @@
 <?php 
-class cargos extends ControllerCRUD{
+class funcoes extends ControllerCRUD{
 
-	public $nome = array("Cargo","Cargos");
+	public $nome = array("Função","Funções");
 
-	public $campos = array("nome"     => "Cargo", 
+	public $campos = array("nome"     => "Função", 
 						   "qtd"	  => "Quantidade",
 						   "descricao"=> "Descrição");
-	public $cor = "black";
+	public $cor = "teal";
 
 	public $inalteraveis = array("qtd");
 
-	public $icone = "sitemap";
+	public $icone = "pin";
 
 	public $listar = array("nome", "qtd");
 

@@ -111,7 +111,7 @@ class HTML{
 		if($normal)
 			$invertido = "";
 
-		echo "<a class=\"$cor $active item menuprin esconder\" id=\"menu_$nome\" onClick=\"navegacao('$controller','$view', '$nome')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
+		echo "<a class=\"$cor $active item menuprin esconder\" id=\"menu_$nome\" href=\"".URL."$controller$view\" onClick=\"navegacao('$controller','$view', '$nome')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
   				<i class=\"circular $cor $invertido big $icone icon\"></i>$nome
 			  </a>";
 	}
@@ -120,11 +120,11 @@ class HTML{
 		$this->subMenuCor();
 	}
 
-	function subMenuCor($cor = ""){
+	function subMenuCor($cor = "", $invertido = "inverted"){
 		$corFinal = (isset($this->dados['cor']) && $this->dados['cor'] != "") ? $this->dados['cor'] : $cor;
 		echo "<div class=\"ui column center aligned grid esconder\" style=\"width: auto;\">
   				<div class=\"column\"  style=\"width: auto;\">
-   					<div class=\"ui $corFinal inverted fluid menu\" style=\"width: auto;\">";
+   					<div class=\"ui $corFinal $invertido fluid menu\" style=\"width: auto;\">";
 	}
 
 	function subMenuItem($nome, $controller = "", $view = "", $icone = ""){
@@ -133,7 +133,7 @@ class HTML{
 			$active = "active";
 		$imgIcone = ($icone != "") ? "<i class=\"$icone icon\"></i>" : "";
 		$controller .= ($controller != "") ? "/" : "";
-		echo "<a class=\"item submenu $active\" id=\"subMenu_$nome\" style=\"min-width:120px;\" onClick=\"navegacaoSub('$controller','$view', '$nome');\">$imgIcone$nome</a>";
+		echo "<a class=\"item submenu $active\" href=\"".URL."$controller$view\" id=\"subMenu_$nome\" style=\"min-width:120px;\" onClick=\"navegacaoSub('$controller','$view', '$nome'); evento(event);\">$imgIcone$nome</a>";
 	}
 
 //<<--------------- CAMPOS DE INPUT -------------------->>
@@ -714,7 +714,7 @@ class HTML{
 		$incluir .= "<div class=\"ui dropdown selection\" id=\"select_$campo\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
 				      <input type=\"hidden\" name='$campo' $value id='input_$campo' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
 				      <i class='$icone icon disabled'></i>
-				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>$selecionado</div>
+				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:100px;'>$selecionado</div>
 				      <div class=\"menu\">$opcoes
 				      </div>$asterisco
 				      </div>";

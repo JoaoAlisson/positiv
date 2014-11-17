@@ -1,6 +1,3 @@
-<?php
-	//print_r($dados);
-?>
 <div style="width:100%; text-align:center; text-transform: uppercase;"><h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?><?php echo $dados['nome'][0];?></h2>
   <?php 
     $nomeSingular = "";

@@ -39,6 +39,9 @@
     var CONTROLLER_GLOBAl = "<?php echo CONTROLLER.'/';?>";
 
 		$(document).ready(function(){
+      $("a").click(function(event){
+        event.preventDefault();
+      });
       $('.balao').popup();
       $('.escondeMenu').click(function(){
          $('.ui.sidebar').sidebar("hide");

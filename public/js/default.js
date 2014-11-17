@@ -12,6 +12,10 @@ function carregando(){
    
 }
 
+function evento(event){
+	event.preventDefault();
+}
+
 function graficos(){
 	if($('#canvas')){
 		var ctx = document.getElementById("canvas").getContext("2d");
@@ -28,10 +32,11 @@ function graficos(){
 	}
 }
 
-function navegacao(controller, action, menuPincipal, id){
+function navegacao(controller, action, menuPincipal, id, urlCompleta){
 
 	carregando();
 	menuPincipal = menuPincipal || "";
+	urlCompleta = urlCompleta || "";
 	id = id || "";
 
 	if(menuPincipal != ""){
@@ -42,7 +47,10 @@ function navegacao(controller, action, menuPincipal, id){
 	controller = controller || "";
 	action = action || ""; 
 
-	caminho = URL+controller+action;
+	if(urlCompleta == "")
+		caminho = URL+controller+action;
+	else
+		caminho = urlCompleta;
 	PAGINACAMINHO = caminho; 
 
 	$.post(caminho, { ajaxPg: true, idSet: id}, function(retorno) {
@@ -149,16 +157,20 @@ function navPaginacao(controller, action){
 	ORDENACAO = "ASC";
 }
 
-function editarBt(id){
+function editarBt(id, control){
 
 	$('.balao').popup('hide');
-	controller = CONTROLLER_GLOBAl;
+	controller = control || CONTROLLER_GLOBAl;
 	action = "editar"; 
 
-	caminho = URL+controller+action;
+	caminho = URL+controller+action+"/cod:"+id;
 	PAGINACAMINHO = caminho; 
-	$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true , idSet: id});
 
+	$.post(caminho, { ajaxPg: true, subClick: true , idSet: id}, function(retorno) {
+		$( "#subconteudo" ).html(retorno);
+		$('.balao').popup({ on: 'hover' });
+		//graficos();
+	});
 
 	window.history.pushState('Object', 'Postiv', caminho);
 
@@ -185,22 +197,22 @@ function verBt(id){
 	ORDENACAO = "ASC";	
 }
 
-function deletarBt(idd){
+function deletarBt(idd, controller, action){
 	$('.balao').popup('hide');
 	mensagemConfirmacao("Deseja realmente deletar esse camarada?");
 	$('.small.modal.canfirmar').modal('setting', {
     closable  : false,
     onApprove : function() {
-
-     	deletar(idd);
+     	deletar(idd, controller, action);
     }
   }).modal('show');
 }
 
-function deletar(idd){
+function deletar(idd, controller, action){
     	$('.small.modal.canfirmar').modal("hide");
-    	controller = CONTROLLER_GLOBAl;
-    	caminho = URL+controller+"deletar";
+    	controller = controller || CONTROLLER_GLOBAl;
+    	action = action || "deletar";
+    	caminho = URL+controller+action;
 
 		$.post(caminho, { model : controller, id : idd }, function(retorno){
 
@@ -218,8 +230,8 @@ function deletar(idd){
 				setTimeout(function(){
 					$('.small.modal.sucesso').modal('show');
 				}, 500);            
-		
-				navegacao(controller, "");
+				caminho = window.location.href;
+				navegacao(controller, "", null, null, caminho);
             }else{
 
 				mensagemAlertaErro(retorno.mensagem); 
@@ -270,11 +282,13 @@ function filtrar(controller){
 	paginacao(controller+"/", '1');
 }
 
-function submeter(controller, action, id){
+function submeter(controller, action, id, mudarPg){
 
 	controller = controller || "";
 	action = action || "";
 	id = id || "";
+
+	mudarPg = mudarPg || "";
 
 	caminho = URL+controller+action;
 
@@ -317,7 +331,10 @@ function submeter(controller, action, id){
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){
-		            	navegacao(controller, action, "", id);
+		        		if(mudarPg == "")
+		            		navegacao(controller, action, "", id);
+		            	else
+		            		list(controller, "listagem", id);
 		            	files = {};
 
 						mensagemAlerta("Os dados foram salvos com sucesso!"); 
@@ -773,4 +790,50 @@ function facebook(face){
 		return "";
 	else
 		return "Esta conta não existe";	
+}
+
+function list(controller, action, id){
+
+	controller = controller || "";
+	action = action || ""; 
+
+	caminho = URL+controller+action;
+	PAGINACAMINHO = caminho; 
+	$.post(caminho, { idSet: id }, function(retorno){
+
+		var retorno;
+		try{
+			retorno = jQuery.parseJSON(retorno);
+		}catch(e){
+			//$(window.document.location).attr('href', URL);
+			alert(retorno);
+		}
+
+		$("#listagem").html("");
+		$("#qtd").html(retorno.qtd);
+		lista = "";
+		$.each(retorno.listagem, function(item, campos){
+			lista = lista + "<tr>";
+			$.each(campos, function(chave, valor){
+				if(chave != "id")
+					lista = lista + "<td>" + valor + "</td>";
+			});
+			lista = lista + "<td> " +
+					  "<div class=\"tiny ui icon button balao \" id=\"btEditar\" data-content='Editar' onClick='editarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"pencil icon\"></i></div>" +
+                      "<div class=\"tiny ui red icon button balao btDeletar\" data-content='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
+              "</td></tr>";
+		});
+
+		//$("#totalBusc").html("Total: "+retorno.total);
+		$("#listagem").html(lista);
+	});
+}
+
+function addItem(controller, id){
+	valido = validacao();
+	if(valido == true){
+		submeter(controller, "cadastrar", id, "naum"); 
+			
+			
+	}
 }

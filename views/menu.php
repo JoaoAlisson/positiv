@@ -1,10 +1,10 @@
 <?php
 	$this->html->menu("Igreja", "igreja", "", "building", "teal", false,
 					  array("Membros"     => array("membros", "", "users"),
+					  	    "Consagrações"=> array("consagracoes", "", "tags"),
 							"Ministérios" => array("ministerios", "", "list"),
-							"Consagrações"=> array("consagracoes", "", "tags"),
-							"Cargos"	  => array("cargos", "", "sitemap"),
-							"Funcionários"=> array("funcionarios", "", "male")));
+							"Funções"	  => array("funcoes", "", "pin"),
+							"Visitantes"  => array("visitantes", "", "male")));
 
 	$this->html->menu("Usuários", "login", "", "basic users", "green", false, array());
 

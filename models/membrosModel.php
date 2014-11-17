@@ -36,7 +36,6 @@ class membrosModel extends Model{
 			$sth = $banco->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $id");
 			$sth->execute();
 		}
-
 	}
 
 	public function antesDeEditar($id, $dados){
@@ -51,9 +50,9 @@ class membrosModel extends Model{
 
 	public function antesDeDeletar($id){
 		
-		$banco = new Database();
+
 		$tabela = PREFIXO."membros";
-		$consulta = $banco->prepare("SELECT consagracao FROM $tabela WHERE id = {$id}");
+		$consulta = $this->prepare("SELECT consagracao FROM $tabela WHERE id = {$id}");
 		$consulta->execute();
 
 		$consagracao = $consulta->fetchAll(PDO::FETCH_ASSOC);
@@ -63,25 +62,46 @@ class membrosModel extends Model{
 		if($consagracao != 0){
 
 			$tabela = PREFIXO."consagracoes";
-			$sth = $banco->prepare("UPDATE $tabela SET qtd = qtd - 1 WHERE id = $consagracao");
+			$sth = $this->prepare("UPDATE $tabela SET qtd = qtd - 1 WHERE id = $consagracao");
 			$sth->execute();
+		}
+
+		$tabela = PREFIXO."integrantes";
+		$consulta = $this->prepare("SELECT id, ministerio FROM $tabela WHERE membro = {$id}");
+		$consulta->execute();
+
+		$ministerios = $consulta->fetchAll(PDO::FETCH_ASSOC);
+			
+		$tabelaM = PREFIXO."ministerios";
+		$tabelaI = PREFIXO."integrantes";
+
+		foreach ($ministerios as $key => $valor) {
+
+			$ministerio = $valor['ministerio'];
+			$sth = $this->prepare("UPDATE $tabelaM SET qtd = qtd - 1 WHERE id = $ministerio");
+			$sth->execute();			
+
+			$integrante = $valor['id'];			
+			$stmt = $this->prepare("DELETE FROM $tabelaI WHERE id = :id");
+			$stmt->bindParam(':id', $integrante, PDO::PARAM_INT);   
+			$stmt->execute();					
 		}
 
 	}
 
 	private function incrementaConsag($incrementa, $consagracao){
-		$this->setaBancoModel();
+		//$this->setaBancoModel();
 		$tabela = PREFIXO."consagracoes";
 
 		$sinal = ($incrementa == true) ? "+" : "-";
-		$sth = $this->bancoModel->prepare("UPDATE $tabela SET qtd = qtd $sinal 1 WHERE id = $consagracao");
+		$sth = $this->prepare("UPDATE $tabela SET qtd = qtd $sinal 1 WHERE id = $consagracao");
 		$sth->execute();
 	}
 
 	private function pegarCampo($id, $campo){
-		$this->setaBancoModel();
+		//$this->setaBancoModel();
 		$tabela = PREFIXO."membros";
-		$consulta = $this->bancoModel->prepare("SELECT $campo FROM $tabela WHERE id = {$id}");
+		$consulta = $this->prepare("SELECT $campo FROM $tabela WHERE id = {$id}");
 		$consulta->execute();
 
 		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
