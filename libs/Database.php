@@ -222,7 +222,7 @@ class Database extends PDO{
 		return $this->pegarOnde(null, $campos);
 	}
 
-	public function pegarPagina($pagina = 1, $quantidade = "", $campos = "*", $onde = null, $tabela = null, $ordem = null, $ascend = null, $integro = false){
+	public function pegarPagina($pagina = 1, $quantidade = "", $campos = "*", $onde = null, $tabela = null, $ordem = null, $ascend = null, $integro = false, $ondeCustomizado = ""){
 
 		if($tabela == null)
 			$tabela = str_replace("Model", "", get_class($this));
@@ -275,7 +275,12 @@ class Database extends PDO{
 		$pagina = (is_numeric($pagina)) ? $pagina : 1;
 		$pagina = ($pagina < 1) ? 1 : $pagina;		
 
-
+		if($ondeCustomizado != ""){
+			if($where != "")
+				$where .= " AND $ondeCustomizado";
+			else
+				$where = " WHERE ".$ondeCustomizado;
+		}
 
 		//pega a quantidade total
 		$quantidadeTodos;
@@ -295,6 +300,7 @@ class Database extends PDO{
 		$joinCampos = $joins['joinCampos'];
 		$joinTabela = $joins['joinTabela'];
 		
+
 		$sql = "SELECT $campos $joinCampos FROM `$tabela` $joinTabela $where ORDER BY $ordem $ascend LIMIT $inicio, $quantidade";
 		//$sql = "SELECT `pstv_membros`.`nome`, `pstv_membros`.`estado`, `pstv_membros`.`celular`, `pstv_membros`.`nascimento`, `pstv_membros`.`id `pstv_consagracoes`.`nome` AS `consagracoes_nome` FROM `pstv_membros` INNER JOIN `pstv_consagracoes` ON `pstv_membros`.`consagracao` = `pstv_consagracoes`.`nome` ORDER BY `pstv_membros`.`id` LIMIT 0, 10";
 		//echo $sql;

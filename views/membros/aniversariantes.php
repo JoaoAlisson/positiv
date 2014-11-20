@@ -1,5 +1,9 @@
 <?php 
 //print_r($dados['itens']);
+
+  $mes = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+
+
 $paginacao = "";
  if(!isset($dados['filtro'])){
   $filtrosValores = "";
@@ -7,20 +11,8 @@ $paginacao = "";
       $filtrosValores .= "/$campo:$valor";
   }
   echo "<script type='text/javascript'>setOrdemPag('".$dados['pagina']."','".$dados['ordem']."', '".$dados['ordenacao']."'); FILTROS = '$filtrosValores';</script>"; ?>
-<div style="width:100%; text-align:center; text-transform: uppercase;"><h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?><?php echo $dados['nome'][1];?></h2>
-  <?php 
-    $nomeSingular = "";
-    if(isset($dados['nome'][0]))
-      $nomeSingular = $dados['nome'][0];
-    else
-      $nomeSingular = $dados['nomeController'];
-  ?>
-  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
-    <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
-  </div>
-  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','aniversariantes', '');">
-    <i class="gift icon"></i>Aniversariantes
-  </div>   
+<div style="width:100%; text-align:center; text-transform: uppercase;"><h2>
+  <i class="list icon"></i>Membros</h2>
 </div>    
 <?php if(isset($dados['filtros'])){ ?>
   <form class="formulario">
@@ -28,15 +20,31 @@ $paginacao = "";
        <div class="column" style="width: auto;">
     <div class="ui <?php echo $dados['cor']; ?> segment" style="width: auto;">
 
-  <?php
-      foreach ($dados['filtros'] as $campo => $nome) {
-        echo "<div style='width:auto; float: left; text-align:left; margin-right: 20px;'>";
-          $valorFiltros = isset($dados['filtrosValores'][$campo]) ? $dados['filtrosValores'][$campo] : null;
-          $this->html->campo($campo, false, $valorFiltros);
-        echo "</div>";
-      }
-  ?>
-    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
+
+<div class="field" id="campo_consagracao" style="margin: 2px; float:left; text-align:left;">
+     <label>Mês </label><div class="ui left labeled icon input"><div class="ui dropdown selection" id="select_consagracao" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_consagracao');">
+            <input type="hidden" name="mes" id="input_consagracao" class="" onchange=";" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:100px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <div class="item" data-value="1">Janeiro</div>
+                <div class="item" data-value="2">Fevereiro</div>
+                <div class="item" data-value="3">Março</div>
+                <div class="item" data-value="4">Abril</div>
+                <div class="item" data-value="5">Maio</div>
+                <div class="item" data-value="6">Junio</div>
+                <div class="item" data-value="7">Julho</div>
+                <div class="item" data-value="8">Agosto</div>
+                <div class="item" data-value="9">Setembro</div>
+                <div class="item" data-value="10">Outubro</div>
+                <div class="item" data-value="11">Novembro</div>
+                <div class="item" data-value="12">Dezembro</div>
+              </div>                                     
+            </div></div>
+</div>
+
+    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin:2px; margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>', 'aniversariantes')">
       <i class=" search icon"></i>Filtrar
     </div>
 
@@ -55,6 +63,16 @@ $paginacao = "";
     </div>
     <br>
 <?php } ?>
+
+
+
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+  <div class="ui teal inverted vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('membros/','aniversariantes', '');">
+    <i class="time icon"></i>HOJE
+  </div>
+  <h3><i class="gift icon"></i>Aniversariantes de <span id="outramsg"><?php if($dados['mes'] == "") echo "Hoje"; else echo $mes[$dados['mes']]; ?></span></h3>
+</div> 
+
 <table class="ui table segment" id="tabelaListagem" style="width:auto;">
 	<thead>
 		<tr>
@@ -62,9 +80,8 @@ $paginacao = "";
       if($nome == "facebook")
         echo "<th><i class=\"facebook sign big purple icon\" style='margin-left: 6px;'></i></th>";
       else
-			 echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
+			 echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', '','$campo', 'aniversariantes');\"><i class='sort icon'></i>$nome</a></th>";
 		}?>
-    <th></th>
     <th></th>
 		</tr>
 	</thead>
@@ -84,10 +101,9 @@ $paginacao = "";
       		      $listagem .= "<td>$valor</td>";
             }
       	}
-        $listagem .= "<td><div class=\"mini ui teal labeled icon button balao\" data-content='Ver e Informar Visitas' onClick=\"editarBt('".$campos['id']."', 'visitas/vistd')\"><i class=\"calendar icon\"></i>Visitas</div></td>";
       $listagem .= "<td>
                       <div class=\"tiny ui icon button balao\" data-content='Visualizar' onClick='verBt(".$campos['id'].")'><i class=\"unhide icon\"></i></div>
-                      <div class=\"tiny ui icon button balao\" data-content='Editar Ministério' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
+                      <div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
                       <div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt(".$campos['id'].")'><i class=\"trash icon\"></i></div>
               </td></tr>";
     	} 
@@ -153,21 +169,18 @@ $paginacao = "";
 
   //print_r($dados['itens']);
   if(isset($dados['filtro'])){
-  
-    $botao = "<div class=\"mini ui teal labeled icon button balao\" data-content='Informar Visita' onClick='deletarBt()'><i class=\"calendar icon\"></i>Visita</div>";
-  
+    
     if(in_array("facebook", $dados['tipos'])){
       $campo = array_search("facebook", $dados['tipos']);
       foreach ($dados['itens'] as $chave => $campos) {
         if($dados['itens'][$chave][$campo] != "")
           $dados['itens'][$chave][$campo] = "<a href=\"http://facebook.com/".$campos[$campo]."\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/".$campos[$campo]."/picture\"/></a>";
-
-        $dados['itens'][$chave]['botao'] = $botao; 
       } 
-    }else{
-      foreach ($dados['itens'] as $chave => $campos)
-      $dados['itens'][$chave]['botao'] = $botao;    
     }
+
+    $retorna["outramsg"] = "HOJE";
+    if($dados['mes'] != 0)
+      $retorna['outramsg'] = $mes[$dados['mes']];
 
     $retorna["listagem"] = $dados['itens'];
     $retorna["paginacao"] = $paginacao;

@@ -42,11 +42,15 @@ class Model extends Database{
 
 						$tipo = isset($this->tipos[$campo]) ? $this->tipos[$campo] : "";
 						if(is_array($tipo)){
-							if(!$integro){
-								$campoEstrangeiro = $tipo['model']."_".$tipo['campo'];
-								$retorno[$item][$campo] = "<a onclick=\"redir('".$tipo['model']."', '".$retorno[$item][$campo]."')\">".$retorno[$item][$campoEstrangeiro]."</a>";
+							if(isset($tipo['relacao'])){
+								if(!$integro){
+									$campoEstrangeiro = $tipo['model']."_".$tipo['campo'];
+									$retorno[$item][$campo] = "<a onclick=\"redir('".$tipo['model']."', '".$retorno[$item][$campo]."')\">".$retorno[$item][$campoEstrangeiro]."</a>";
+								}else{
+									$retorno[$item][$campo] = $valor;
+								}	
 							}else{
-								$retorno[$item][$campo] = $valor;
+								$retorno[$item][$campo] = $this->formataEnum($campo, $valor, $integro);
 							}
 						}else{
 							$funcaoFormatacao = "formata".ucfirst($tipo);
@@ -101,6 +105,19 @@ class Model extends Database{
 		}
 	}
 
+	public function formataEnum($campo, $valor = "", $integro){
+
+		if(!$integro && $valor != ""){
+			$array = array();
+			foreach ($this->tipos[$campo] as $chave => $val)
+				$array[$this->removeAcentos($val)] = $val;
+			$valor = $array[$valor];
+		}
+
+		return $valor;
+
+	}
+
 	public function formataSexo($campo, $valor, $integro){
 		if(!$integro){
 			if($valor == "1")
@@ -126,7 +143,7 @@ class Model extends Database{
 			return $retorna;
 	}
 
-	public function formataMoeda($campo, $valor, $integro){
+	public function formataMoeda($campo = "", $valor, $integro){
 		$formatado = number_format($valor, 2, ',', '.');
 		if($integro == false){
 			$formatado = "R$ ". $formatado;

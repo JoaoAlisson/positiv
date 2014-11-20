@@ -334,9 +334,10 @@ class HTML{
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "__/__/____";
 		$incluir = "<div class='ui left labeled icon input'>";
 		$incluir .= "<input type='text' class='$requerido' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onfocus=\"datapick('input_$campo');\" onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs \" onfocusout=\"$validacaoJs\">";
-		$incluir .= "<i class='$icone icon'></i></div>";
+		$incluir .= "<i class='$icone icon'></i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
+		$incluir .= "</div>";
 		$this->retornaCampo($campo, $incluir);
 	}	
 

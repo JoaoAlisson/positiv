@@ -9,7 +9,7 @@ class categorias extends ControllerCRUD{
 
 	public $icone = "sitemap";
 
-	public $listar = array("nome");
+	public $listar = array("nome", "tipo");
 
 	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
 

@@ -119,6 +119,7 @@ function navPaginacao(controller, action){
 	$.post(caminho, { ajaxPg: true, subClick: true, filtro: true }, function(retorno){
 
 		var retorno;
+		//alert(retorno);
 		try{
 			retorno = jQuery.parseJSON(retorno);
 		}
@@ -141,6 +142,9 @@ function navPaginacao(controller, action){
                       "<div class=\"tiny ui red icon button balao btDeletar\" data-content='Deletar' onClick='deletarBt("+ campos.id +")' style='margin-left:4px;'><i class=\"trash icon\"></i></div>" +
               "</td></tr>";
 		});
+		
+		if(retorno.outramsg !== "undefined")
+			$("#outramsg").html(retorno.outramsg);
 
 		$("#totalBusc").html("Total: "+retorno.total);
 		$("#listagem").html(lista);
@@ -247,14 +251,15 @@ function deletar(idd, controller, action){
 		});
 }
 
-function paginacao(controller, pag, campo){
+function paginacao(controller, pag, campo, action){
 	CAMPOORDEM = campo || CAMPOORDEM;
 	PAGINA = pag || PAGINA;
-
+	action = action || "index";
+	
 	salvCampo = CAMPOORDEM;
 	salvPag = PAGINA;
 
-	action = "index";
+	
 
 	ordem = ORDENACAO;
 	if(campo == CAMPOORDEM){
@@ -272,14 +277,20 @@ function paginacao(controller, pag, campo){
 	ORDENACAO = ordem;
 }
 
-function filtrar(controller){
+function filtrar(controller, action){
 	var data = $(".formulario").serializeArray();
 	filtrs = "";
 	$.each(data, function(chave, valor){
-		filtrs = filtrs + "/" + valor.name + ":" + valor.value;
+		nome = valor.name;
+		if(nome.indexOf("_submit") == -1){
+			valorcampo = valor.value;
+			valorcampo = valorcampo.replace(/[/]+/g,'-');
+			filtrs = filtrs + "/" + valor.name + ":" + valorcampo;
+		}
 	});
 	FILTROS = filtrs;
-	paginacao(controller+"/", '1');
+	action = action || "index";
+	paginacao(controller+"/", '1', null, action);
 }
 
 function submeter(controller, action, id, mudarPg){
@@ -321,7 +332,7 @@ function submeter(controller, action, id, mudarPg){
 		        	classeMostrar = "";
 		        	imagemm = "";
 					//alert(result);
-					//$(".textoLongo").val(result);
+					$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);

@@ -4,7 +4,9 @@
 					  	    "Consagrações"=> array("consagracoes", "", "tags"),
 							"Ministérios" => array("ministerios", "", "list"),
 							"Funções"	  => array("funcoes", "", "pin"),
-							"Visitantes"  => array("visitantes", "", "male")));
+							"Visitantes"  => array("visitantes", "", "male"),
+							"Integrantes" => array("integrantes", "", "", false),
+							"Visitas"  	  => array("visitas", "", "", false)));
 
 	$this->html->menu("Usuários", "login", "", "basic users", "green", false, array());
 
