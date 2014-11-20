@@ -4,7 +4,7 @@ class patrimonio extends ControllerCRUD{
 	public $nome = array("Patrimonio","Patrimonio");
 
 	public $campos = array("codigo"    => "Código",
-						   "cod_sistema"=> "Cod. Sist.",
+						   "cod"	   => "Cod. Sist.",
 						   "nome" 	   => "Nome",
 						   "descricao" => "Descrição",
 						   "ministerio"=> "Ministério",
@@ -21,11 +21,11 @@ class patrimonio extends ControllerCRUD{
 
 	public $icones = array("codigo" => "barcode");
 
-	public $filtros = array("ministerio", "situacao", "cod_sistema","codigo");
+	public $filtros = array("ministerio", "situacao", "cod","codigo");
 
-	public $listar = array("cod_sistema","codigo","nome", "situacao", "total");
+	public $listar = array("cod","codigo","nome", "situacao", "total");
 
-	public $inalteraveis = array("total", "cod_sistema");	
+	public $inalteraveis = array("total", "cod");	
 
 	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
 
@@ -35,7 +35,9 @@ class patrimonio extends ControllerCRUD{
 	public function index(){
 		parent::index();
 		$dados = $this->getDados();
-		$dados['totalPatrimonio'] = $this->model->pegarTotal();
+
+		if(!isset($_POST['filtro']))
+			$dados['totalPatrimonio'] = $this->model->pegarTotal();
 
 		$this->dados($dados);
 

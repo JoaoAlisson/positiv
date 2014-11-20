@@ -2,7 +2,7 @@
 class patrimonioModel extends Model{
  
 	public $tipos = array( "codigo" => "texto",
-						   "cod_sistema" => "inteiro",
+						   "cod" => "inteiro",
 						   "nome"	=> "nome",
 						   "descricao" => "descricao",
 						   "ministerio"=> array("relacao" => "muitosParaUm", "model" => "ministerios", "campo" => "nome"),
@@ -80,7 +80,7 @@ class patrimonioModel extends Model{
 		$id = $this->lastInsertId();
 
 		$tabela = PREFIXO."patrimonio";
-		$sth = $this->prepare("UPDATE $tabela SET cod_sistema = '$id' WHERE id = $id");
+		$sth = $this->prepare("UPDATE $tabela SET cod = '$id' WHERE id = $id");
 		$sth->execute();	
 	}
 }

@@ -247,7 +247,7 @@ class Database extends PDO{
 					$valor = mysql_real_escape_string($valor);
 					if($valor != ""){
 						if($this->tipos[$campo] == "numero" || $this->tipos[$campo] == "moeda" || $this->tipos[$campo] == "inteiro")
-							$where .= ($i > 0) ? "AND `$tabela`.`".$campo."` = '".$valor."' " : "`$tabela`.".$campo."` = '".$valor."' ";
+							$where .= ($i > 0) ? "AND `$tabela`.`".$campo."` = '".$valor."' " : "`$tabela`.`".$campo."` = '".$valor."' ";
 						else
 							$where .= ($i > 0) ? "AND `$tabela`.`".$campo."` LIKE '%".$valor."%' " : "`$tabela`.`".$campo."` LIKE '%".$valor."%' ";
 						$i++;
@@ -285,6 +285,7 @@ class Database extends PDO{
 		//pega a quantidade total
 		$quantidadeTodos;
 		$sql = "SELECT COUNT(*) FROM $tabela $where";
+		//echo $sql;
 		$resposta =  $this->query($sql);
 		$quantidadeTodos = $resposta->fetchColumn();
 
@@ -302,7 +303,6 @@ class Database extends PDO{
 		
 
 		$sql = "SELECT $campos $joinCampos FROM `$tabela` $joinTabela $where ORDER BY $ordem $ascend LIMIT $inicio, $quantidade";
-		//$sql = "SELECT `pstv_membros`.`nome`, `pstv_membros`.`estado`, `pstv_membros`.`celular`, `pstv_membros`.`nascimento`, `pstv_membros`.`id `pstv_consagracoes`.`nome` AS `consagracoes_nome` FROM `pstv_membros` INNER JOIN `pstv_consagracoes` ON `pstv_membros`.`consagracao` = `pstv_consagracoes`.`nome` ORDER BY `pstv_membros`.`id` LIMIT 0, 10";
 		//echo $sql;
 
 		$query = $this->prepare($sql);
