@@ -55,11 +55,11 @@ class HTML{
 		return $this->estados;
 	}
 
-	function campo($campo, $validar = true, $valor = null){
+	function campo($campo, $validar = true, $valor = null, $where = ""){
 		if(isset($this->dados['tipos'][$campo])){
 			if(is_array($this->dados['tipos'][$campo])){
 				if(isset($this->dados['tipos'][$campo]["relacao"]))
-					$this->chaveEstrangeira($campo, $validar, $valor, $this->dados['tipos'][$campo]);
+					$this->chaveEstrangeira($campo, $validar, $valor, $this->dados['tipos'][$campo], $where);
 				else
 					$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo]);
 			}else{
@@ -677,7 +677,7 @@ class HTML{
 		$this->retornaCampo($campo, $incluir);				
 	}
 
-	function chaveEstrangeira($campo, $validar, $valor = "", $informacoes){
+	function chaveEstrangeira($campo, $validar, $valor = "", $informacoes, $where){
 		if($valor == null)
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
 
@@ -700,7 +700,7 @@ class HTML{
 		$value = "";
 	
 		$banco = $this->getBanco();
-		$valores = $banco->pegarTodosGenerico($informacoes['model']);
+		$valores = $banco->pegarTodosGenerico($informacoes['model'], $where);
 		$opcoes = "<div class=\"item\" data-value=\"\"></div>";
 
 		foreach ($valores as $key => $descricao){

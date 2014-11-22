@@ -5,6 +5,7 @@ class patrimonio extends ControllerCRUD{
 
 	public $campos = array("codigo"    => "Código",
 						   "cod"	   => "Cod. Sist.",
+						   "nota"	   => "Número da Nota Fiscal/Cupom",
 						   "nome" 	   => "Nome",
 						   "descricao" => "Descrição",
 						   "ministerio"=> "Ministério",

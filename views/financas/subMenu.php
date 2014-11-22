@@ -4,5 +4,5 @@
 	$this->html->subMenuItem("Entradas", "entradas", "", "up");
 	$this->html->subMenuItem("Saídas", "saidas", "", "down");
 	$this->html->subMenuItem("Caixa", "cargos", "", "money");
-	$this->html->subMenuItem("Dízimos/Ofertas", "cargos", "", "");
+	$this->html->subMenuItem("Dízimos-Ofertas", "dizimos_ofertas", "", "");
 ?>

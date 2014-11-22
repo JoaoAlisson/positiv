@@ -7,7 +7,7 @@ class categorias extends ControllerCRUD{
 
 	public $cor = "orange";
 
-	public $icone = "sitemap";
+	public $icone = "bookmark";
 
 	public $listar = array("nome", "tipo");
 

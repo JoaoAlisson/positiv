@@ -20,5 +20,15 @@ class entradas extends ControllerCRUD{
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;
+
+	public function cadastrar(){
+		parent::cadastrar();
+		$this->renderizar("entradas/cadastrar");
+	}	
+
+	public function editar(){
+		parent::editar();
+		$this->renderizar("entradas/editar");
+	}	
 }
 ?>

@@ -1,7 +1,8 @@
 <?php 
 class saidasModel extends Model{
  
-	public $tipos = array( "saida" => "texto",
+	public $tipos = array( "saida"     => "texto",
+						   "nota"      => "texto",
 						   "categoria" => array("relacao" => "muitosParaUm", "model" => "categorias", "campo" => "nome"),
 						   "valor"     => "moeda",
 						   "vencimento"=> "data",

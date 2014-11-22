@@ -21,7 +21,7 @@
 							"Entradas" 	     => array("entradas", "", "up"),
 							"Saídas"         => array("saidas", "", "down"),
 							"Caixa"	         => array("caixa", "", "money"),
-							"Dízimos/Ofertas"=> array("", "", "")));	
+							"Dízimos-Ofertas"=> array("dizimos_ofertas", "", "")));	
 
 	$this->html->menu("Relatórios", "relatorios", "", "basic chart", "purple", false, array());
 
