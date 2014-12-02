@@ -1,0 +1,331 @@
+<?php
+$mesArray = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+$cores = array(
+    array("#16a085", "#1dd2af"), array("#2cc36b", "#40d47e"), array("#F7464A", "#FF5A5E"), array("#46BFBD", "#5AD3D1"),
+    array("#FDB45C", "#FFC870"), array("#949FB1", "#A8B3C5"), array("#4D5360", "#616774"), array("#2e8ece", "#4aa3df"),
+    array("#8e44ad", "#9b59b6"), array("#2c3e50", "#34495e"), array("#f4a62a", "#f2ca27"), array("#ec5e00", "#e67e22"),
+    array("#c0392b", "#ea6153"), array("#7f8c8d", "#95a5a6"), array("#bdc3c7", "#fbfcfc"),
+    "#46BFBD", "#FDB45C", "#949FB1", "#4D5360", "#00ffff", "#00008b", "#008b8b", "#a9a9a9",
+    "#006400", "#bdb76b", "#8b008b", "#556b2f", "#ff8c00", "#9932cc", "#8b0000", "#e9967a",
+    "#9400d3", "#ff00ff", "#ffd700", "#008000", "#4b0082", "#f0e68c", "#add8e6", "#e0ffff",
+    "#90ee90", "#d3d3d3", "#ffb6c1", "#ffffe0", "#00ff00", "#f0ffff", "#ff00ff", "#800000",
+    "#000080", "#808000", "#ffa500", "#ffc0cb", "#800080", "#800080", "#ff0000", "#c0c0c0",
+    "#ffffff", "#ffff00");
+?>
+<script>
+    var grafEntrada = [
+        {
+          value: <?php echo $dados['dizimos']; ?>,
+          color: "<?php echo $cores[0][0]; ?>",
+          highlight: "<?php echo $cores[0][1]; ?>",
+          label: "Dízimos"
+        },
+        {
+          value: <?php echo $dados['ofertas']; ?>,
+          color:  "<?php echo $cores[1][0]; ?>",
+          highlight: "<?php echo $cores[1][1]; ?>",
+          label: "Ofertas"
+        }
+        <?php 
+          $cont = 2;
+          foreach ($dados['entradasPagas'] as $categoria => $valor) {
+  
+          if(!isset($cores[$cont]))
+            $cont = 0;
+
+          $cor = "";
+          if(is_array($cores[$cont])){
+            $cor[0] = $cores[$cont][0];
+            $cor[1] = $cores[$cont][1];
+          }else{
+            $cor[0] = $cores[$cont];
+            $cor[1] = $cores[$cont];
+          }
+          echo ",{
+                  value: $valor,
+                  color: \"".$cor[0]."\",
+                  highlight: \"". $cor[1] ."\",
+                  label: \"".$dados['categorias'][$categoria]."\"
+                }";
+          $cont++;
+          }
+        ?>
+      ];
+
+    var grafSaida = [
+        <?php 
+          $cont = 0;
+          $i = 0;
+          foreach ($dados['saidasPagas'] as $categoria => $valor) {
+          if(!isset($cores[$cont]))
+            $cont = 0;
+          $cor = "";
+          if(is_array($cores[$cont])){
+            $cor[0] = $cores[$cont][0];
+            $cor[1] = $cores[$cont][1];
+          }else{
+            $cor[0] = $cores[$cont];
+            $cor[1] = $cores[$cont];
+          }
+          if($i > 0)
+            echo ",";
+          echo "{
+                  value: $valor,
+                  color: \"".$cor[0]."\",
+                  highlight: \"". $cor[1] ."\",
+                  label: \"".$dados['categorias'][$categoria]."\"
+                }";
+          $cont++;
+          $i++;
+          }
+        ?>
+      ];
+    
+    $(document).ready(function(){ 
+      var ctx5 = document.getElementById("graficoEntradas").getContext("2d");
+      window.entrada = new Chart(ctx5).Pie(grafEntrada);      
+
+      var ctx6 = document.getElementById("graficoSaidas").getContext("2d");
+      window.saidas = new Chart(ctx6).Pie(grafSaida);           
+    });  
+</script>
+
+<div style="width:100%;">
+  <div style="text-align:center;">
+    <h2><i class="money icon"></i>CAIXA</h2>
+    <?php 
+      $saldo = $dados['saldo'];
+      if($saldo < 0)
+        $saldo = "<span style='color:red'>-".formataMoeda($saldo)."</span>";
+      else
+        $saldo = formataMoeda($saldo);
+
+    ?>
+    <h3>Saldo Atual: <?php  echo $saldo; ?></h3>
+  </div>  
+    <form class="formulario">
+    <div class="ui column center aligned grid">
+      <div class="column" style="width: auto;">
+        <div class="ui orange segment" style="width: auto;">
+
+<div class="field" id="campo_consagracao" style="margin: 2px; float:left; text-align:left;">
+     <label>Mês </label><div class="ui left labeled icon input"><div class="ui dropdown selection" id="select_consagracao" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_consagracao');">
+            <input type="hidden" value="<?php echo $dados['mes']; ?>" name="mes" id="input_consagracao" class="" onchange="" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="<?php echo $dados['mes']; ?>" style="max-width:450px; min-width:100px;"><?php echo $mesArray[$dados['mes']]; ?></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <div class="item" data-value="1">Janeiro</div>
+                <div class="item" data-value="2">Fevereiro</div>
+                <div class="item" data-value="3">Março</div>
+                <div class="item" data-value="4">Abril</div>
+                <div class="item" data-value="5">Maio</div>
+                <div class="item" data-value="6">Junio</div>
+                <div class="item" data-value="7">Julho</div>
+                <div class="item" data-value="8">Agosto</div>
+                <div class="item" data-value="9">Setembro</div>
+                <div class="item" data-value="10">Outubro</div>
+                <div class="item" data-value="11">Novembro</div>
+                <div class="item" data-value="12">Dezembro</div>
+              </div>                                     
+            </div></div>
+</div>
+
+<div class="field" id="campo_ano" style="margin: 2px; float:left; text-align:left;">
+     <label>Ano </label><div class="ui left labeled icon input"><div class="ui dropdown selection" id="select_ano" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_ano');">
+            <input type="hidden" name="ano" value="<?php echo $dados['ano']; ?>" id="input_ano" class="" onchange="" style="max-width:50px; min-width:100px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="<?php echo $dados['ano']; ?>" style="max-width:50px; min-width:50px;"><?php echo $dados['ano']; ?></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php
+                  for($i = 2000; $i <= 2020; $i++)
+                    echo "<div class=\"item\" data-value=\"$i\">$i</div>";
+                ?>
+              </div>                                     
+            </div></div>
+</div>
+
+<div class="ui inverted orange vertical labeled circular icon submit button submeterForm" style="margin:2px;" onClick="filtrarRedi('caixa');">
+  <i class=" search icon"></i>Filtrar
+</div>
+
+        </div>
+      </div>
+    </div>
+  </form>
+<div class="ui center column aligned grid">
+<div class="column center aligned">
+<div class="ui orange segment center aligned" >
+  <div style="text-align:center;">
+  <h3><i class="up icon"></i>Entradas</h3>
+    <h4>Dízimos: <?php  echo formataMoeda($dados['dizimos']); ?> / Ofertas: <?php  echo formataMoeda($dados['ofertas']); ?></h4>
+</div>
+
+  <div class="ui column center aligned grid">
+
+<div class="three wide column" style="width:auto;">
+    <h3>Gráfico das Entradas</h3>
+    <canvas id="graficoEntradas" height="250" width="250"></canvas>
+</div> 
+
+<div class="three wide column" style="width:auto;">
+
+  <h3>Entradas Recebidas</h3>
+  <table class="ui orange inverted table segment">
+      <thead>
+        <tr>
+            <th>Categoria</th>
+            <th>Valor</th>
+        </tr>
+      <thead>
+      <tbody>
+        <?php 
+          $total = 0;
+          foreach ($dados['entradasPagas'] as $categoria => $valor) {
+          $total = $total + $valor;
+          echo "<tr><td>". $dados['categorias'][$categoria] ."</td><td>".formataMoeda($valor)."</td></tr>";
+        }?>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Total: <?php echo formataMoeda($total);?></th>
+        </tr>
+      </tfoot>      
+  </table>
+</div>
+<div class="three wide column" style="width:auto;">
+  <h3>Entradas a Receber</h3>
+
+  <table class="ui orange inverted table segment" style="">
+      <thead>
+        <tr>
+            <th>Categoria</th>
+            <th>Valor</th>
+        </tr>
+      <thead>
+      <tbody>
+        <?php 
+          $total = 0;
+          foreach ($dados['entradasApagar'] as $categoria => $valor) {
+            $total = $total + $valor;
+          echo "<tr><td>". $dados['categorias'][$categoria] ."</td><td>".formataMoeda($valor)."</td></tr>";
+        }?>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Total: <?php echo formataMoeda($total); $totalAreceber = $total; ?></th>
+        </tr>
+      </tfoot>      
+  </table>
+  </div>
+
+
+</div>
+</div>
+</div>
+</div>
+
+
+<div class="ui center column aligned grid">
+<div class="column">
+<div class="ui orange center aligned segment" >
+
+  <div style="text-align:center;">
+    <h3><i class="down icon"></i>Saídas</h3>
+  </div>
+
+  <div class="ui center aligned grid">
+
+<div class="three wide column" style="width:auto;">
+    <h3>Gráfico das Saídas</h3>
+    <canvas id="graficoSaidas" height="250" width="250"></canvas>
+</div> 
+
+<div class="three wide column" style="width:auto;">
+
+  <h3>Saídas Pagas</h3>
+
+  <table class="ui orange inverted table segment" id="tabelaListagem">
+      <thead>
+        <tr>
+            <th>Categoria</th>
+            <th>Valor</th>
+        </tr>
+      <thead>
+      <tbody>
+        <?php 
+          $total = 0;
+          foreach ($dados['saidasPagas'] as $categoria => $valor) {
+          $total = $total + $valor;
+          echo "<tr><td>". $dados['categorias'][$categoria] ."</td><td>".formataMoeda($valor)."</td></tr>";
+        }?>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td></td>
+          <td>Total: <?php echo formataMoeda($total);?></td>
+        </tr>
+      </tfoot>       
+  </table>
+</div>
+
+<div class="three wide column" style="width:auto;">
+  <h3>Saídas a Pagar</h3>
+
+  <table class="ui orange inverted table segment" id="tabelaListagem">
+      <thead>
+        <tr>
+            <th>Categoria</th>
+            <th>Valor</th>
+        </tr>
+      <thead>
+      <tbody>
+        <?php 
+          $total = 0;
+          foreach ($dados['saidasApagar'] as $categoria => $valor) {
+          $total = $total + $valor;
+          echo "<tr><td>". $dados['categorias'][$categoria] ."</td><td>".formataMoeda($valor)."</td></tr>";
+        }?>
+      </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Total: <?php echo formataMoeda($total); $totalApagar = $total; ?></th>
+        </tr>
+      </tfoot>      
+  </table>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<?php
+  $saldoPrevisto = $dados['saldo'] + $totalAreceber - $totalApagar;
+  if($saldoPrevisto < 0)
+    $saldoPrevisto = "<span style='color:red'>-".formataMoeda($saldoPrevisto)."</span>";
+  else
+    $saldoPrevisto = formataMoeda($saldoPrevisto);
+?>
+<div style="width:100%; ">
+  <div style="text-align:center;">
+    <h3>Saldo Previsto: <?php echo $saldoPrevisto; ?></h3>
+  </div>
+</div>
+<?php
+  function formataMoeda($valor){
+
+    $formatado = number_format($valor, 2, ',', '.');
+    $formatado = "R$ ". $formatado;
+    if(strlen($valor) > 53)
+      $formatado = substr($formatado, 0, 50) . "...";
+
+    return $formatado;
+  }
+?>

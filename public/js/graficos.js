@@ -136,5 +136,10 @@ window.onload = function(){
     var ctx4 = document.getElementById("chart-area4").getContext("2d");
     window.myPie = new Chart(ctx4).Pie(pieData);
   }
+
+  if($('#graficoEntradas')){
+    var ctx5 = document.getElementById("graficoEntradas").getContext("2d");
+    window.entrada = new Chart(ctx5).Pie(grafEntrada);
+  }
 }; 
 

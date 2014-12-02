@@ -24,9 +24,12 @@ class HTML{
 		return $this->banco;
 	}
 
-	private function getTabindex(){
+	private function getTabindex($key = true){
 		$this->tabindex = $this->tabindex + 1;
-		return "tabindex=\"".$this->tabindex."\" onkeypress=\"enterSubmit(event);\"";
+		if($key)
+			return "tabindex=\"".$this->tabindex."\" onkeypress=\"enterSubmit(event);\"";
+		else
+			return "tabindex=\"".$this->tabindex."\"";
 	}
 
 	private function retornaCampo($nome, $campo){
@@ -77,13 +80,14 @@ class HTML{
 		$view = isset($view) ? $view : $this->dados['nomeView'];
 		$nomeBotao = isset($nomeBotao) ? $nomeBotao : "Cadastrar";
 		$icone = isset($icone) ? $icone : "save";
-		echo    "<div class=\"ui cortopo inverted vertical labeled icon submit button submeterForm\" ".$this->getTabindex()." style=\"margin-top:10px;\" onClick=\"submeter('$controller/', '$view', '$id')\">
+
+		echo    "<div class=\"ui green vertical labeled icon submit button submeterForm\" ".$this->getTabindex(false)." style=\"margin-top:10px;\" onClick=\"submeter('$controller/', '$view', '$id');\">
 					<i class=\"$icone icon\"></i>$nomeBotao
 				</div>";
 	}
 
 	function formulario(){
-		echo "<script type=\"text/javascript\">$('.ui.selection.dropdown').dropdown();</script>
+		echo "<script type=\"text/javascript\">$(document).ready(function(){ $('.ui.selection.dropdown').dropdown(); });</script>
 		<form action=\"\" enctype=\"multipart/form-data\" class=\"ui form formulario\" method=\"POST\">";
 	}
 

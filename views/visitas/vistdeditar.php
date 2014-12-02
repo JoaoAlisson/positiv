@@ -20,9 +20,12 @@
 				<div style='width:auto; float: left; text-align:left; margin-right: 20px; margin: 5px;'>
 					<?php $this->html->campo("data");?>
 				</div>
-				<div class="ui green inverted vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 5px;" onclick="addItem('visitas/', '<?php echo $dados['id']; ?>');">
-	   				<i class="plus icon"></i>Adicionar
-	 			</div>	
+			    <div style="width:auto; float: left; text-align:left;">
+    				 <br>
+					<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 5px;" onclick="addItem('visitas/', '<?php echo $dados['id']; ?>');">
+		   				<i class="plus icon"></i>Adicionar
+		 			</div>	
+	 			</div>
 	 			</form>							
 			</div>
 		</div>

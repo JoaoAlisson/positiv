@@ -15,13 +15,14 @@ $paginacao = "";
     else
       $nomeSingular = $dados['nomeController'];
   ?>
-  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
+  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
     <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
   </div>
-  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','aniversariantes', '');">
+  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','aniversariantes', '');">
     <i class="gift icon"></i>Aniversariantes
   </div>   
-</div>    
+</div>  
+<br>  
 <?php if(isset($dados['filtros'])){ ?>
   <form class="formulario">
     <div class="ui column center aligned grid">
@@ -36,9 +37,12 @@ $paginacao = "";
         echo "</div>";
       }
   ?>
-    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
+    <div style="width:auto; float: left; text-align:left;">
+     <br>
+    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrar('<?php echo $dados['controller'];?>')">
       <i class=" search icon"></i>Filtrar
     </div>
+  </div>
 
   </div>
     <div class="ui <?php echo $dados['cor']; ?> circular label" style="float:left;">

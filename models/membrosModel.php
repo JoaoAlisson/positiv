@@ -7,6 +7,7 @@ class membrosModel extends Model{
 						  "face"	   => "facebook",
 						  "consagracao"=> array("relacao" => "muitosParaUm", "model" => "consagracoes", "campo" => "nome"),
 						  "cpf"		   => "cpf",
+						  "rg"		   => "texto",
 						  "sexo"	   => "sexo",
 						  "foto"       => "imagem",
 						  "estadocivil"=> array("Solteiro", "Casado", "Divorciado"),
@@ -31,9 +32,8 @@ class membrosModel extends Model{
 	public function depoisDeCadastrar($dados){
 		$id = $dados['consagracao'];
 		if($id != "" && $id != "0"){
-			$banco = new Database();
 			$tabela = PREFIXO."consagracoes";
-			$sth = $banco->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $id");
+			$sth = $this->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $id");
 			$sth->execute();
 		}
 	}

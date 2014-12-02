@@ -44,9 +44,12 @@ $paginacao = "";
             </div></div>
 </div>
 
-    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin:2px; margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>', 'aniversariantes')">
+    <div style="width:auto; float: left; text-align:left;">
+     <br>
+    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrar('<?php echo $dados['controller'];?>')">
       <i class=" search icon"></i>Filtrar
     </div>
+  </div>
 
   </div>
     <div class="ui <?php echo $dados['cor']; ?> circular label" style="float:left;">
@@ -67,7 +70,7 @@ $paginacao = "";
 
 
 <div style="width:100%; text-align:center; text-transform: uppercase;">
-  <div class="ui teal inverted vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('visitantes/','aniversariantes', '');">
+  <div class="ui teal vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('visitantes/','aniversariantes', '');">
     <i class="time icon"></i>HOJE
   </div>
   <h3><i class="gift icon"></i>Aniversariantes de <span id="outramsg"><?php if($dados['mes'] == "") echo "Hoje"; else echo $mes[$dados['mes']]; ?></span></h3>

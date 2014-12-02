@@ -284,6 +284,7 @@ class Database extends PDO{
 
 		//pega a quantidade total
 		$quantidadeTodos;
+		
 		$sql = "SELECT COUNT(*) FROM $tabela $where";
 		//echo $sql;
 		$resposta =  $this->query($sql);
@@ -321,7 +322,7 @@ class Database extends PDO{
 
 	}
 
-	private function separaJoin($tabela){
+	public function separaJoin($tabela){
 		$joinCampos = "";
 		$joinTabela = "";
 		if(isset($this->tipos)){

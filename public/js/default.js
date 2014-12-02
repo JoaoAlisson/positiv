@@ -295,6 +295,7 @@ function filtrar(controller, action){
 
 function submeter(controller, action, id, mudarPg){
 
+
 	controller = controller || "";
 	action = action || "";
 	id = id || "";
@@ -331,14 +332,14 @@ function submeter(controller, action, id, mudarPg){
 		        	
 		        	classeMostrar = "";
 		        	imagemm = "";
-					//alert(result);
-					$(".textoLongo").val(result);
+					alert(result);
+					//$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);
 		        	}
 		        	catch(e){
-						$(window.document.location).attr('href', URL);
+						//$(window.document.location).attr('href', URL);
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){
@@ -752,8 +753,11 @@ function mudarCidade(campo){
 }
 
 function enterSubmit(e){
-	if(e.which == 13 || e.keyCode == 13)
+
+	if(e.which == 13 || e.keyCode == 13){
+		e.preventDefault();
 		$(".submeterForm").click();
+	}
 }
 
 function registraSelect(id){
@@ -840,11 +844,31 @@ function list(controller, action, id){
 	});
 }
 
+function filtrarRedi(controller, action){
+	var data = $(".formulario").serializeArray();
+	filtrs = "";
+	$.each(data, function(chave, valor){
+		nome = valor.name;
+		if(nome.indexOf("_submit") == -1){
+			valorcampo = valor.value;
+			valorcampo = valorcampo.replace(/[/]+/g,'-');
+			filtrs = filtrs + "/" + valor.name + ":" + valorcampo;
+		}
+	});
+
+	action = action || "index";
+
+	action = action + filtrs;
+	navegacaoSub(controller+"/", action);
+}
+
 function addItem(controller, id){
 	valido = validacao();
 	if(valido == true){
-		submeter(controller, "cadastrar", id, "naum"); 
-			
-			
+		submeter(controller, "cadastrar", id, "naum"); 		
 	}
 }
+
+//function prevenir(event){
+//  event.preventDefault();
+//}

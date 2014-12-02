@@ -17,8 +17,8 @@
   <script type="text/javascript" src="<?php echo URL; ?>public/js/picker.js"></script> 
   <script type="text/javascript" src="<?php echo URL; ?>public/js/picker.date.js"></script> 
 
-	<script type="text/javascript" src="<?php echo URL; ?>public/js/semantic.min.js"></script>
-	<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/semantic.min.css"/>
+	<script type="text/javascript" src="<?php echo URL; ?>public/semantic.min.js"></script>
+	<link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/semantic.min.css"/>
 
   <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/default.css"/>
   <!-- <link rel="stylesheet" type="text/css" href="<?php echo URL; ?>public/css/jquery-ui.min.css"/> -->
@@ -115,8 +115,12 @@
   </div>  
 
 <div class="ui center celled aligned grid">
-  <div class="ui icon menu">
-<?php include 'menuPrincipal.php';?>
+  <div class="ui center aligned grid" style="margin-top:-13px;">
+    <div class="column">
+      <div class="ui icon menu">
+        <?php include 'menuPrincipal.php';?>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -140,6 +144,6 @@
   </div>
 </div>  
 
-<div id="conteudoConteiner">
-<div class="ui segment">
-<div id="conteudo">  
+<div id="conteudoConteiner" style="width:100%;">
+<div class="ui segment" style="width:100%;">
+<div id="conteudo" style="width:100%; padding:0px; margin:0px;">  

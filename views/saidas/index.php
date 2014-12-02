@@ -15,14 +15,10 @@ $paginacao = "";
     else
       $nomeSingular = $dados['nomeController'];
   ?>
-  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
+  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
     <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
   </div>
-  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','aniversariantes', '');">
-    <i class="gift icon"></i>Aniversariantes
-  </div>  
-</div>   
-<br> 
+</div>    
 <?php if(isset($dados['filtros'])){ ?>
   <form class="formulario">
     <div class="ui column center aligned grid">
@@ -31,18 +27,22 @@ $paginacao = "";
 
   <?php
       foreach ($dados['filtros'] as $campo => $nome) {
-        echo "<div style='width:auto; float: left; text-align:left; margin-right: 20px;'>";
+        echo "<div style='width:auto; text-align:left; margin-right: 20px;'>";
           $valorFiltros = isset($dados['filtrosValores'][$campo]) ? $dados['filtrosValores'][$campo] : null;
           $this->html->campo($campo, false, $valorFiltros);
         echo "</div>";
       }
   ?>
-    <div style="width:auto; float: left; text-align:left;">
-     <br>
-    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrar('<?php echo $dados['controller'];?>')">
+  <br>
+<div style="margin-top: 0px;"> <label>Período de</label> </div>
+
+<div class='ui left labeled icon input'><input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='max-width:350px; min-width:100px; margin-top:2px;' value='' id='input_inicio' placeholder='__/__/____' name='inicio' onfocus="datapick('input_inicio');"><i class='empty calendar icon'></i></div>
+   <labe>a</label>
+<div class='ui left labeled icon input'><input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='max-width:350px; min-width:100px; margin-top:2px;' value='' id='input_fim' placeholder='__/__/____' name='fim' onfocus="datapick('input_fim');"><i class='empty calendar icon'></i></div>
+<br>
+    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:10px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
       <i class=" search icon"></i>Filtrar
     </div>
-  </div>
 
   </div>
     <div class="ui <?php echo $dados['cor']; ?> circular label" style="float:left;">
@@ -60,39 +60,39 @@ $paginacao = "";
     <br>
 <?php } ?>
 <table class="ui table segment" id="tabelaListagem" style="width:auto;">
-  <thead>
-    <tr>
-    <?php foreach ($dados['campos'] as $campo => $nome) {
+	<thead>
+		<tr>
+		<?php foreach ($dados['campos'] as $campo => $nome) {
       if($nome == "facebook")
         echo "<th><i class=\"facebook sign big purple icon\" style='margin-left: 6px;'></i></th>";
       else
-       echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
-    }?>
+			 echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
+		}?>
     <th></th>
-    </tr>
-  </thead>
+		</tr>
+	</thead>
   <tbody id="listagem">
   <div>
   <?php //} ?>
-    <?php 
+  	<?php 
       $listagem = "";
       foreach ($dados['itens'] as $iten => $campos) { 
 
       $listagem .= "<tr>";
-        foreach ($campos as $campo => $valor) {
+      	foreach ($campos as $campo => $valor) {
             if($campo != 'id'){
               if($dados['tipos'][$campo] == "facebook" && $valor != "")
                 $listagem .= "<td><a href=\"http://facebook.com/$valor\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/$valor/picture\"/></a></td>";
               else
-                $listagem .= "<td>$valor</td>";
+      		      $listagem .= "<td>$valor</td>";
             }
-        }
+      	}
       $listagem .= "<td>
                       <div class=\"tiny ui icon button balao\" data-content='Visualizar' onClick='verBt(".$campos['id'].")'><i class=\"unhide icon\"></i></div>
                       <div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
                       <div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt(".$campos['id'].")'><i class=\"trash icon\"></i></div>
               </td></tr>";
-      } 
+    	} 
       //if(!isset($dados['filtro']))
           echo $listagem;
     ?>

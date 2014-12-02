@@ -15,12 +15,9 @@ $paginacao = "";
     else
       $nomeSingular = $dados['nomeController'];
   ?>
-  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
+  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
     <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
   </div>
-  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:2px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','aniversariantes', '');">
-    <i class="gift icon"></i>Aniversariantes
-  </div>  
 </div>   
 <br> 
 <?php if(isset($dados['filtros'])){ ?>
@@ -29,6 +26,9 @@ $paginacao = "";
        <div class="column" style="width: auto;">
     <div class="ui <?php echo $dados['cor']; ?> segment" style="width: auto;">
 
+      <div style='width:auto; float: left; text-align:left; margin-right: 20px;'>
+       <label>Nome</label><div class="ui left labeled icon input"><input type="text" class=" nome" value="<?php if(isset($dados['filtrosValores']['nome'])) echo $dados['filtrosValores']['nome']; ?>" tabindex="1" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_nome" placeholder="Isira seu nome" name="nome" onkeyup="; limpaNome('nome');" onblur=""><i class="user icon"></i></div></div>
+
   <?php
       foreach ($dados['filtros'] as $campo => $nome) {
         echo "<div style='width:auto; float: left; text-align:left; margin-right: 20px;'>";
@@ -36,7 +36,7 @@ $paginacao = "";
           $this->html->campo($campo, false, $valorFiltros);
         echo "</div>";
       }
-  ?>
+  ?> 
     <div style="width:auto; float: left; text-align:left;">
      <br>
     <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrar('<?php echo $dados['controller'];?>')">
@@ -60,39 +60,36 @@ $paginacao = "";
     <br>
 <?php } ?>
 <table class="ui table segment" id="tabelaListagem" style="width:auto;">
-  <thead>
-    <tr>
-    <?php foreach ($dados['campos'] as $campo => $nome) {
+	<thead>
+		<tr>
+		<?php foreach ($dados['campos'] as $campo => $nome) {
       if($nome == "facebook")
         echo "<th><i class=\"facebook sign big purple icon\" style='margin-left: 6px;'></i></th>";
       else
-       echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
-    }?>
+			 echo "<th><a class='small ui button' onclick=\"paginacao('".$dados['controller']."/', null ,'$campo');\"><i class='sort icon'></i>$nome</a></th>";
+		}?>
     <th></th>
-    </tr>
-  </thead>
+		</tr>
+	</thead>
   <tbody id="listagem">
   <div>
   <?php //} ?>
-    <?php 
+  	<?php 
       $listagem = "";
       foreach ($dados['itens'] as $iten => $campos) { 
 
       $listagem .= "<tr>";
-        foreach ($campos as $campo => $valor) {
+      	foreach ($dados['campos'] as $campo => $nome) {
             if($campo != 'id'){
-              if($dados['tipos'][$campo] == "facebook" && $valor != "")
-                $listagem .= "<td><a href=\"http://facebook.com/$valor\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/$valor/picture\"/></a></td>";
-              else
-                $listagem .= "<td>$valor</td>";
+      		      $listagem .= "<td>".$dados['itens'][$iten][$campo]."</td>";
             }
-        }
+      	}
       $listagem .= "<td>
                       <div class=\"tiny ui icon button balao\" data-content='Visualizar' onClick='verBt(".$campos['id'].")'><i class=\"unhide icon\"></i></div>
                       <div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt(".$campos['id'].")'><i class=\"pencil icon\"></i></div>
                       <div class=\"tiny ui red icon button balao\" data-content='Deletar' onClick='deletarBt(".$campos['id'].")'><i class=\"trash icon\"></i></div>
               </td></tr>";
-      } 
+    	} 
       //if(!isset($dados['filtro']))
           echo $listagem;
     ?>

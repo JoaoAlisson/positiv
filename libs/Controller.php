@@ -16,7 +16,10 @@ class Controller{
 		$this->informacoes['nome'] = isset($this->nome) ? $this->nome : "";
 		$this->informacoes['campos'] = isset($this->campos) ? $this->campos : "";
 		$this->informacoes['icones'] = isset($this->icones) ? $this->icones : "";
-		$this->informacoes['obrigatorios'] = isset($this->model->obrigatorios) ? $this->model->obrigatorios : "";
+		$this->informacoes['obrigatorios'] = isset($this->model->obrigatorios) ? $this->model->obrigatorios : array();
+		if(isset($this->obrigatorios))
+			$this->informacoes['obrigatorios'] = array_merge($this->informacoes['obrigatorios'], $this->obrigatorios); 
+
 		$this->informacoes['tipos'] = isset($this->model->tipos) ? $this->model->tipos : "";
 		$this->informacoes['placeholders'] = isset($this->placeholders) ? $this->placeholders : "";
 		$this->informacoes['nomeController'] = strtolower(get_class($this));
@@ -52,7 +55,8 @@ class Controller{
 		if(isset($this->model))
 			$this->model->inserirPermissao($this->permissao);
 
-		define("CONTROLLER", $this->informacoes['nomeController']);
+		if(!defined('CONTROLLER'))
+			define("CONTROLLER", $this->informacoes['nomeController']);
 	}
 
 	public function  loadModel($name){

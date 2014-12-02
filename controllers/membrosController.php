@@ -11,6 +11,7 @@ class membros extends ControllerCRUD{
 						   "face"	    => "Facebook (http://facebook.com/exemplo)",
 						   "consagracao"=> "Consagração",
 						   "cpf"		=> "CPF",
+						   "rg"			=> "RG",
 						   "nascimento" => "Data de Nascimento",
 						   "sexo"		=> "Sexo",
  						   "foto"   	=> "Foto",
