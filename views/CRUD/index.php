@@ -21,6 +21,7 @@ $paginacao = "";
 </div>   
 <br> 
 <?php if(isset($dados['filtros'])){ ?>
+<script type="text/javascript">$(document).ready(function(){ $('.ui.selection.dropdown').dropdown(); $('.ui.dropdown').dropdown() });</script>
   <form class="formulario">
     <div class="ui column center aligned grid">
        <div class="column" style="width: auto;">

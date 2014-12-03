@@ -332,14 +332,14 @@ function submeter(controller, action, id, mudarPg){
 		        	
 		        	classeMostrar = "";
 		        	imagemm = "";
-					alert(result);
+					// alert(result);
 					//$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);
 		        	}
 		        	catch(e){
-						//$(window.document.location).attr('href', URL);
+						$(window.document.location).attr('href', URL);
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){
@@ -423,7 +423,8 @@ function validar(idCampo){
 	$("#campo_"+idCampo).removeClass("error");
 
 	classe = $('#input_'+idCampo).attr('class');
-	if(classe != ""){
+	if(classe != "" && typeof classe !== "undefined"){
+
 		classes = classe.split(' ');
 
 		mensagem = "";

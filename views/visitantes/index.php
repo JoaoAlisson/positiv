@@ -158,11 +158,13 @@ $paginacao = "";
   //print_r($dados['itens']);
   if(isset($dados['filtro'])){
   
-    $botao = "<div class=\"mini ui teal labeled icon button balao\" data-content='Informar Visita' onClick='deletarBt()'><i class=\"calendar icon\"></i>Visita</div>";
+    
   
     if(in_array("facebook", $dados['tipos'])){
       $campo = array_search("facebook", $dados['tipos']);
       foreach ($dados['itens'] as $chave => $campos) {
+        $botao = "<div class=\"mini ui teal labeled icon button balao\" data-content='Informar Visita' onClick=\"editarBt('".$dados['itens'][$chave]['id']."', 'visitas/vistd')\"><i class=\"calendar icon\"></i>Visitas</div>";
+
         if($dados['itens'][$chave][$campo] != "")
           $dados['itens'][$chave][$campo] = "<a href=\"http://facebook.com/".$campos[$campo]."\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/".$campos[$campo]."/picture\"/></a>";
 

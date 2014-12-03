@@ -22,7 +22,7 @@ $paginacao = "";
 
 
 <div class="field" id="campo_consagracao" style="margin: 2px; float:left; text-align:left;">
-     <label>Mês </label><div class="ui left labeled icon input"><div class="ui dropdown selection" id="select_consagracao" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_consagracao');">
+     <label>Mês </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_consagracao" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_consagracao');">
             <input type="hidden" name="mes" id="input_consagracao" class="" onchange=";" style="max-width:450px; min-width:300px;">
             <i class="triangle down icon disabled"></i>
             <div class="text" data-value="" style="max-width:450px; min-width:100px;"></div>
@@ -46,7 +46,7 @@ $paginacao = "";
 
   <div style="width:auto; float: left; text-align:left;">
      <br>
-    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrar('<?php echo $dados['controller'];?>')">
+    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrar('membros', 'aniversariantes')">
       <i class=" search icon"></i>Filtrar
     </div>
   </div>

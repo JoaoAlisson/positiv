@@ -147,7 +147,7 @@ class membros extends ControllerCRUD{
 			}
 		}
 		if($mes == "")
-			$mes = "DAY(`".PREFIXO."membros`.`nascimento`) = day(NOW())";
+			$mes = "MONTH(`".PREFIXO."membros`.`nascimento`) = MONTH(NOW()) AND DAY(`".PREFIXO."membros`.`nascimento`) = day(NOW())";
 
 		$qtdPorPg = isset($this->qtdPorPagina) ? $this->qtdPorPagina : 8;
 		$busca = $this->model->pegarPagina($pagina, $qtdPorPg, $camposPegar, $onde, null, $ordem, $ordenacao, null, $mes);

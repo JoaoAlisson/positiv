@@ -118,6 +118,7 @@ body:before {
   box-shadow: 0 0 7px black !important;
 }
 
+/**
 select{
   margin: 0;
   padding: .65em 1em;
@@ -126,7 +127,7 @@ select{
   border: 1px solid rgba(0,0,0,.15);
   height: 40px;
 }
-
+**/
 a {
   color: #009FDA;
   text-decoration: none;

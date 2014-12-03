@@ -1,5 +1,5 @@
 <?php
-	$this->html->menu("Igreja", "membros", "", "building", "teal", false,
+	$this->html->menu("Igreja", "membros", "", "university", "teal", false,
 					  array("Membros"     => array("membros", "", "users"),
 					  	    "Consagrações"=> array("consagracoes", "", "tags"),
 							"Ministérios" => array("ministerios", "", "list"),

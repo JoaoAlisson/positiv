@@ -19,7 +19,7 @@ function atualizarBanco(){
 
 function colocaLoad(){
 	ATUALIZANDOBANCO = true;
-	$("#iconeDesenvolvimento").html("Atualizando... <i class='icon loading'></i>");
+	$("#iconeDesenvolvimento").html("Atualizando... <i class='spinner loading icon'></i>");
 }
 
 function tiraLoad(){

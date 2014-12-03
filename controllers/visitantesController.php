@@ -142,7 +142,7 @@ class visitantes extends ControllerCRUD{
 			}
 		}
 		if($mes == "")
-			$mes = "DAY(`".PREFIXO."visitantes`.`nascimento`) = day(NOW())";
+			$mes = "MONTH(`".PREFIXO."visitantes`.`nascimento`) = MONTH(NOW()) AND DAY(`".PREFIXO."visitantes`.`nascimento`) = day(NOW())";
 
 		$qtdPorPg = isset($this->qtdPorPagina) ? $this->qtdPorPagina : 8;
 		$busca = $this->model->pegarPagina($pagina, $qtdPorPg, $camposPegar, $onde, null, $ordem, $ordenacao, null, $mes);

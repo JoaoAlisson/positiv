@@ -80,16 +80,16 @@
 </head>
 
 <body>
-<div id="wrap">
+
 <div class="ui large vertical corlateral inverted labeled icon sidebar menu" id="menu">
 
-    <a class="item" onclick="navegacao('','', 'Home');">
-      <i class="inverted circular red awesome download home icon"></i> <b>Home</b>
-    </a>
-    <?php $this->html->menuLateral(); ?>
-  </div>
+  <a class="item" onclick="navegacao('','', 'Home');">
+    <i class="inverted circular red home icon"></i> <b>Home</b>
+  </a>
+  <?php $this->html->menuLateral(); ?>
+</div>
 
-<div class="ui fixed cortopo transparent inverted main menu">
+<div class="ui fixed cortopo inverted main menu">
     <div class="container">
       <a class="launch item menuLateral"><i class="icon list layout"></i> Menu</a>
       <div class="title item">
@@ -114,8 +114,11 @@
     </div>
   </div>  
 
+<div class="pusher" id="wrap">
+
+
 <div class="ui center celled aligned grid">
-  <div class="ui center aligned grid" style="margin-top:-13px;">
+  <div class="ui center aligned grid" style="margin-top:25px;">
     <div class="column">
       <div class="ui icon menu">
         <?php include 'menuPrincipal.php';?>
