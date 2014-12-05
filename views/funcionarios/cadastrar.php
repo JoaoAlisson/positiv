@@ -1,4 +1,5 @@
 <?php 
+/**
   function tiposModel(){
       $tipos = array("nome"  => "nome",
               "face"         => "facebook",
@@ -21,6 +22,7 @@
 
       return $tipos;
   }
+*/
 
   function tiposController(){
       $tipos = array("nome"  => "Nome",
@@ -39,8 +41,7 @@
                "cidade"      => "Cidade",
                "bairro"      => "Bairro",
                "rua"         => "Rua",
-               "numero"      => "Numero",
-               "observacoes" => "Observações");    
+               "numero"      => "Numero");    
 
         return $tipos;   
   }  
@@ -70,10 +71,10 @@
         <div id="context1">
           <div class="ui tab segment active" data-tab="first">
             <div class="ui top attached tabular menu">
-              <a class="active item" data-tab="first/a">Membro</a>
-              <a class="item" data-tab="first/b">Não Membro</a>
+              <a class="item <?php if($dados['aba'] == 1) echo "active"; ?>" data-tab="first/a">Membro</a>
+              <a class="item <?php if($dados['aba'] == 2) echo "active"; ?>" data-tab="first/b">Não Membro</a>
             </div>
-            <div class="ui bottom attached active tab segment" data-tab="first/a">
+            <div class="ui bottom attached <?php if($dados['aba'] == 1) echo "active"; ?> tab segment" data-tab="first/a">
 
 <?php
 function inicio(){
@@ -93,8 +94,9 @@ function fim(){
 }
 </style>
 <?php
-  $this->html->formulario();
-  echo "<div class=\"ui column center aligned grid\">";
+  $this->html->formulario("membro");
+  echo "<input hidden name='subMembro'>
+        <div class=\"ui column center aligned grid\">";
 
   echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px;\">
         <div class=\"ui left ".$dados['cor']." aligned segment\" style=\"\">";
@@ -102,8 +104,7 @@ function fim(){
   $this->html->campo("membro");
   $this->html->campo("cargo");
   $this->html->campo("salario");
-  echo "<input hidden name='submetido' value=''/>
-       <script type=\"text/javascript\">$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script>
+  echo "<script type=\"text/javascript\">$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script>
        <div class='ui checkbox'>
         <input name='inss' type='checkbox'>
         <label><strong>Calcular INSS</strong></label>
@@ -111,7 +112,7 @@ function fim(){
   $this->html->campo("descricao");
   
   echo "<div style='clear: both;'>";
-  $this->html->submeter(null , "cadastrar"); 
+  $this->html->submeter(null , "cadastrar", null, null, null, "membro"); 
   echo "</div>";
   fim();
   echo "</div>";
@@ -119,14 +120,14 @@ function fim(){
 ?>
 
 </div>
-            </div>
-            <div class="ui bottom attached tab segment" data-tab="first/b">
+      </div>
+      <div class="ui bottom attached tab <?php if($dados['aba'] == 2) echo "active"; ?> segment" data-tab="first/b">
 
 <?php
 
-  $informacoes['tipos']  = tiposModel();
+  $informacoes['tipos']  = $dados['campos'];
   $informacoes['campos'] = tiposController();
-  $informacoes['obrigatorios'] = array();
+  $informacoes['obrigatorios'] = array("nome", "sexo");
 
   $html2 = new HTML($informacoes);
 

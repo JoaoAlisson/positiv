@@ -18,9 +18,29 @@
 </style>
 
 <?php
-	$html2->formulario();
+	$html2->formulario('nMembro');
 	$quantidade = count($dados['campos']);
-	echo "<div class=\"ui column center aligned grid\">";
+	echo "<input hidden name='subNaoMembro'>
+		  <div class=\"column\" style=\"width:auto;\">
+		  	<div class=\"ui left aligned segment\" style=\"\">";
+
+		  	inicio();
+
+			$html2->campo("nome");		  		
+			$this->html->campo("cargo", true, null, null, "cargo2");
+			$this->html->campo("salario");
+
+			fim();
+			inicio();
+
+			echo "<br><script type=\"text/javascript\">$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script>
+				<div class='ui checkbox'>
+				<input name='inss' type='checkbox'>
+				<label><strong>Calcular INSS</strong></label>
+				</div><br><br>";		  
+		  $this->html->campo("descricao");
+
+	echo "</div></div><br>";
 
 	if($quantidade <= 6)
 		echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px;\">
@@ -37,20 +57,23 @@
 	$ultimo = $quantidade - 1;
 
 	$cont = 0;
+
 	foreach ($dados['campos'] as $chave => $campo) {
-		$html2->campo($chave);
-		$cont++;
-		if($cont == $metade && $quantidade > 6){
-			fim();
-			inicio();
-		}		
+		if($campo != "nome"){
+			$html2->campo($chave);
+			$cont++;
+			if($cont == $metade && $quantidade > 6){
+				fim();
+				inicio();
+			}	
+		}
 	}
 	
 	if($quantidade > 6)
 		fim();
 
 	echo "<div style='clear: both;'>";
-	$this->html->submeter(null , "cadastrar"); 
+	$this->html->submeter(null , "cadastrar/ab:2", null, null, null, "nMembro"); 
 	echo "</div>";
 	fim();
 	echo "</div>";

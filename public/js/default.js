@@ -293,21 +293,27 @@ function filtrar(controller, action){
 	paginacao(controller+"/", '1', null, action);
 }
 
-function submeter(controller, action, id, mudarPg){
+function submeter(controller, action, id, mudarPg, idForm){
 
 
 	controller = controller || "";
 	action = action || "";
 	id = id || "";
+	idForm = idForm || "formulario";
+
+	if(idForm == "formulario")
+		idForm = "."+idForm;
+	else
+		idForm = "#"+idForm;
 
 	mudarPg = mudarPg || "";
 
 	caminho = URL+controller+action;
 
-	valido = validacao();
+	valido = validacao(idForm);
 	if(valido == true){
 
-		$('.formulario').submit(function(event){
+		$(idForm).submit(function(event){
 
 			event.preventDefault();
 
@@ -332,14 +338,14 @@ function submeter(controller, action, id, mudarPg){
 		        	
 		        	classeMostrar = "";
 		        	imagemm = "";
-					// alert(result);
+					 alert(result);
 					//$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);
 		        	}
 		        	catch(e){
-						$(window.document.location).attr('href', URL);
+						//$(window.document.location).attr('href', URL);
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){
@@ -373,16 +379,16 @@ function submeter(controller, action, id, mudarPg){
 		    return false;		    
 		});	
 
-	    $('.formulario').submit();
+	    $(idForm).submit();
 	    files.empty();
 	}    
 }
 
 
-function validacao(){
+function validacao(idForm){
 
 	retornar = true;
-	$('form > * :input').each(function(){
+	$(idForm + ' > * :input').each(function(){
 		campo = $(this).attr('id');
 		valido = true;
 		if(campo != null)

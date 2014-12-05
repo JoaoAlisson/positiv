@@ -32,8 +32,9 @@ class HTML{
 			return "";
 	}
 
-	private function retornaCampo($nome, $campo){
-		echo "<div class=\"field\" id=\"campo_$nome\">
+	private function retornaCampo($nome, $campo, $id = ""){
+		$id = ($id == "") ? $nome : $id;
+		echo "<div class=\"field\" id=\"campo_$id\">
 			 <label>" . $this->dados['campos'][$nome] . "</label>";
 		echo $campo;
 		echo "</div>";			
@@ -58,11 +59,11 @@ class HTML{
 		return $this->estados;
 	}
 
-	function campo($campo, $validar = true, $valor = null, $where = ""){
+	function campo($campo, $validar = true, $valor = null, $where = "", $id = ""){
 		if(isset($this->dados['tipos'][$campo])){
 			if(is_array($this->dados['tipos'][$campo])){
 				if(isset($this->dados['tipos'][$campo]["relacao"]))
-					$this->chaveEstrangeira($campo, $validar, $valor, $this->dados['tipos'][$campo], $where);
+					$this->chaveEstrangeira($campo, $validar, $valor, $this->dados['tipos'][$campo], $where, $id);
 				else
 					$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo]);
 			}else{
@@ -74,21 +75,21 @@ class HTML{
 		}
 	}
 
-	function submeter($controller = null, $view = null, $nomeBotao = null, $icone = null, $id = ""){
+	function submeter($controller = null, $view = null, $nomeBotao = null, $icone = null, $id = "", $idForm = ""){
 
 		$controller = isset($controller) ? $controller : $this->dados['nomeController'];
 		$view = isset($view) ? $view : $this->dados['nomeView'];
 		$nomeBotao = isset($nomeBotao) ? $nomeBotao : "Cadastrar";
 		$icone = isset($icone) ? $icone : "save";
 
-		echo    "<div class=\"ui green vertical labeled icon submit button submeterForm\" ".$this->getTabindex(false)." style=\"margin-top:10px;\" onClick=\"submeter('$controller/', '$view', '$id');\">
+		echo    "<div class=\"ui green vertical labeled icon submit button submeterForm\" ".$this->getTabindex(false)." style=\"margin-top:10px;\" onClick=\"submeter('$controller/', '$view', '$id', null, '$idForm');\">
 					<i class=\"$icone icon\"></i>$nomeBotao
 				</div>";
 	}
 
-	function formulario(){
+	function formulario($id = ""){
 		echo "<script type=\"text/javascript\">$(document).ready(function(){ $('.ui.selection.dropdown').dropdown(); $('.ui.dropdown').dropdown() });</script>
-		<form action=\"\" enctype=\"multipart/form-data\" class=\"ui form formulario\" method=\"POST\">";
+		<form action=\"\" enctype=\"multipart/form-data\" class=\"ui form formulario\" id='$id' method=\"POST\">";
 	}
 
 	function formularioFim(){
@@ -683,16 +684,17 @@ class HTML{
 		$this->retornaCampo($campo, $incluir);				
 	}
 
-	function chaveEstrangeira($campo, $validar, $valor = "", $informacoes, $where){
+	function chaveEstrangeira($campo, $validar, $valor = "", $informacoes, $where, $id = ""){
 		if($valor == null)
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
 
 		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
 		$validacaoJs = "";
+		$id = ($id == "") ? $campo : $id;
 		if($validar == false){
 			$requerido =  "";			
 		}else{
-			$validacaoJs = "validar('$campo');";
+			$validacaoJs = "validar('$id');";
 		}
 
 		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "triangle down";
@@ -718,15 +720,15 @@ class HTML{
 		}
 
 		$incluir = "<div class='ui left labeled icon input'>";
-		$incluir .= "<div class=\"ui search dropdown selection\" id=\"select_$campo\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
-				      <input type=\"hidden\" name='$campo' $value id='input_$campo' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
+		$incluir .= "<div class=\"ui search dropdown selection\" id=\"select_$id\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$id');\">
+				      <input type=\"hidden\" name='$id' $value id='input_$id' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
 				      <i class='$icone icon disabled'></i>
 				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:100px;'>$selecionado</div>
 				      <div class=\"menu\">$opcoes
 				      </div>$asterisco
 				      </div>";
 		$incluir .= "</div>";		
-		$this->retornaCampo($campo, $incluir);				
+		$this->retornaCampo($campo, $incluir, $id);				
 	}
 
 

@@ -15,9 +15,9 @@ class funcionariosModel extends Model{
 	public function depoisDeCadastrar($dados){
 		$id = $dados['cargo'];
 		if($id != "" && $id != "0"){
-			$banco = new Database();
+			$id = (int)$id;
 			$tabela = PREFIXO."cargos";
-			$sth = $banco->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $id");
+			$sth = $this->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $id");
 			$sth->execute();
 		}
 
@@ -35,6 +35,7 @@ class funcionariosModel extends Model{
 
 	public function antesDeDeletar($id){
 		
+		$id = (int)$id;
 		$banco = new Database();
 		$tabela = PREFIXO."funcionarios";
 		$consulta = $banco->prepare("SELECT cargo FROM $tabela WHERE id = {$id}");
@@ -44,7 +45,9 @@ class funcionariosModel extends Model{
 		$consagracao = $consagracao[0];
 		$consagracao = $consagracao['cargo'];
 
+		$consagracao = (int) $consagracao;
 		if($consagracao != 0){
+
 
 			$tabela = PREFIXO."cargos";
 			$sth = $banco->prepare("UPDATE $tabela SET qtd = qtd - 1 WHERE id = $consagracao");

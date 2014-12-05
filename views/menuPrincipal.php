@@ -28,7 +28,7 @@
 <?php
   function funcionarios(){
     $ativo = (CONTROLLER == "funcionarios") ? "active" : "";
-    echo "<a class=\"item $ativo menuprin esconder\" id=\"menu_funcionarios\" onClick=\"navegacao('funcionarios','', 'funcionarios')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
+    echo "<a class=\"item $ativo menuprin esconder\" id=\"menu_funcionarios\" onClick=\"navegacao('funcionarios/','', 'funcionarios')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
   <img class=\"circular ui inverted image\" style=\"width:60px; height:30;\" src=\"". URL ."public/images/icons/funcionario.png\">Funcionários
 </a>";
   }

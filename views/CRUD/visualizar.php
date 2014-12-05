@@ -6,11 +6,11 @@
     else
       $nomeSingular = $dados['nomeController'];
   ?>
-  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:-10px;" onclick="editarBt('<?php echo $dados['id']; ?>');">
+  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:-10px;" onclick="editarBt('<?php echo $dados['id']; ?>');">
     <i class="pencil icon"></i>Editar <?php echo $nomeSingular;?>
   </div>
 </div>  
-
+<br>
 <div class="ui column center aligned grid">
 	<div class="column" style="width: auto;">
 		<div class="ui <?php echo $dados['cor']; ?> segment" style="width: auto; max-width:900px;">

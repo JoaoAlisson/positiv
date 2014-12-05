@@ -8,7 +8,7 @@ class funcionarios extends ControllerCRUD{
 						   "cargo"		=> "Cargo",
 						   "salario"	=> "Salário",
 						   "inss"		=> "Calcular INSS",
-						   "descricao"  => "Descrição");
+						   "descricao"  => "Observações");
 
 	public $cor = "black";
 
@@ -28,7 +28,8 @@ class funcionarios extends ControllerCRUD{
 	public function cadastrar(){
 		
 		$retorno = array();
-		if(isset($_POST['submetido'])){
+
+		if(isset($_POST['subMembro'])){
 
 			$this->usarLayout(false);
 
@@ -44,11 +45,41 @@ class funcionarios extends ControllerCRUD{
 
 				$retornou = $this->model->inserir($campos);
 				$retorno['retorno'] = $retornou; 
-				//print_r($campos);
 			}
 
 		}
+
+		if(isset($_POST['subNaoMembro'])){
+
+			$this->usarLayout(false);
+
+			if($_POST['cargo2'] == 0 || $_POST['cargo2'] == ""){
+				$retorno['retorno'][0] = "erro";
+				$retorno['retorno'][1] = "O funcionário não foi cadastrado";
+				$retorno['retorno'][2]['cargo2'][0] = "Campo Obrigatório"; 
+			}else{
+				require RAIZ . SEPARADOR . "models" . SEPARADOR . "func_nao_membroModel.php";
+
+				$nMembro = new func_nao_membroModel();
+
+				$campos = array();
+				$tipos = $this->outrosCampos();
+				foreach ($tipos as $key => $value) 
+					$campos[$key] = isset($_POST[$key]) ? $_POST[$key] : "";
+
+				$retornou = $nMembro->inserir($campos);
+				$retorno['retorno'] = $retornou;
+			}
+
+		}
+
 		$campos = $this->outrosCampos();
+
+		$aba = (isset($this->GET['ab'])) ? $this->GET['ab'] : 1;
+		$aba = ($aba != 2) ? 1 : 2;
+
+		$retorno['aba'] = $aba;
+
 		$retorno['campos'] = $campos;
 		$this->dados($retorno);
 	}
@@ -189,8 +220,7 @@ class funcionarios extends ControllerCRUD{
 					      "cidade"	   => "cidade",
 					      "bairro"     => "texto",
 					      "rua"		   => "texto",
-					      "numero"	   => "texto",
-						  "observacoes"=> "textoLongo");
+					      "numero"	   => "texto");
 		return $tipos;
 	}
 }
