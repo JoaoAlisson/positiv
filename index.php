@@ -1,4 +1,5 @@
 <?php
+	//error_reporting(false); 
 	define('SEPARADOR', DIRECTORY_SEPARATOR);
 	define('RAIZ', dirname(__FILE__));
 

@@ -66,9 +66,9 @@ class funcionariosModel extends Model{
 	}
 
 	private function pegarCampo($id, $campo){
-		$this->setaBancoModel();
+		//$this->setaBancoModel();
 		$tabela = PREFIXO."funcionarios";
-		$consulta = $this->bancoModel->prepare("SELECT $campo FROM $tabela WHERE id = {$id}");
+		$consulta = $this->prepare("SELECT $campo FROM $tabela WHERE id = {$id}");
 		$consulta->execute();
 
 		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);

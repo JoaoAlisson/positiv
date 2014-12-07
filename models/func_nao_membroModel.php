@@ -32,7 +32,7 @@ class func_nao_membroModel extends Model{
 		$campos = array("membro" 	=> 0,
 						"func"		=> $id,
 						"cargo"  	=> $cargo,
-						"salario"	=> $_POST['salario'],
+						"salario"	=> $_POST['salario2'],
 						"inss"      => $inss,
 						"descricao" => $_POST['descricao']);
 

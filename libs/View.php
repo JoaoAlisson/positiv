@@ -13,10 +13,10 @@ class View {
 	}
 
 	private function adicionarSubMenu($controller){
-		if(file_exists("views/". CONTROLLER . "/subMenu.php"))
-			require "views/". CONTROLLER . "/subMenu.php";
+		if(file_exists("views/". CONTROLLER . "/subMenu.phtml"))
+			require "views/". CONTROLLER . "/subMenu.phtml";
 		else
-			require "views/". $controller . "/subMenu.php";
+			require "views/". $controller . "/subMenu.phtml";
 		echo "</div>
 			 </div>
 			</div>";						
@@ -31,35 +31,35 @@ class View {
 		$arquivo = $controller . "/". $view;
 		$dados = $this->dados;
 		
-		require "views/menu.php";
+		require "views/menu.phtml";
 		if(!$noInclude || $paginacaoAjax){
 
 			if(!$noInclude){
-				require "views/". $view . ".php";
+				require "views/". $view . ".phtml";
 			}else{
 				echo "<div id='submenu'>";
-					if(file_exists("views/". $controller . "/subMenu.php")){
+					if(file_exists("views/". $controller . "/subMenu.phtml")){
 						if(!isset($_POST['subClick'])){
 							$this->adicionarSubMenu($controller);
 						}	
 					}	
 				echo "</div><div id='subconteudo'>";
-					require "views/". $view . ".php";  
+					require "views/". $view . ".phtml";  
 				echo "</div>";
 			}
 		}else{		
 
-			if(file_exists("views/". $view . ".php")){
-				require "views/topo.php";
+			if(file_exists("views/". $view . ".phtml")){
+				require "views/topo.phtml";
 				echo "<div id='submenu'>";
-					if(file_exists("views/". $controller . "/subMenu.php")){
+					if(file_exists("views/". $controller . "/subMenu.phtml")){
 						$this->adicionarSubMenu($controller);
 					}	
 				echo "</div><div id='subconteudo'>";
 					$this->html->dados['nomeView'] = $view;							
-					require "views/". $view . ".php";
+					require "views/". $view . ".phtml";
 				echo "</div>";
-				require "views/rodape.php";
+				require "views/rodape.phtml";
 
 			}
 		}

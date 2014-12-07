@@ -1,0 +1,130 @@
+<?php 
+function inicio(){
+  echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px; float: left; margin: 10px;\">";
+}
+
+function fim(){
+  echo "</div>";
+}
+
+	if(isset($dados['retorno'])){
+			$retornoJson['valido'] = $dados['retorno'][0];
+			$retornoJson['mensagem'] = $dados['retorno'][1];
+			$retornoJson['erros'] = isset($dados['retorno'][2]) ? $dados['retorno'][2] : "";
+
+			$retornoJson = json_encode($retornoJson);
+			echo $retornoJson;
+
+	}else{
+
+	require_once RAIZ . SEPARADOR . 'models' . SEPARADOR . 'func_nao_membroModel.php';
+	$modelFunc = new func_nao_membroModel();
+	$modelFunc->formataSaida($dados['valores2']);
+
+	$informacoes['tipos']  = $dados['campos2'];
+	$informacoes['campos'] = tiposController();
+	$informacoes['obrigatorios'] = array("nome", "sexo");
+	$informacoes['dados']['campos'] = $dados['valores2'];
+
+	$html2 = new HTML($informacoes);		
+?>
+<style>
+@media (min-width: 460px) {
+  .divForm {
+    width:450px !important;
+  }
+}
+</style>
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?>Editar Funcionário</h2> (Não Membro)
+</div>
+
+<?php
+	$html2->formulario();
+	$quantidade = count($dados['campos2']);
+	echo "<div class=\"ui column center aligned grid\">";
+	echo "<input hidden name='subNaoMembro'>
+		  <div class=\"column\" style=\"width:auto;\">
+		  	<div class=\"ui left aligned segment\" style=\"\">";
+
+		  	inicio();
+
+			$html2->campo("nome");		  		
+			$this->html->campo("cargo");
+			$this->html->campo("salario");
+
+			fim();
+			inicio();
+
+	$selecionado = ($dados['funcionarios']['inss'] == 1) ? "checked='checked'" : "";
+	echo "<script type=\"text/javascript\">$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script><br>
+		<div class='ui checkbox'>
+		<input $selecionado name='inss' type='checkbox'>
+		<label><strong>Calcular INSS</strong></label>
+		</div><br><br>";	  
+		  $this->html->campo("descricao");
+
+	echo "</div></div><br>";
+
+	if($quantidade <= 6)
+		echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px;\">
+				<div class=\"ui left aligned segment\" style=\"\">";
+	else
+		echo "<div class=\"column\" style=\"width:auto;\">
+				<div class=\"ui left aligned segment\" style=\"\">";
+	
+	
+	if($quantidade > 6)
+		inicio();
+	
+	$metade = (int)($quantidade/2) + 1;
+	$ultimo = $quantidade - 1;
+
+	$cont = 0;
+	echo "<input type='text' name='id' value='".$dados['id']."' style='display:none;' />";
+	foreach ($dados['campos2'] as $chave => $campo) {
+		if($campo != "nome"){
+			$html2->campo($chave);
+			$cont++;
+			if($cont == $metade && $quantidade > 6){
+				fim();
+				inicio();
+			}	
+		}
+	}
+	
+	if($quantidade > 6)
+		fim();
+
+	echo "<div style='clear: both;'>";
+	$this->html->submeter(null , "editar", "Salvar Alterações", null, $dados['id']);
+	//$this->html->submeter(null , "cadastrar/ab:2", null, null, null, "nMembro"); 
+	echo "</div>";
+	fim();
+	echo "</div></div>";
+		$this->html->formularioFim(); 
+
+}
+
+	function tiposController(){
+	  $tipos = array("nome"  => "Nome",
+	           "face"        => "Facebook (http://facebook.com/exemplo)",
+	           "cpf"         => "CPF",
+	           "rg"          => "RG",
+	           "nascimento"  => "Data de Nascimento",
+	           "sexo"        => "Sexo",
+	           "foto"        => "Foto",
+	           "estadocivil" => "Estado Civil",
+	           "conjuge"     => "Conjugue",
+	           "telefone"    => "Telefone",
+	           "celular"     => "Celular",
+	           "email"       => "Email",
+	           "estado"      => "Estado",
+	           "cidade"      => "Cidade",
+	           "bairro"      => "Bairro",
+	           "rua"         => "Rua",
+	           "numero"      => "Numero");    
+
+	    return $tipos;
+	}  
+?>

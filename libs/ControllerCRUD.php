@@ -175,7 +175,11 @@ class ControllerCRUD extends Controller{
 
 	public function editar(){
 
-		$id = isset($_POST['idSet']) ? $_POST['idSet'] : "";
+		$id = "";
+		if(isset($this->GET['cod']))
+			$id = $this->GET['cod'];
+		if(isset($_POST['idSet']))
+			$id = $_POST['idSet'];
 		if(isset($_POST['id']))
 			$id = $_POST['id'];
 
@@ -231,12 +235,18 @@ class ControllerCRUD extends Controller{
 	}
 
 	public function visualizar(){
-		if(!isset($_POST['idSet']))
-			header('location: '. URL . $this->nomeController());
-		if($_POST['idSet'] == "")
+		
+		$id = "";
+		if(isset($this->GET['cod']))
+			$id = $this->GET['cod'];
+
+		if(isset($_POST['idSet']))
+			$id = $_POST['idSet'];
+
+		if($id == "")
 			header('location: '. URL . $this->nomeController());
 
-		$id = $_POST['idSet'];
+		//$id = $_POST['idSet'];
 		//$id= 2;
 		$retorno = $this->model->visualizar($id);
 		$retorno['nome'] = $this->nome;

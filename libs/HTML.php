@@ -68,7 +68,7 @@ class HTML{
 					$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo]);
 			}else{
 				$funcao = "campo".ucfirst($this->dados['tipos'][$campo]);
-				$this->{$funcao}($campo, $valor, $validar);
+				$this->{$funcao}($campo, $valor, $validar, $id);
 			}
 		}else{
 			$this->campoTexto($campo, $valor, $validar);
@@ -389,27 +389,29 @@ class HTML{
 		$this->retornaCampo($campo, $incluir);
 	}	
 
-	function campoMoeda($campo, $valor = null, $validar){
+	function campoMoeda($campo, $valor = null, $validar, $id){
 
 		if($valor == null)
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
 
 		$requerido = in_array($campo, $this->dados['obrigatorios']) ? "validarObrigatorio" : "";
+		$id = ($id != "") ? $id : $campo;
 		$validacaoJs = "";
-		if($validar == false){
+
+		if($validar == false)
 			$requerido =  "";			
-		}else{
-			$validacaoJs = "validar('$campo');";
-		}
+		else
+			$validacaoJs = "validar('$id');";
+				 
 		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "dollar";
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
 		$incluir = "<div class='ui corner labeled left icon input'>";
-		$incluir .= "<input type='text' class='$requerido data' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$campo' placeholder='$placeholder' onfocus=\"moedaMask('input_$campo')\" name='$campo' onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs\">";
+		$incluir .= "<input type='text' class='$requerido data' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$id' placeholder='$placeholder' onfocus=\"moedaMask('input_$id')\" name='$id' onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs\">";
 		$incluir .= "<i class='$icone icon'></i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
 		$incluir .= "</div>";		
-		$this->retornaCampo($campo, $incluir);
+		$this->retornaCampo($campo, $incluir, $id);
 	}
 
 	function campoEmail($campo, $valor = null, $validar){
