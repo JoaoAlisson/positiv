@@ -239,7 +239,6 @@ class ControllerCRUD extends Controller{
 		$id = "";
 		if(isset($this->GET['cod']))
 			$id = $this->GET['cod'];
-
 		if(isset($_POST['idSet']))
 			$id = $_POST['idSet'];
 

@@ -319,8 +319,97 @@ class funcionarios extends ControllerCRUD{
 		$this->dados($retorno);
 	}
 
+	public function deletar(){
+		
+		$retorno;
+		if(!isset($_POST['id']) || !isset($_POST['model'])){
+			$retorno['flag'] = "erro";
+			$retorno['mensagem'] = "Não foi possível deletar";
+		}else{
+			$id = $_POST['id'];
+			
+			$idFunc = $this->model->pegar($id, array("func"));
+			$idFunc = $idFunc['funcionarios']['func'];	
+			if($idFunc != "" && $idFunc != 0){
+
+				require RAIZ . SEPARADOR . 'models' . SEPARADOR . 'func_nao_membroModel.php';
+				$func = new func_nao_membroModel();	
+				$func->deletar($idFunc);			
+			}
+			$retorno = $this->model->deletar($id);		
+		}
+	
+		echo json_encode($retorno);
+	}	
+
 	public function visualizar(){
-		echo "testes";
+		$id = "";
+		if(isset($this->GET['cod']))
+			$id = $this->GET['cod'];
+		if(isset($_POST['idSet']))
+			$id = $_POST['idSet'];
+
+		if($id == "")
+			header('location: '. URL . $this->nomeController());
+
+		$retorno = $this->model->visualizar($id);
+		$retorno['nome'] = $this->nome;
+		$retorno['id'] = $id;
+		$campos =  $this->campos;
+
+		$retorno['campos'] = $campos;
+		$retorno['tipos'] = $this->model->tipos;
+
+		if($retorno['funcionarios']['inss'] == 1)
+			$retorno['funcionarios']['inss'] = "Sim";
+		else
+			$retorno['funcionarios']['inss'] = "Não";
+
+		$retorno['funcionarios']['salario'] = "R$ ".$retorno['funcionarios']['salario'];
+		
+		if($retorno['funcionarios']['func']){
+
+			unset($retorno['campos']['func']);
+			$idFunc = $this->model->pegar($id, array("func"));
+			$idFunc = $idFunc['funcionarios']['func'];
+
+			require RAIZ . SEPARADOR . 'controllers' . SEPARADOR . 'func_nao_membroController.php';
+			require RAIZ . SEPARADOR . 'models' . SEPARADOR . 'func_nao_membroModel.php';
+			$func = new func_nao_membroModel();
+			$vars = get_class_vars('func_nao_membro');
+			$camposFunc = $vars['campos'];
+
+			$dadosFunc = $func->visualizar($idFunc);
+
+			$retorno['funcionarios'] = array_merge($retorno['funcionarios'], $dadosFunc['func_nao_membro']);
+			$retorno['tipos'] = array_merge($retorno['tipos'], $func->tipos);
+			$retorno['campos'] = array_merge($retorno['campos'], $camposFunc);
+
+		}else{
+
+			unset($retorno['campos']['membro']);
+			$idMembro = $this->model->pegar($id, array("membro"));
+			$idMembro = $idMembro['funcionarios']['membro'];
+
+			require RAIZ . SEPARADOR . 'controllers' . SEPARADOR . 'membrosController.php';
+			require RAIZ . SEPARADOR . 'models' . SEPARADOR . 'membrosModel.php';
+			$membro = new membrosModel();
+			$vars = get_class_vars('membros');
+			$camposMembros = $vars['campos'];
+
+			$dadosMembro = $membro->visualizar($idMembro);
+
+			$retorno['funcionarios'] = array_merge($retorno['funcionarios'], $dadosMembro['membros']);
+			$retorno['tipos'] = array_merge($retorno['tipos'], $membro->tipos);
+			$retorno['campos'] = array_merge($retorno['campos'], $camposMembros);
+			$retorno['funcionarios']['nome'] = "<a onclick=\"redir('membros', '$idMembro', 'Igreja');\">".$retorno['funcionarios']['nome']."</a>";
+		}
+
+		$retorno['cor'] = $this->informacoes['cor'];
+		$retorno['icone'] = $this->informacoes['icone'];
+
+		$this->dados($retorno);
+		$this->renderizar('CRUD/visualizar');
 	}
 
 	private function outrosCampos(){

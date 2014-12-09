@@ -189,7 +189,7 @@ function verBt(id){
 	controller = CONTROLLER_GLOBAl;
 	action = "visualizar"; 
 
-	caminho = URL+controller+action;
+	caminho = URL+controller+action+"/cod:"+id;;
 	PAGINACAMINHO = caminho; 
 	$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true , idSet: id});
 
@@ -771,13 +771,18 @@ function registraSelect(id){
 	$("#"+id).dropdown();
 }
 
-function redir(controller, id){
+function redir(controller, id, nMenu){
 
 	action = "/visualizar"; 
+	nMenu = nMenu || "";
+	if(nMenu != ""){
+		$(".menuprin.active").removeClass("active");
+		$("#menu_"+nMenu).addClass("active");	
+	}
 
 	caminho = URL+controller+action;
 	PAGINACAMINHO = caminho; 
-	$( "#subconteudo" ).load(caminho, { ajaxPg: true, subClick: true , idSet: id});
+	$( "#conteudo" ).load(caminho, { ajaxPg: true, idSet: id});
 
 	window.history.pushState('Object', 'Postiv', caminho);
 

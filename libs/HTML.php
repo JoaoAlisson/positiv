@@ -17,7 +17,7 @@ class HTML{
 	function __construct(&$informacoes){
 		$this->dados = &$informacoes;
 	}
-
+	
 	private function getBanco(){
 		if($this->banco == null)
 			$this->banco = new Database();

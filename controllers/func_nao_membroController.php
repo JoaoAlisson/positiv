@@ -23,8 +23,7 @@ class func_nao_membro extends ControllerCRUD{
  						   "cidade"	    => "Cidade",
  						   "bairro"     => "Bairro",
  						   "rua"	    => "Rua",
- 						   "numero"	    => "Numero",
-						   "observacoes"=> "textoLongo");
+ 						   "numero"	    => "Numero");
 
 	public function cadastrar(){
 		$this->usarLayout(false);
