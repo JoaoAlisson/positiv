@@ -8,9 +8,10 @@ class funcionariosModel extends Model{
 						   "cargo"     => array("relacao" => "muitosParaUm", "model" => "cargos", "campo" => "nome"),
 						   "salario"   => "moeda",
 						   "inss"	   => "inteiro",
+						   "situacao"  => array("Ativo", "De Férias", "Demitido"),
 						   "descricao" => "textoLongo");
 
-	public $obrigatorios = array("nome", "cargo");
+	public $obrigatorios = array("nome", "cargo", "situacao");
 
 	public function depoisDeCadastrar($dados){
 		$id = $dados['cargo'];

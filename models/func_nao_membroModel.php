@@ -34,6 +34,7 @@ class func_nao_membroModel extends Model{
 						"cargo"  	=> $cargo,
 						"salario"	=> $_POST['salario2'],
 						"inss"      => $inss,
+						"situacao"	=> $_POST['situacao2'],
 						"descricao" => $_POST['descricao']);
 
 		$dados = $campos;

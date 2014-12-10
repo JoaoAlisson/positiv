@@ -237,15 +237,16 @@ function deletar(idd, controller, action){
 				caminho = window.location.href;
 				navegacao(controller, "", null, null, caminho);
             }else{
-
 				mensagemAlertaErro(retorno.mensagem); 
 				setTimeout(function(){
 					$('.small.modal.erro').modal('show');
 				}, 500);   
             }
 			setTimeout(function(){
-			 	$('.small.modal.sucesso').modal('hide');
-			 	$('.small.modal.erro').modal('hide');
+				if(retorno.flag == "ok")
+			 		$('.small.modal.sucesso').modal('hide');
+			 	else
+			 		$('.small.modal.erro').modal('hide');
 			}, 2500);            			
 
 		});

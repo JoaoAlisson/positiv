@@ -8,6 +8,7 @@ class funcionarios extends ControllerCRUD{
 						   "cargo"		=> "Cargo",
 						   "salario"	=> "Salário",
 						   "inss"		=> "Calcular INSS",
+						   "situacao"	=> "Situação",
 						   "descricao"  => "Observações");
 
 	public $cor = "black";
@@ -18,7 +19,7 @@ class funcionarios extends ControllerCRUD{
 
 	public $listar = array("cargo", "salario");
 
-	public $filtros = array("cargo");
+	public $filtros = array("cargo", "situacao");
 
 	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
 
@@ -41,6 +42,7 @@ class funcionarios extends ControllerCRUD{
 								"cargo"  	=> $_POST['cargo'],
 								"salario"	=> $_POST['salario'],
 								"inss"      => $inss,
+								"situacao"	=> $_POST['situacao'],
 								"descricao" => $_POST['descricao']);
 
 				$retornou = $this->model->inserir($campos);
@@ -274,6 +276,7 @@ class funcionarios extends ControllerCRUD{
 						$campos = array("cargo"  	=> $_POST['cargo'],
 										"salario"	=> $_POST['salario'],
 										"inss"      => $inss,
+										"situacao"	=> $_POST['situacao'],
 										"descricao" => $_POST['descricao']);
 
 						$retornou = $this->model->atualizar($campos, $_POST['id']);

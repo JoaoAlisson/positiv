@@ -1,0 +1,183 @@
+<?php 
+  $mes = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+//print_r($dados['itens']);
+$paginacao = "";
+ if(!isset($dados['filtro'])){
+  $filtrosValores = "";
+  foreach ($dados['filtrosValores'] as $campo => $valor) {
+      $filtrosValores .= "/$campo:$valor";
+  }
+  echo "<script type='text/javascript'>setOrdemPag('".$dados['pagina']."','".$dados['ordem']."', '".$dados['ordenacao']."'); FILTROS = '$filtrosValores';</script>"; ?>
+<div style="width:100%; text-align:center; text-transform: uppercase;"><h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?><?php echo $dados['nome'][1];?></h2>
+  <?php 
+    $nomeSingular = "";
+    if(isset($dados['nome'][0]))
+      $nomeSingular = $dados['nome'][0];
+    else
+      $nomeSingular = $dados['nomeController'];
+  ?>
+</div>   
+<br> 
+
+<script type="text/javascript">$(document).ready(function(){ $('.ui.selection.dropdown').dropdown(); $('.ui.dropdown').dropdown() });</script>
+  <form class="formulario">
+    <input id='ano' value='<?php echo $dados['ano']; ?>' hidden>
+    <input id='anoAtual' value='<?php $atual = 2000 + date('y'); echo $atual; ?>' hidden>
+    <input id='mesAtual' value='<?php echo date('m'); ?>' hidden>
+    <div class="ui column center aligned grid">
+       <div class="column" style="width: auto;">
+    <div class="ui <?php echo $dados['cor']; ?> segment" style="width: auto;">
+
+<div class="field" id="campo_consagracao" style="margin: 2px; float:left; text-align:left;">
+     <label>Ano </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_ano" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_ano');">
+            <input type="hidden" name="mes" id="input_ano" value="<?php echo $dados['ano']; ?>" class="" onchange=";" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:100px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php 
+                    for($ano = 2010; $ano <= 2030; $ano++){
+                      if($ano == $dados['ano'])
+                        echo " <div class='item' value='$ano' data-value='$ano'>$ano</div>";
+                      else
+                        echo " <div class='item' data-value='$ano'>$ano</div>";
+                    }
+                ?>
+              </div>                                     
+            </div></div>
+</div>
+    <div style="width:auto; float: left; text-align:left;">
+     <br>
+    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrarFolha();">
+      <i class=" search icon"></i>Filtrar
+    </div>
+  </div>
+  </div>
+  <h3><i class="calendar icon"></i>Ano de <?php echo $dados['ano']; ?></h3>
+  </div></div>
+  </form>
+
+    <div class="ui column center aligned grid">
+       <div class="column" style="width: auto;">
+  <table class="ui table segment" id="tabelaListagem" style="width:auto;">
+	<thead>
+		<tr>
+  	<?php foreach ($dados['campos'] as $campo => $nome) {
+      if($nome == "facebook")
+        echo "<th><i class=\"facebook sign big purple icon\" style='margin-left: 6px;'></i></th>";
+      else
+			 echo "<th>$nome</th>";
+		}?>
+    <th></th>
+    <th></th>
+		</tr>
+	</thead>
+  <tbody id="listagem">
+  <div>
+  <?php //} ?>
+  	<?php 
+      $listagem = "";
+      $mesValor = array();
+      $totalAnual = (double)0;
+      foreach ($dados['itens'] as $iten => $campos){
+        $mesValor[$campos['mes']]['total'] = $campos['total'];
+        $mesValor[$campos['mes']]['id'] = $campos['id'];
+      }
+      unset($mes[0]);
+      foreach ($mes as $numeroMes => $nomeMes) { 
+
+        $listagem .= "<tr>";
+        $listagem .= "<td>$nomeMes</td>";
+
+        if(isset($mesValor[$numeroMes])){
+          $listagem .= "<td>".formataMoeda($mesValor[$numeroMes]['total'])."</td>";
+          $totalAnual = $totalAnual + paraDouble($mesValor[$numeroMes]['total']);
+        }else{
+          $listagem .= "<td></td>";
+        }
+
+        if(isset($mesValor[$numeroMes]))
+          $listagem .= "<td><div class=\"mini ui green labeled icon disabled button balao\"><i class=\"plus icon\"></i>Gerar Folha</div></td>";
+        else
+          $listagem .= "<td><div class=\"mini ui green labeled icon button balao\" id='bal_$numeroMes' data-content='Gerar Folha de Pagamento' onClick=\"gerar('".$numeroMes."')\"><i id='icone_$numeroMes' class=\"plus icon\"></i><span id='gerar_$numeroMes'>Gerar Folha<span></div></td>";
+
+        if(isset($mesValor[$numeroMes]))
+          $listagem .= "<td>
+                          <div class=\"tiny ui icon button balao\" data-content='Visualizar' onClick='verBt()'><i class=\"unhide icon\"></i></div>
+                          <div class=\"tiny ui icon button balao\" data-content='Editar' onClick='editarBt()'><i class=\"pencil icon\"></i></div>
+                  </td></tr>";
+        else
+          $listagem .= "<td>
+                            <div class=\"tiny ui icon disabled button balao\"><i class=\"unhide icon\"></i></div>
+                            <div class=\"tiny ui icon disabled button balao\"><i class=\"pencil icon\"></i></div>
+                    </td></tr>";          
+    	} 
+      //if(!isset($dados['filtro']))
+          echo $listagem;
+    ?>
+ <?php //if(!isset($dados['filtro'])){ ?>  
+ </div>  
+  </tbody>
+      <tfoot>
+        <tr>
+          <th></th>
+          <th>Total Anual: <?php echo formataMoeda2($totalAnual);?></th>
+          <th></th>
+          <th></th>
+        </tr>
+      </tfoot>    
+</table>
+
+<?php } ?>
+
+<?php  if(!isset($dados['filtro'])) echo "</div></div>"; ?>
+
+<?php 
+  //print_r($dados['itens']);
+  if(isset($dados['filtro'])){
+    
+    if(in_array("facebook", $dados['tipos'])){
+      $campo = array_search("facebook", $dados['tipos']);
+      foreach ($dados['itens'] as $chave => $campos) {
+        if($dados['itens'][$chave][$campo] != "")
+          $dados['itens'][$chave][$campo] = "<a href=\"http://facebook.com/".$campos[$campo]."\" TARGET=\"_blank\"><img class=\"rounded ui image\" src=\"http://graph.facebook.com/".$campos[$campo]."/picture\"/></a>";
+      } 
+    }
+
+    $retorna["listagem"] = $dados['itens'];
+    $retorna["paginacao"] = $paginacao;
+    $retorna['total'] = $dados['qtd'];
+    echo json_encode($retorna);
+  }
+
+  function formataMoeda($valor){
+
+    $formatado = str_replace(".", "", $valor);
+    $formatado = str_replace(",", ".", $formatado);
+
+    $formatado = (double)$formatado;
+    $formatado = number_format($formatado, 2, ',', '.');
+    $formatado = "R$ ". $formatado;
+    if(strlen($valor) > 53)
+      $formatado = substr($formatado, 0, 50) . "...";
+
+    return $formatado;
+  }
+
+  function paraDouble($valor){
+    $formatado = str_replace(".", "", $valor);
+    $formatado = str_replace(",", ".", $formatado);
+
+    return $formatado;
+  }
+
+  function formataMoeda2($valor){
+    $formatado = (double)$valor;
+    $formatado = number_format($formatado, 2, ',', '.');
+    $formatado = "R$ ". $formatado;
+    if(strlen($valor) > 53)
+      $formatado = substr($formatado, 0, 50) . "...";
+
+    return $formatado;
+  }
+?>

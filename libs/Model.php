@@ -144,6 +144,7 @@ class Model extends Database{
 	}
 
 	public function formataMoeda($campo = "", $valor, $integro){
+
 		$formatado = number_format($valor, 2, ',', '.');
 		if($integro == false){
 			$formatado = "R$ ". $formatado;

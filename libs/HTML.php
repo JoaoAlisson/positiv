@@ -65,7 +65,7 @@ class HTML{
 				if(isset($this->dados['tipos'][$campo]["relacao"]))
 					$this->chaveEstrangeira($campo, $validar, $valor, $this->dados['tipos'][$campo], $where, $id);
 				else
-					$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo]);
+					$this->enum($campo, $validar, $valor, $this->dados['tipos'][$campo], $id);
 			}else{
 				$funcao = "campo".ucfirst($this->dados['tipos'][$campo]);
 				$this->{$funcao}($campo, $valor, $validar, $id);
@@ -639,7 +639,11 @@ class HTML{
 		$this->retornaCampo($campo, $incluir);				
 	}
 
-	function enum($campo, $validar, $valor = "", $valores){
+	function enum($campo, $validar, $valor = "", $valores, $id){
+
+		if($id == "") 
+			$id = $campo;
+
 		if($valor == null)
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
 
@@ -648,7 +652,7 @@ class HTML{
 		if($validar == false){
 			$requerido =  "";			
 		}else{
-			$validacaoJs = "validar('$campo');";
+			$validacaoJs = "validar('$id');";
 		}
 
 		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "triangle down";
@@ -675,15 +679,15 @@ class HTML{
 		}
 
 		$incluir = "<div class='ui corner labeled left icon input'>";
-		$incluir .= "<div class=\"ui search dropdown selection\" id=\"select_$campo\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$campo');\">
-				      <input type=\"hidden\" name='$campo' $value id='input_$campo' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
+		$incluir .= "<div class=\"ui search dropdown selection\" id=\"select_$id\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$id');\">
+				      <input type=\"hidden\" name='$id' $value id='input_$id' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
 				      <i class='$icone icon disabled'></i>
 				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>$selecionado</div>
 				      <div class=\"menu\">$opcoes
 				      </div>$asterisco
 				      </div>";
 		$incluir .= "</div>";		
-		$this->retornaCampo($campo, $incluir);				
+		$this->retornaCampo($campo, $incluir, $id);				
 	}
 
 	function chaveEstrangeira($campo, $validar, $valor = "", $informacoes, $where, $id = ""){
