@@ -166,6 +166,137 @@ class folhas extends Controller{
 			echo json_encode($retorno);
 	}
 
+	public function editar(){
+
+		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
+			if(isset($_POST['ajaxPg'])){
+				require "views/erro/index.php";
+				exit();
+			}else{ 
+				header('location: '.URL.'erro');
+			}
+		}
+
+		$idFolha = (isset($this->GET['cod'])) ? $this->GET['cod'] : "";
+
+		$idFuncionario = (isset($this->GET['fun'])) ? $this->GET['fun'] : "";
+
+		if($idFolha == "" && $idFuncionario == "" && !isset($_POST['fun']))
+			header('location: '. URL . 'folhas');
+
+		if($idFuncionario == "-1" || isset($_POST['idFolha'])){
+			$this->editar3();
+		}else{
+			if($idFuncionario != "" || isset($_POST['fun']))
+				$this->editar2($idFuncionario);
+			else
+				$this->editar1($idFolha);
+		}
+	}
+
+	private function editar1($idFolha){
+		$folha = $this->model->visualizar($idFolha);
+		$retorna['idFolha'] = $idFolha;
+		$retorna['folha'] = $folha['folhas'];
+		$retorna['funcs'] = $this->model->funcsDaFolha($idFolha);
+		$this->dados($retorna);		
+	}
+
+	private function editar3(){
+
+		$idFolha = $this->GET['cod'];
+
+		if(isset($_POST['idFolha'])){
+			require RAIZ . SEPARADOR . "models" . SEPARADOR . "descontos_abonosModel.php";
+			$eventos = new descontos_abonosModel();
+
+			$valor = isset($_POST['valor']) ? $_POST['valor'] : "";
+			$tipo  = isset($_POST['tipo']) ? $_POST['tipo'] : "";
+			$obs   = isset($_POST['observacoes']) ? $_POST['observacoes'] : "";
+
+			$campos = array('folha' 		=> $idFolha, 
+							'funcionario' 	=> 0, 
+							'valor'			=> $valor,
+							'tipo'			=> $tipo,
+							'descricao'		=> $obs,
+							'todos'			=> 1);
+
+			if($tipo != ""){
+				$sinal = ($tipo == '1') ? 'soma' : 'subtrai';
+				$qtd = $this->model->qtdFunctionariosFolha($idFolha);
+				$this->model->atualizaTotalFolhaTodos($sinal, $valor, $idFolha, $qtd);
+			}
+
+			$retorno = $eventos->inserir($campos);
+			$this->retorna("ok", "Alterado com sucesso!");
+			exit();
+		}
+
+		$folha = $this->model->visualizar($idFolha);
+		$retorna['folha'] 	= $folha['folhas'];
+		$retorna['idFolha'] = $idFolha;
+		$retorna['eventos'] = $this->model->eventosFuncionario("", $idFolha);
+
+		$this->renderizar('folhas/cadastrarEventoTodos');
+		$this->dados($retorna);			
+	}
+
+	private function editar2($idFuncionario){
+
+		$idFuncionario = isset($_POST['fun']) ? $_POST['fun'] : $idFuncionario;
+
+		$funcionario = $this->model->pegarFuncionario($idFuncionario);
+		$idFolha = $funcionario[0]['folha'];
+		if(isset($_POST['fun'])){
+			require RAIZ . SEPARADOR . "models" . SEPARADOR . "descontos_abonosModel.php";
+			$eventos = new descontos_abonosModel();
+
+			$valor = isset($_POST['valor']) ? $_POST['valor'] : "";
+			$tipo  = isset($_POST['tipo']) ? $_POST['tipo'] : "";
+			$obs   = isset($_POST['observacoes']) ? $_POST['observacoes'] : "";
+
+			$campos = array('folha' 		=> $idFolha, 
+							'funcionario' 	=> $idFuncionario, 
+							'valor'			=> $valor,
+							'tipo'			=> $tipo,
+							'descricao'		=> $obs,
+							'todos'			=> 0);
+
+			if($tipo != ""){
+				$sinal = ($tipo == '1') ? 'soma' : 'subtrai';
+				$this->model->atualizaTotalFolha($sinal, $valor, $idFolha);
+			}
+
+			$retorno = $eventos->inserir($campos);
+			$this->retorna("ok", "Alterado com sucesso!");
+			exit();
+		}
+		
+		$folha = $this->model->visualizar($idFolha);
+		$retorna['folha'] = $folha['folhas'];
+		$retorna['funcionario'] = $funcionario[0];
+		$retorna['eventos'] = $this->model->eventosFuncionario($idFuncionario, $idFolha);
+
+		$this->renderizar('folhas/cadastrarEvento');
+		$this->dados($retorna);			
+	}
+
+	public function deletarEvnt(){
+		$retorno;
+		if(!isset($_POST['id']) || !isset($_POST['model'])){
+			$retorno['flag'] = "erro";
+			$retorno['mensagem'] = "Não foi possível deletar";
+		}else{
+			$id = $_POST['id'];
+			require RAIZ . SEPARADOR . "models" . SEPARADOR . "descontos_abonosModel.php";
+			$eventos = new descontos_abonosModel();
+
+			$retorno = $eventos->deletar($id);
+		}
+	
+		echo json_encode($retorno);		
+	}
+
 	private function validaData($ano, $mes){
 		$erro = "";
 		if($ano < 2010 || $ano > 2030 || $mes < 1 || $mes > 12)
@@ -178,6 +309,13 @@ class folhas extends Controller{
 		}
 
 		return $erro;
+	}
+
+	private function retorna($flag, $mensagem){
+		$this->renderizar(false);
+		$retorno['valido'] = $flag;
+		$retorno['mensagem'] = $mensagem;
+		echo json_encode($retorno);
 	}
 
 	private function retornaOk(){

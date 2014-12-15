@@ -1,0 +1,104 @@
+<?php
+  $mes = ["", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+?>
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="file powerpoint outline icon"></i>Editar Folha</h2>
+	<h3><?php echo $mes[$dados['folha']['mes']]. " de " .$dados['folha']['ano']; ?></h3>
+
+  <h4>Todos os Funcionários</h4>
+</div>
+
+<form action="" enctype="multipart/form-data" class="ui form formulario" id="" method="POST">
+  <input hidden name='idFolha' value='<?php echo $dados['idFolha']; ?>'>
+  <div class="ui column center aligned grid">
+    <div class="column divForm" style="width:auto; max-width: 450px;">
+      <div class="ui left aligned segment" style="">
+
+        <div class="field" id="campo_funcionario">
+             <label>Tipo </label>
+             <div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_funcionario" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_funcionario');">
+                    <input type="hidden" name="tipo" id="input_funcionario" class="validarObrigatorio" onchange="validar('funcionario');" style="max-width:450px; min-width:300px;">
+                    <i class="triangle down icon disabled"></i>
+                    <div class="text" data-value="" style="max-width:450px; min-width:100px;"></div>
+                      <div class="menu ui ">
+                        <div class="item" data-value=""></div>
+                        <div class="item" data-value="1">Abono</div>
+                        <div class="item" data-value="2">Desconto</div>
+                      </div> 
+                      <div class="ui corner label"><i class="icon asterisk"></i></div>                                    
+                    </div>
+                  </div>
+        </div>
+
+        <div class="field" id="campo_valor">
+         <label>Valor</label>
+            <div class="ui corner labeled left icon input">
+              <input type="text" class="validarObrigatorio" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_valor" name="valor" onkeyup="validar('valor');" onblur="validar('valor');" onfocus="moedaMask('input_valor')"><i class="dollar icon"></i>
+              <div class="ui corner label"><i class="icon asterisk"></i></div>
+          </div>
+        </div>
+
+        <div class="field" id="campo_observacoes">
+         <label>Observação</label>
+         <div class="ui corner labeled left icon input">
+            <textarea type="text" class=" textoLongo" onkeypress="enterSubmit(event);" style="height:10px; max-width:450px; min-width:300px;" placeholder="" name="observacoes"></textarea>
+            <i class="pencil icon"></i>
+          </div>
+        </div>
+
+        <div style="clear: both;">
+          <div class="ui green vertical labeled icon submit button submeterForm" style="margin-top:10px;" onclick="submeter('folhas/', 'editar/cod:<?php echo $dados['idFolha']; ?>/fun:-1');">
+            <i class="save icon"></i>Salvar
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>    
+</form>
+
+<div class="ui column center aligned grid">
+   <div class="column" style="width: auto;"> 
+    <table class="ui table segment" id="" style="width:auto;">
+        <thead>
+          <tr>
+              <th style="text-align:center;">Valor</th>
+              <th style="text-align:center;">Tipo</th>
+              <th style="text-align:center;">Descrição</th>
+              <th></th>
+          </tr>
+        </thead>
+        <tbody id="listagem">
+        <?php foreach ($dados['eventos'] as $key => $visita) { ?>
+        <tr>
+          <td><?php echo formataMoeda($visita['valor']); ?></td>
+          <td><?php echo tipos($visita['tipo']); ?></td>
+          <td><?php echo $visita['descricao']; ?></td>
+          <td>
+            <div class="tiny ui red icon button balao" data-content='Deletar' onClick="deletarBt('<?php echo $visita['id']; ?>', 'folhas/', 'deletarEvnt')"><i class="trash icon"></i></div>
+          </td>
+        </tr> 
+        <?php } ?>
+      </tbody>
+    </table>  
+  </div>
+</div>
+
+<?php
+  function tipos($tipo){
+    if($tipo == 1)
+      return "Abono";
+    else
+      return "Desconto";
+  }
+
+  function formataMoeda($valor){
+
+    $formatado = number_format($valor, 2, ',', '.');
+    $formatado = "R$ ". $formatado;
+    if(strlen($valor) > 53)
+      $formatado = substr($formatado, 0, 50) . "...";
+
+    return $formatado;
+  }
+?>

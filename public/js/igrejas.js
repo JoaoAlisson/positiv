@@ -5,6 +5,16 @@ function filtrarFolha(){
 	navegacaoSub('folhas', action, null);
 }
 
+function selecionarFunc(){
+	id = $("#input_funcionario").val();
+	idFolha = $("#idFolha").val();
+	controller = 'folhas/';
+	action = 'editar/cod:'+ idFolha +'/fun:'+id;
+
+	if(id != "")
+		navegacaoSub(controller, action);
+}
+
 function gerar(mes){
 
 	ano = $('#ano').val();

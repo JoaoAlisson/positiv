@@ -10,6 +10,8 @@ class folhasModel extends Model{
 
 	public function retornaQuantidade($ano, $mes){
 		$tabela = PREFIXO."folhas";
+		$ano = (int)$ano;
+		$mes = (int)$mes;
 
 		$sql = "SELECT COUNT(*) FROM $tabela WHERE ano = $ano AND mes = $mes";
 		$resposta =  $this->query($sql);
@@ -27,6 +29,26 @@ class folhasModel extends Model{
 		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
 
 		return $resultado;			
+	}
+
+	public function funcsDaFolha($idFolha){
+		$tabela = PREFIXO."folha_funcionarios";
+		$idFolha = (int)$idFolha;
+		$sql = "SELECT id, nome FROM $tabela WHERE folha = $idFolha";
+
+		$query = $this->prepare($sql);
+		$query->execute();
+		return $query->fetchAll(PDO::FETCH_ASSOC);
+	}
+
+	public function pegarFuncionario($id){
+		$id = (int)$id;
+		$tabela = PREFIXO."folha_funcionarios";
+		$sql = "SELECT * FROM $tabela WHERE id = $id";
+
+		$query = $this->prepare($sql);
+		$query->execute();
+		return $query->fetchAll(PDO::FETCH_ASSOC);
 	}
 
 	private function todos(){
@@ -92,6 +114,8 @@ class folhasModel extends Model{
 		$todosFuncionarios = $this->todos();
 		$this->setaTabelaInss();
 
+		$idFolha = (int)$idFolha;
+
 		$tabela = PREFIXO."folha_funcionarios";
 		$sql = "INSERT INTO $tabela (folha, funci, nome, cpf, rg, salario, inss, cargo) VALUES";
 		$inssTotal = (double)0;
@@ -120,8 +144,60 @@ class folhasModel extends Model{
 
 	private function setTotalFolha($id, $total){
 		$tabela = PREFIXO."folhas";
+		$id = (int)$id;
 		$sth = $this->prepare("UPDATE $tabela SET total = $total WHERE id = $id");
 		$sth->execute();
-	}	
+	}
+
+	public function eventosFuncionario($idFuncionario = "", $idFolha){
+		$tabela = PREFIXO . "descontos_abonos";
+		$idFolha = (int)$idFolha;
+		$idFuncionario = (int)$idFuncionario;
+		$funcionario = ($idFuncionario != "") ? "(funcionario = '$idFuncionario') OR" : "";
+		$sql = "SELECT * FROM $tabela WHERE $funcionario (folha = '$idFolha' AND todos = '1') ORDER BY id DESC"; 
+		$query = $this->prepare($sql);
+		$query->execute();
+		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		return $resultado;			
+	}
+
+	public function qtdFunctionariosFolha($idFolha){
+
+		$tabela = PREFIXO."folha_funcionarios";
+		$idFolha = (int)$idFolha;	
+
+		$sql = "SELECT COUNT(*) FROM $tabela WHERE folha = $idFolha";
+		$resposta =  $this->query($sql);
+
+		return $resposta->fetchColumn();		
+	}
+
+	public function atualizaTotalFolhaTodos($soma, $valor, $id, $qtd){
+		$valor = $this->trataValor($valor);
+		$valor = $qtd*$valor;
+		$this->atualizaTotalFolha($soma, $valor, $id, false);
+	}
+
+	public function atualizaTotalFolha($soma, $valor, $id, $tratar = true){
+
+		if($tratar)
+			$valor = $this->trataValor($valor);
+
+		$id = (int)$id;
+		$valor = (double)$valor;
+
+		$sinal = ($soma == 'soma') ? "+" : "-";
+		$tabela = PREFIXO."folhas";
+		$sth = $this->prepare("UPDATE $tabela SET total = total $sinal $valor WHERE id = $id");
+		$sth->execute();
+	}
+
+	private function trataValor($valor){
+		$valor = str_replace(".", "", $valor);
+		$valor = str_replace(",", ".", $valor);
+
+		return $valor;
+	}
 }
 ?>

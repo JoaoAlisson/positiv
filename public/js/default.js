@@ -228,7 +228,6 @@ function deletar(idd, controller, action){
 			}
 
         	if(retorno.flag == "ok"){
-            	//navegacao(controller, action);
 
 				mensagemAlerta(retorno.mensagem);
 				setTimeout(function(){
@@ -662,11 +661,13 @@ function trocaImgSexo(id){
 
 function datapick(id){
 
+	$('#'+id).mask('00/00/0000');
 	$("#"+id).pickadate({
 		selectYears: true,
    		selectMonths: true,
-   		format: 'd/mm/yyyy',
-   		formatSubmit: 'd/mm/yyyy',
+   		editable: true,
+   		format: 'dd/mm/yyyy',
+   		formatSubmit: 'dd/mm/yyyy',
    		labelMonthNext: 'Próximo Mês',
 		labelMonthPrev: 'Mês Anterior',
    		monthsFull: ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'],
@@ -676,28 +677,6 @@ function datapick(id){
     	close: 'Cancelar'
 	});
 }
-/**
-function calendario(id){
-	$("#"+id).mask("00/00/0000", {placeholder: "__/__/____"});
-    $("#"+id).datepicker({
-		showButtonPanel:true,
-		changeMonth: true,
-		changeYear: true,
-		closeText: 'Fechar',
-		prevText: 'Anterior',
-		nextText: 'Seguinte',
-		showAnim: 'drop',
-		currentText: 'Hoje',		
-        dateFormat: 'dd/mm/yy',
-        dayNames: ['Domingo','Segunda','Terça','Quarta','Quinta','Sexta','Sábado','Domingo'],
-        dayNamesMin: ['D','S','T','Q','Q','S','S','D'],
-        dayNamesShort: ['Dom','Seg','Ter','Qua','Qui','Sex','Sáb','Dom'],
-        monthNames: ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'],
-        monthNamesShort: ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez']
-   });
-    $("#"+id).datepicker("show");
-}
-*/
 
 function funcaoValidarCPF(cpf){
     var numeros, digitos, soma, i, resultado, digitos_iguais;
