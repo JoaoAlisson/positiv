@@ -41,10 +41,12 @@ class visitantes extends ControllerCRUD{
 
 	public function index(){
 		parent::index();
-		$this->renderizar("visitantes/index");
+		$view = "visitantes" . SEPARADOR . "index";
+		$this->renderizar($view);
 	}
 
 	public function aniversariantes(){
+
 	//pega os quatro primeiros campos, menos campos do tipo imagem
 		$cont = 0;
 		$campos = array();

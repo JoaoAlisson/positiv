@@ -12,7 +12,7 @@ class entradas extends ControllerCRUD{
 
 	public $cor = "orange";
 
-	public $icone = "up";
+	public $icone = "arrow up";
 
 	public $listar = array("entrada", "categoria", "pago", "vencimento", "valor");
 

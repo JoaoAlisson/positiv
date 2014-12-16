@@ -8,11 +8,13 @@ class Controller{
 	public $informacoes;
 	public $GET;
 	public $permissao;
+	public $view;
 
 	function __construct(){
-	
-		$this->loadModel(strtolower(get_class($this)));
 
+
+		$this->loadModel(strtolower(get_class($this)));
+		
 		$this->informacoes['nome'] = isset($this->nome) ? $this->nome : "";
 		$this->informacoes['campos'] = isset($this->campos) ? $this->campos : "";
 		$this->informacoes['icones'] = isset($this->icones) ? $this->icones : "";
@@ -64,10 +66,11 @@ class Controller{
 			header('location: '. URL);
 		}else{
 
-			$file = 'models/'.$name.'Model.php';
+			$file = RAIZ . SEPARADOR . 'models'. SEPARADOR . $name . 'Model.php';
 
 			if(file_exists($file)){
-				require 'models/'.$name.'Model.php';
+
+				require $file;
 				$modelName = $name.'Model';
 				$this->model = new $modelName;
 			}

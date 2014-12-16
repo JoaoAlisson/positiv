@@ -13,7 +13,7 @@ class saidas extends ControllerCRUD{
 
 	public $cor = "orange";
 
-	public $icone = "down";
+	public $icone = "arrow down";
 
 	public $filtros = array("nota", "categoria", "pago");
 
@@ -25,7 +25,7 @@ class saidas extends ControllerCRUD{
 	private $tipoIndex = 1;
 
 	public function index(){
-	//pega os quatro primeiros campos, menos campos do tipo imagem
+		//pega os quatro primeiros campos, menos campos do tipo imagem
 		$cont = 0;
 		$campos = array();
 		if(isset($this->listar)){

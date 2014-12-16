@@ -1,6 +1,7 @@
 <?php 
 class Database extends PDO{
 	function __construct(){
+
 		parent::__construct(DB_TYPE.':host='.DB_HOST.';dbname='.DB_NAME, DB_USER, DB_PASS);	
 		//array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8; SET character_set_client = utf8; SET character_set_results = utf8; SET character_set_connection = utf8;"));
 	}  

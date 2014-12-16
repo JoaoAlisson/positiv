@@ -5,6 +5,7 @@ class Model extends Database{
 	public $obrigatorios = array();
 	
 	function __construct(){
+
 		parent::__construct();
 		//$this->tipoUsuario = $this->pegaTipoUsuario('1');
 	}

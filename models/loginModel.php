@@ -1,5 +1,5 @@
 <?php 
-class LoginModel extends Model{
+class loginModel extends Model{
 
 	public $tipos = array("login" => "login",
 						  "senha" => "senha");	

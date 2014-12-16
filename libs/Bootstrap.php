@@ -16,12 +16,14 @@ class Bootstrap {
 	}
 
 	public function carregarTelaLogin(){
-		require "controllers/loginController.php";
+
+		require RAIZ . SEPARADOR . "controllers". SEPARADOR ."loginController.php";
+
 		$controller = new login();
-		$controller->setViewRender("login/index");
+		$controller->setViewRender("login".SEPARADOR."index");
 		$controller->index();
 		$controller->view->adicionarDados($controller->getDados());
-		$controller->view->render("login","login/index", false);			
+		$controller->view->render("login", "login". SEPARADOR ."index", false);			
 	}	
 
 	public function carregarPgs(){
@@ -76,14 +78,16 @@ class Bootstrap {
 
 				define("VIEW", $url[1]);
 				$metodo = new ReflectionMethod($controller->informacoes['nomeController'], $url[1]);
+
 				if($metodo->isPublic()) 
 					$controller->{$url[1]}();
 				else
 					header('location: '. URL);
-						
-							
+				
+
 				$controller->view->adicionarDados($controller->getDados());
 				$nomeController = (get_parent_class($controller) == "ControllerCRUD") ? "CRUD" : strtolower(get_class($controller));
+				
 				$controller->view->render($nomeController, $controller->getViewRender(), $controller->getLayout());
 
 			}else{

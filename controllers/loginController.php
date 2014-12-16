@@ -5,6 +5,7 @@ class login extends Controller {
 						   "senha" => "Senha");	
 
 	public function index() {
+
 		if(!Sessao::pegar("logado"))
 			$this->usarLayout(false);
 
