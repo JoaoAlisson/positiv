@@ -97,7 +97,7 @@ $paginacao = "";
         }
 
         if(isset($mesValor[$numeroMes]))
-          $listagem .= "<td><div class=\"mini ui green labeled icon disabled button balao\"><i class=\"plus icon\"></i>Gerar Folha</div></td>";
+          $listagem .= "<td><div class=\"mini ui green labeled icon button balao\" data-content='Atualizar a Folha de Pagamento' onClick=\"atualizar('".$numeroMes."', '".$mesValor[$numeroMes]['id']."')\"><i id='icone_$numeroMes' class=\"refresh icon\"></i><span id='gerar_$numeroMes'>Atualizar<span></div></td>";
         else
           $listagem .= "<td><div class=\"mini ui green labeled icon button balao\" id='bal_$numeroMes' data-content='Gerar Folha de Pagamento' onClick=\"gerar('".$numeroMes."')\"><i id='icone_$numeroMes' class=\"plus icon\"></i><span id='gerar_$numeroMes'>Gerar Folha<span></div></td>";
 

@@ -15,6 +15,25 @@ function selecionarFunc(){
 		navegacaoSub(controller, action);
 }
 
+function atualizar(mes, folha){
+
+	if(GERANDOFOLHA == false){
+		GERANDOFOLHA = true;
+
+		$('.balao').popup('hide');
+		mensagemConfirmacao("Ao atualizar a folha, o valor total pode ser alterado.<br> Tem certeza que deseja atualizar?");
+		$('.small.modal.canfirmar').modal('setting', {
+	    closable  : false,
+	    onApprove : function() {
+	    	colocaAtualizando(mes);
+			gerarOk(folha, 'atualizar');
+		}
+		}).modal('show');
+
+		GERANDOFOLHA = false;
+	}
+}
+
 function gerar(mes){
 
 	ano = $('#ano').val();
@@ -41,15 +60,15 @@ function gerar(mes){
 	//GERANDOFOLHA = false;
 }
 
-function gerarOk(mes){
+function gerarOk(mes, action){
 		ano = $('#ano').val();
     	$('.small.modal.canfirmar').modal("hide");
     	controller = 'folhas/';
-    	action = 'gerar';
+    	action = action || 'gerar';
     	caminho = URL+controller+action;
 
 		$.post(caminho, { mesSet : mes , anoSet : ano }, function(retorno){
-
+			
 			try{
 				retorno = jQuery.parseJSON(retorno);
 			}
@@ -82,4 +101,9 @@ function gerarOk(mes){
 function colocaGerando(id){
 	GERANDOFOLHA = true;
 	$("#gerar_"+id).html("Gerando Folha... <i class='spinner loading icon'></i>");
+}
+
+function colocaAtualizando(id){
+	GERANDOFOLHA = true;
+	$("#gerar_"+id).html("Atualizando ... <i class='spinner loading icon'></i>");	
 }

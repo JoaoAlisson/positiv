@@ -133,6 +133,58 @@ class folhas extends Controller{
 		$this->dados($retorno);
 	}	
 
+	public function atualizar(){
+
+		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
+			if(isset($_POST['ajaxPg'])){
+				require "views/erro/index.php";
+				exit();
+			}else{ 
+				header('location: '.URL.'erro');
+			}
+		}
+
+		$this->usarLayout(false);
+		$retorno['flag'] = "ok";
+		if(!isset($_POST['mesSet'])){
+			$retorno['flag'] = "erro";
+			$retorno['mensagem'] = "Não foi possível deletar";
+		}else{
+			$idFolha = $_POST['mesSet'];
+			$this->atualizarFolha($idFolha);
+		}
+
+		
+		if($retorno['flag'] == "ok")
+			$this->retornaOk();
+		else
+			echo json_encode($retorno);
+	}	
+
+	private function atualizarFolha($idFolha){
+		$campos = array('id', 'funci');
+		$funcsFolha = $this->model->funcsDaFolha($idFolha, $campos);
+		$todosFuncsR = $this->model->todos();
+
+		$todosFuncs = array();
+		foreach ($todosFuncsR as $key => $funcionario)
+			$todosFuncs[$funcionario['id']] = $funcionario;
+
+		foreach ($funcsFolha as $key => $funcionarioF){
+			if(isset($todosFuncs[$funcionarioF['funci']])){
+				$this->model->atualizaFuncFolha($funcionarioF['id'], $todosFuncs[$funcionarioF['funci']]);
+				unset($todosFuncs[$funcionarioF['funci']]);
+			}else{
+				$this->model->deletaFuncFolha($funcionarioF['id']);
+			}
+		}
+
+		$this->model->criarNovosFuncionarios($idFolha, $todosFuncs);
+		$this->model->recalcularTotal($idFolha);
+
+
+	}
+
 	public function gerar(){
 
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){

@@ -6,7 +6,7 @@ class folhasModel extends Model{
 						   "total"  => "moeda",
 						   "contab" => "inteiro");
 
-	private $tabelaInss = array();
+	private $tabelaInss = "";
 
 	public function retornaQuantidade($ano, $mes){
 		$tabela = PREFIXO."folhas";
@@ -31,10 +31,15 @@ class folhasModel extends Model{
 		return $resultado;			
 	}
 
-	public function funcsDaFolha($idFolha){
+	public function funcsDaFolha($idFolha, $campos = ""){
 		$tabela = PREFIXO."folha_funcionarios";
 		$idFolha = (int)$idFolha;
-		$sql = "SELECT id, nome FROM $tabela WHERE folha = $idFolha";
+		if($campos == "")
+			$campos = "id, nome";
+		else
+			$campos = implode(", ", $campos);
+
+		$sql = "SELECT $campos FROM $tabela WHERE folha = $idFolha";
 
 		$query = $this->prepare($sql);
 		$query->execute();
@@ -51,7 +56,7 @@ class folhasModel extends Model{
 		return $query->fetchAll(PDO::FETCH_ASSOC);
 	}
 
-	private function todos(){
+	public function todos(){
 		$tbMembro 		= PREFIXO."membros";
 		$tbFcun   		= PREFIXO."func_nao_membro";
 		$tbFuncionario 	= PREFIXO."funcionarios";
@@ -98,6 +103,9 @@ class folhasModel extends Model{
 	}
 
 	private function retornaTaxa($valor){
+
+		if($this->tabelaInss == "")
+			$this->setaTabelaInss();
 		
 		if($valor < $this->tabelaInss[0]['fim']){
 			return $this->tabelaInss[0]['taxa'];
@@ -112,7 +120,7 @@ class folhasModel extends Model{
 	public function insereFuncionarios($idFolha){
 
 		$todosFuncionarios = $this->todos();
-		$this->setaTabelaInss();
+		//$this->setaTabelaInss();
 
 		$idFolha = (int)$idFolha;
 
@@ -198,6 +206,98 @@ class folhasModel extends Model{
 		$valor = str_replace(",", ".", $valor);
 
 		return $valor;
+	}
+
+	public function atualizaFuncFolha($id, $campos){
+
+		$inss = 0;
+		if($campos['inss'] == 1)
+			$inss = $this->calculaInss($campos['salario']);
+
+		$tabela = PREFIXO."folha_funcionarios";
+		$sth = $this->prepare("UPDATE $tabela SET nome = '".$campos['nome']."', cpf = '".$campos['cpf']."', rg = '".$campos['rg']."', cargo = '".$campos['cargo']."', inss = '$inss' WHERE id = $id");
+		$sth->execute();
+	}
+
+	private function deletaFuncFolha($id){
+
+		$tabela = PREFIXO.'folha_funcionarios';			
+		$stmt = $this->prepare("DELETE FROM $tabela WHERE id = '$id'");
+		$stmt->execute();
+
+		$tabela = PREFIXO.'descontos_abonos';			
+		$stmt = $this->prepare("DELETE FROM $tabela WHERE funcionario = '$id'");
+		$stmt->execute();					
+	}	
+
+	public function criarNovosFuncionarios($idFolha, $funcionarios){
+		$tabela = PREFIXO."folha_funcionarios";
+		$sql = "INSERT INTO $tabela (folha, funci, nome, cpf, rg, salario, inss, cargo) VALUES";
+
+		foreach ($funcionarios as $key => $campos) {
+			$inss = 0;
+			if($campos['inss'] == 1)
+				$inss = $this->calculaInss($campos['salario']);
+
+			if($key == 0)
+				$sql .= " ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."')";
+			else
+				$sql .= ", ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."')";
+		}
+
+		$sth = $this->prepare($sql);
+		$sth->execute();
+	}
+
+	public function recalcularTotal($idTabela){
+		$tabela = PREFIXO."folha_funcionarios";
+		$sql = "SELECT SUM(salario), SUM(inss) FROM $tabela WHERE folha = '$idTabela'";
+		$query = $this->prepare($sql);
+		$query->execute();
+
+		$salario_inss = $query->fetchAll(PDO::FETCH_ASSOC);
+
+	    $salarios = $salario_inss[0]['SUM(salario)'];
+		$inss = $salario_inss[0]['SUM(inss)'];
+
+		$tabela = PREFIXO."descontos_abonos";
+		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '1' AND todos = '0'";
+		$query = $this->prepare($sql);
+		$query->execute();
+		$abonos = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		$abonos = $abonos[0]['SUM(valor)'];
+
+		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '2' AND todos = '0'";
+		$query = $this->prepare($sql);	
+		$query->execute();
+		$descontos = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		$descontos = $descontos[0]['SUM(valor)'];
+
+		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '1' AND todos = '1'";
+		$query = $this->prepare($sql);
+		$query->execute();
+		$abonosTodos = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		$abonosTodos = $abonosTodos[0]['SUM(valor)'];
+
+		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '2' AND todos = '1'";
+		$query = $this->prepare($sql);	
+		$query->execute();
+		$descontosTodos = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		$descontosTodos = $descontosTodos[0]['SUM(valor)'];		
+
+		$qtdFuncionarios = $this->qtdFunctionariosFolha($idTabela);
+
+		$total = $salarios - $inss;
+		$total = $total + $abonos - $descontos;
+		$total = $total + $qtdFuncionarios*$abonosTodos - $qtdFuncionarios*$descontosTodos;
+
+		$tabela = PREFIXO."folhas";
+		$sth = $this->prepare("UPDATE $tabela SET total = $total WHERE id = $idTabela");
+		$sth->execute();
 	}
 }
 ?>
