@@ -1,0 +1,53 @@
+<?php
+  $mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+?>
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="file powerpoint outline icon"></i>Folha</h2>
+	<h3><?php echo $mes[$dados['folha']['mes']]. " de " .$dados['folha']['ano']. "<br> Total: R$ ".$dados['folha']['total']; ?></h3>
+</div>
+
+<div class="ui column center aligned grid">
+<div class="column" style="width: auto;">
+ <table class="ui table segment" id="tabelaListagem" style="width:auto;">
+ 	<tbody>
+		<tr>
+        	<td><strong>Qtd Funcionários:</strong></td>
+        	<td><?php echo $dados['dados']['qtdFuncionarios']; ?></td>
+       	</tr> 		
+		<tr>
+        	<td><strong>Total de Salários:</strong></td>
+        	<td><?php echo formataMoeda($dados['dados']['salarios']); ?></td>
+       	</tr>
+		<tr>
+        	<td><strong>Total de INSS:</strong></td>
+        	<td><?php echo formataMoeda($dados['dados']['inss']); ?></td>
+       	</tr>
+		<tr>
+        	<td><strong>Total de Abonos:</strong></td>
+        	<td><?php echo formataMoeda($dados['dados']['abonos']); ?></td>
+       	</tr> 
+		<tr>
+        	<td><strong>Total de Descontos:</strong></td>
+        	<td><?php echo formataMoeda($dados['dados']['descontos']); ?></td>
+       	</tr>
+		<tr>
+        	<td><strong>Valor Total da Folha:</strong></td>
+        	<td>R$ <?php echo $dados['folha']['total']; ?></td>
+       	</tr>       	       	        	      	
+ 	</tbody>
+ </table>
+</div>
+</div>
+
+<?php 
+  function formataMoeda($valor){
+
+    $formatado = $valor;
+    $formatado = number_format($formatado, 2, ',', '.');
+    $formatado = "R$ ". $formatado;
+    if(strlen($valor) > 53)
+      $formatado = substr($formatado, 0, 50) . "...";
+
+    return $formatado;
+  }
+?>

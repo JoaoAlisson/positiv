@@ -107,7 +107,7 @@ class folhas extends Controller{
 			$retorno['filtrosValores'] = $filtrosValores;
 
 		$qtdPorPg = isset($this->qtdPorPagina) ? $this->qtdPorPagina : 8;
-		$busca = $this->model->pegarPagina($pagina, $qtdPorPg, $camposPegar, $onde, null, $ordem, $ordenacao, true);
+		$busca = $this->model->pegarPagina($pagina, $qtdPorPg, $camposPegar, array("ano" => $ano), null, $ordem, $ordenacao, true);
 
 		$itens = $busca[$this->informacoes['nomeController']];
 
@@ -132,6 +132,68 @@ class folhas extends Controller{
 
 		$this->dados($retorno);
 	}	
+
+	public function pdf(){
+		$this->usarLayout(false);
+		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo');
+		$funcionarios = $this->model->funcsDaFolha('24', $array);
+		$eventos = $this->model->pegarTodosOsEventos(24);
+		$eventosOrd = array();
+		$eventosTodos = array();
+
+		foreach ($eventos as $key => $campos) {
+
+			if($campos['todos'] != 0){
+				array_push($eventosTodos, $eventos[$key]);
+			}else{
+				if(isset($eventosOrd[$campos['funcionario']]))
+					array_push($eventosOrd[$campos['funcionario']], $eventos[$key]);
+				else
+					$eventosOrd[$campos['funcionario']][0] = $eventos[$key];
+			}
+		}
+
+		$retorno['funcionarios'] = $funcionarios;
+		$retorno['eventos'] = $eventosOrd;
+		$retorno['eventosTodos'] = $eventosTodos;
+
+		$this->dados($retorno);		
+	}
+
+	public function teste(){
+		$this->usarLayout(false);
+		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo');
+		$funcionarios = $this->model->funcsDaFolha('24', $array);
+		$eventos = $this->model->pegarTodosOsEventos(24);
+		$eventosOrd = array();
+		$eventosTodos = array();
+
+		foreach ($eventos as $key => $campos) {
+
+			if($campos['todos'] != 0){
+				array_push($eventosTodos, $eventos[$key]);
+			}else{
+				if(isset($eventosOrd[$campos['funcionario']]))
+					array_push($eventosOrd[$campos['funcionario']], $eventos[$key]);
+				else
+					$eventosOrd[$campos['funcionario']][0] = $eventos[$key];
+			}
+		}
+
+		$retorno['funcionarios'] = $funcionarios;
+	}
+
+	public function visualizar(){
+		if(!isset($this->GET['cod']))
+			header('location: '.URL.'folhas');
+
+		$idFolha = $this->GET['cod'];
+		$retorna['folha'] = $this->model->visualizar($idFolha);
+		$retorna['folha'] = $retorna['folha']['folhas'];
+		$retorna['dados'] = $this->model->informacoesFolha($idFolha);
+		
+		$this->dados($retorna);
+	}
 
 	public function atualizar(){
 
@@ -181,8 +243,6 @@ class folhas extends Controller{
 
 		$this->model->criarNovosFuncionarios($idFolha, $todosFuncs);
 		$this->model->recalcularTotal($idFolha);
-
-
 	}
 
 	public function gerar(){

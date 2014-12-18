@@ -31,6 +31,18 @@ class folhasModel extends Model{
 		return $resultado;			
 	}
 
+	public function pegarTodosOsEventos($idFolha){
+		$tabela = PREFIXO."descontos_abonos";
+		
+		$sql = "SELECT * FROM $tabela WHERE folha = '$idFolha'";
+
+		$query = $this->prepare($sql);
+		$query->execute();
+		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		return $resultado;
+	}
+
 	public function funcsDaFolha($idFolha, $campos = ""){
 		$tabela = PREFIXO."folha_funcionarios";
 		$idFolha = (int)$idFolha;
@@ -249,55 +261,98 @@ class folhasModel extends Model{
 		$sth->execute();
 	}
 
-	public function recalcularTotal($idTabela){
+	private function totalSalarioInss($idFolha){
 		$tabela = PREFIXO."folha_funcionarios";
-		$sql = "SELECT SUM(salario), SUM(inss) FROM $tabela WHERE folha = '$idTabela'";
+		$sql = "SELECT SUM(salario), SUM(inss) FROM $tabela WHERE folha = '$idFolha'";
 		$query = $this->prepare($sql);
 		$query->execute();
 
 		$salario_inss = $query->fetchAll(PDO::FETCH_ASSOC);
 
-	    $salarios = $salario_inss[0]['SUM(salario)'];
-		$inss = $salario_inss[0]['SUM(inss)'];
 
+	    $retorna['salarios'] = $salario_inss[0]['SUM(salario)'];
+		$retorna['inss'] = $salario_inss[0]['SUM(inss)'];	
+
+		return $retorna;	
+	}
+
+	private function somaValorEventos($onde){
 		$tabela = PREFIXO."descontos_abonos";
-		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '1' AND todos = '0'";
+		$sql = "SELECT SUM(valor) FROM $tabela WHERE $onde";
 		$query = $this->prepare($sql);
 		$query->execute();
 		$abonos = $query->fetchAll(PDO::FETCH_ASSOC);
 
-		$abonos = $abonos[0]['SUM(valor)'];
+		return $abonos[0]['SUM(valor)'];
+	}
 
-		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '2' AND todos = '0'";
-		$query = $this->prepare($sql);	
-		$query->execute();
-		$descontos = $query->fetchAll(PDO::FETCH_ASSOC);
+	private function abonosNaoTodos($idFolha){
+		$onde = "folha = '$idFolha' AND tipo = '1' AND todos = '0'";
+		return $this->somaValorEventos($onde);
+	}
 
-		$descontos = $descontos[0]['SUM(valor)'];
+	private function descontosNaoTodos($idFolha){
+		$onde = "folha = '$idFolha' AND tipo = '2' AND todos = '0'";
+		return $this->somaValorEventos($onde);
+	}	
 
-		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '1' AND todos = '1'";
-		$query = $this->prepare($sql);
-		$query->execute();
-		$abonosTodos = $query->fetchAll(PDO::FETCH_ASSOC);
+	private function abonosTodos($idFolha){
+		$onde = "folha = '$idFolha' AND tipo = '1' AND todos = '1'";
+		return $this->somaValorEventos($onde);		
+	}
 
-		$abonosTodos = $abonosTodos[0]['SUM(valor)'];
+	private function descontosTodos($idFolha){
+		$onde = "folha = '$idFolha' AND tipo = '2' AND todos = '1'";
+		return $this->somaValorEventos($onde);	
+	}
 
-		$sql = "SELECT SUM(valor) FROM $tabela WHERE folha = '$idTabela' AND tipo = '2' AND todos = '1'";
-		$query = $this->prepare($sql);	
-		$query->execute();
-		$descontosTodos = $query->fetchAll(PDO::FETCH_ASSOC);
+	public function recalcularTotal($idFolha){
+		
+		$salarios_inss = $this->totalSalarioInss($idFolha);
 
-		$descontosTodos = $descontosTodos[0]['SUM(valor)'];		
+	    $salarios = $salarios_inss['salarios'];
+		$inss = $salarios_inss['inss'];
 
-		$qtdFuncionarios = $this->qtdFunctionariosFolha($idTabela);
+		$abonos = $this->abonosNaoTodos($idFolha);
+
+		$descontos = $this->descontosNaoTodos($idFolha);
+
+		$abonosTodos = $this->abonosTodos($idFolha);
+
+		$descontosTodos = $this->descontosTodos($idFolha);		
+
+		$qtdFuncionarios = $this->qtdFunctionariosFolha($idFolha);
 
 		$total = $salarios - $inss;
 		$total = $total + $abonos - $descontos;
 		$total = $total + $qtdFuncionarios*$abonosTodos - $qtdFuncionarios*$descontosTodos;
 
 		$tabela = PREFIXO."folhas";
-		$sth = $this->prepare("UPDATE $tabela SET total = $total WHERE id = $idTabela");
+		$sth = $this->prepare("UPDATE $tabela SET total = $total WHERE id = $idFolha");
 		$sth->execute();
+	}
+
+	public function informacoesFolha($idFolha){
+
+		$salarios_inss = $this->totalSalarioInss($idFolha);
+
+		$abonos = $this->abonosNaoTodos($idFolha);
+
+		$descontos = $this->descontosNaoTodos($idFolha);
+
+		$abonosTodos = $this->abonosTodos($idFolha);
+
+		$descontosTodos = $this->descontosTodos($idFolha);		
+
+		$qtdFuncionarios = $this->qtdFunctionariosFolha($idFolha);
+
+		$retorna['salarios'] = $salarios_inss['salarios'];
+		$retorna['inss'] = $salarios_inss['inss'];
+		$retorna['abonos'] = $abonos + $qtdFuncionarios*$abonosTodos;
+		$retorna['descontos'] = $descontos + $qtdFuncionarios*$descontosTodos;
+		$retorna['qtdFuncionarios'] = $qtdFuncionarios;
+
+		return $retorna;
 	}
 }
 ?>

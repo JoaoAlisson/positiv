@@ -815,5 +815,10 @@ class HTML{
 			echo "</div></div>";
 		}
 	}
+
+	public function pdf(){
+		$caminho = RAIZ . SEPARADOR . 'fpdf' . SEPARADOR . 'fpdf.php';
+		require($caminho);
+	}
 }
 ?>

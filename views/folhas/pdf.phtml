@@ -1,0 +1,147 @@
+<?php
+	
+	//header('Content-type: application/pdf');
+	//header('Content-Disposition: attachment; filename="Folha de Pagamento.pdf"');
+
+	$this->html->pdf();
+
+	class PDF extends FPDF{
+
+		function Header(){
+
+		    $this->SetFont('Arial','I',9);
+		    $this->Cell(0, -1.2,'Positv Sistemas',0,0,'R');
+		    $pagina = utf8_decode('Página: ');
+		    $this->Cell(0, -0.5,$pagina.$this->PageNo().'/{nb}',0,0,'R');
+		   	
+		    $this->Ln(0);
+		}
+
+		function Footer(){
+
+		    $this->SetY(-6);
+		    $this->SetFont('Arial','I',8);
+
+			$pagina = utf8_decode('Página: ');
+		    $this->Cell(5,10,'20, de dezembro de 2014',0,0,'L');
+		    $this->Cell(0,10,'11:27:33',0,0,'L');
+		    $this->Cell(0,10,$pagina.$this->PageNo().'/{nb}',0,0,'R');
+		}
+	}	
+
+	$pdf = new PDF('P', 'cm', 'A4');
+
+	$pdf->Open();
+	$pdf->SetMargins(1, 1.8, 1);
+	$pdf->AliasNbPages();
+	$pdf->AddPage();
+
+
+	$pdf->SetFont('arial','B',15);
+	$pdf->Cell(0,0,"Folha de Pagamento",0,1,'L');
+	$pdf->Ln(0.4);
+	$pdf->SetFont('arial','',9);
+
+	$igreja = "Estabelecimento: ". strtoupper('Igreja Batista Ágape') ." - CNPJ: 02.324.596/0001-25";
+	$igreja = utf8_decode($igreja);
+
+	$mesano = "Mês/Ano: 12/2014";
+	$mesano = utf8_decode($mesano);
+
+	$emissao = "Emissão: 19/12/2014";
+	$emissao =  utf8_decode($emissao);
+
+	$pdf->Cell(0,0.4, $igreja,0,1,'L');
+	$pdf->Cell(0,0.4, $mesano,0,1,'L');
+	$pdf->Cell(0,0.4, $emissao,0,1,'L');
+
+	$pdf->Cell(0,0.2,"","B",1,'C');
+	$pdf->Ln(0.2);
+	$pdf->SetFont('arial','B',9);
+	$pdf->Cell(8, 0.1, 'Empregado', 0, 0, 'L');
+	$pdf->Cell(5, 0.1, 'Evento', 0, 0, 'L');
+	$pdf->Cell(2, 0.1, 'Provento', 0, 0, 'L');
+	$pdf->Cell(2, 0.1, 'Abonos', 0, 0, 'L');
+	$pdf->Cell(2, 0.1, 'Descontos', 0, 1, 'L');
+
+	$pdf->Cell(0,0.2,"","B",1,'C');
+
+	$pdf->SetFont('arial','',9);
+
+	foreach ($dados['funcionarios'] as $key => $campos)
+		funcionario($pdf, $campos);
+
+	$pdf->Ln(1.9);
+	$pdf->SetFont('arial','B',11);
+	$pdf->Cell(0, 0.1, utf8_decode('Responsável'), 0, 1, 'C');
+	$pdf->Ln(0.8);
+	$pdf->Cell(0, 0.1, '_____________________________', 0, 1, 'C');
+	$pdf->SetFont('arial', '', 10);
+	$pdf->Cell(0, 0.8, utf8_decode('João Alisson'), 0, 1, 'C');
+
+	$pdf->Output();	
+
+
+	function funcionario($pdf, $funcionario){
+
+		global $dados;
+		$eventos = isset($dados['eventos'][$funcionario['id']]) ? $dados['eventos'][$funcionario['id']] : array();
+
+		$eventosTodos = $dados['eventosTodos'];
+
+		$pdf->Ln(0.1);
+		$nome = $funcionario['nome'];
+		$nome = strtoupper($nome);
+		$nome = utf8_decode($nome);
+
+		$cargo = $funcionario['cargo'];
+		$cargo = strtoupper($cargo);
+		$cargo = utf8_decode($cargo);
+
+		$cpfRg = '';
+		if($funcionario['rg'] != '')
+			$cpfRg = 'RG: '.$funcionario['rg'];
+
+		if($funcionario['cpf'] != '')
+			$cpfRg = 'CPF: '.$funcionario['cpf'];		
+
+		$pdf->Cell(2, 0.4, $nome, 0, 1, 'L');
+		if($cpfRg != "")
+			$pdf->Cell(2, 0.4, $cpfRg, 0, 1, 'L');
+		$pdf->Cell(2, 0.4, 'Cargo: '.$cargo, 0, 1, 'L');
+
+		$salarioB = 'Salário-Base';
+		$salarioB = utf8_decode($salarioB);
+		$pdf->Cell(8, 0, '', 0, 0, 'L');
+		$pdf->Cell(5, 0.4, $salarioB, 0, 0, 'L');
+		$pdf->Cell(2, 0.4, '723,89', '0', 0, 'L');
+		$pdf->Cell(2, 0.4, '', 0, 0, 'L');
+		$pdf->Cell(2, 0.4, '', 0, 1, 'L');	
+
+		$pdf->Cell(8, 0, '', 0, 0, 'L');
+		$pdf->Cell(5, 0.4, 'INSS', 0, 0, 'L');
+		$pdf->Cell(2, 0.4, '', 'B', 0, 'L');
+		$pdf->Cell(2, 0.4, '', 'B', 0, 'L');
+		$pdf->Cell(2, 0.4, '57,63', 'B', 1, 'L');
+
+		//somas
+		$pdf->Cell(13, 0.5, '', 0, 0, 'L');
+		$pdf->Cell(2, 0.5, '723,89', 0, 0, 'L');
+		$pdf->Cell(2, 0.5, '0,0', 0, 0, 'L');
+		$pdf->Cell(2, 0.5, '57,63', 0, 1, 'L');
+
+		$pdf->Cell(14, 0.5, '', 0, 0, 'L');
+		$pdf->Cell(3, 0.5, 'Total a receber:', 0, 0, 'L');
+		$pdf->Cell(2, 0.5, '723,89', 0, 1, 'L');
+
+		$pdf->Ln(0.3);
+		$pdf->Cell(7, 0.5, 'Data: ', 0, 0, 'R');
+		$pdf->Cell(3, 0.5, '      /        /    ', 'B', 0, 'L');
+
+		$pdf->Cell(2, 0.5, 'Assinatura: ', 0, 0, 'R');
+		$pdf->Cell(7, 0.5, '', 'B', 1, 'L');
+
+		$pdf->Ln(0.3);
+		$pdf->Cell(0,0.2,"","B",1,'C');		
+	}
+?>
