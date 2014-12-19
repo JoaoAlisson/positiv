@@ -51,7 +51,7 @@ class folhasModel extends Model{
 		else
 			$campos = implode(", ", $campos);
 
-		$sql = "SELECT $campos FROM $tabela WHERE folha = $idFolha";
+		$sql = "SELECT $campos FROM $tabela WHERE folha = $idFolha ORDER BY nome";
 
 		$query = $this->prepare($sql);
 		$query->execute();
@@ -243,18 +243,21 @@ class folhasModel extends Model{
 	}	
 
 	public function criarNovosFuncionarios($idFolha, $funcionarios){
+
 		$tabela = PREFIXO."folha_funcionarios";
 		$sql = "INSERT INTO $tabela (folha, funci, nome, cpf, rg, salario, inss, cargo) VALUES";
 
+		$cont = 0;
 		foreach ($funcionarios as $key => $campos) {
 			$inss = 0;
 			if($campos['inss'] == 1)
 				$inss = $this->calculaInss($campos['salario']);
 
-			if($key == 0)
+			if($cont == 0)
 				$sql .= " ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."')";
 			else
 				$sql .= ", ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."')";
+			$cont++;
 		}
 
 		$sth = $this->prepare($sql);

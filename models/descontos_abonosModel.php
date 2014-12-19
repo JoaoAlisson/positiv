@@ -6,7 +6,7 @@ class descontos_abonosModel extends Model{
 						  "valor"		=> "moeda",
 						  "tipo" 		=> "inteiro",
 						  "todos"		=> "inteiro",
-						  "descricao" 	=> "textoLongo");
+						  "descricao" 	=> "nome");
 
 	public function antesDeDeletar($id){
 

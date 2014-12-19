@@ -325,7 +325,9 @@ class HTML{
 		$this->retornaCampo($campo, $incluir);
 	}
 
-	function campoData($campo, $valor = null, $validar){
+	function campoData($campo, $valor = null, $validar, $id){
+
+		$id = ($id != "") ? $id : $campo;
 
 		if($valor == null)
 			$valor = isset($this->dados['dados']['campos'][$campo]) ? $this->dados['dados']['campos'][$campo] : "";
@@ -335,17 +337,17 @@ class HTML{
 		if($validar == false){
 			$requerido =  "";			
 		}else{
-			$validacaoJs = "validar('$campo');";
+			$validacaoJs = "validar('$id');";
 		}
 		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "empty calendar";
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "__/__/____";
 		$incluir = "<div class='ui corner labeled left icon input'>";
-		$incluir .= "<input type='text' class='$requerido' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' value='$valor' id='input_$campo' placeholder='$placeholder' name='$campo' onfocus=\"datapick('input_$campo');\" onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs \" onfocusout=\"$validacaoJs\">";
+		$incluir .= "<input type='text' class='$requerido' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' value='$valor' id='input_$id' placeholder='$placeholder' name='$id' onfocus=\"datapick('input_$id');\" onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs \" onfocusout=\"$validacaoJs\">";
 		$incluir .= "<i class='$icone icon'></i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
 		$incluir .= "</div>";
-		$this->retornaCampo($campo, $incluir);
+		$this->retornaCampo($campo, $incluir, $id);
 	}	
 
 	function campoHora($campo, $valor = null, $validar){

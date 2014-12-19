@@ -68,7 +68,7 @@ function gerarOk(mes, action){
     	caminho = URL+controller+action;
 
 		$.post(caminho, { mesSet : mes , anoSet : ano }, function(retorno){
-			
+	
 			try{
 				retorno = jQuery.parseJSON(retorno);
 			}
@@ -106,4 +106,16 @@ function colocaGerando(id){
 function colocaAtualizando(id){
 	GERANDOFOLHA = true;
 	$("#gerar_"+id).html("Atualizando ... <i class='spinner loading icon'></i>");	
+}
+
+function mostrarDtDemissao(id){
+	input = '';
+	if(id == 1)
+		input = '#input_situacao';
+	else
+		input = '#input_situacao2';
+	if($(input).val() == "Demitido")
+		$("#demissaoId"+id).slideDown();
+	else
+		$("#demissaoId"+id).slideUp();
 }

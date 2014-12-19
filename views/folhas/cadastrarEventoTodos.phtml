@@ -14,6 +14,14 @@
     <div class="column divForm" style="width:auto; max-width: 450px;">
       <div class="ui left aligned segment" style="">
 
+        <div class="field" id="campo_observacoes">
+         <label>Título</label>
+            <div class="ui corner labeled left icon input">
+              <input type="text" class="validarObrigatorio" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_observacoes" name="observacoes" onkeyup="validar('observacoes');" onblur="validar('observacoes');"><i class="pencil icon"></i>
+              <div class="ui corner label"><i class="icon asterisk"></i></div>
+          </div>
+        </div>
+
         <div class="field" id="campo_funcionario">
              <label>Tipo </label>
              <div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_funcionario" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_funcionario');">
@@ -35,14 +43,6 @@
             <div class="ui corner labeled left icon input">
               <input type="text" class="validarObrigatorio" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_valor" name="valor" onkeyup="validar('valor');" onblur="validar('valor');" onfocus="moedaMask('input_valor')"><i class="dollar icon"></i>
               <div class="ui corner label"><i class="icon asterisk"></i></div>
-          </div>
-        </div>
-
-        <div class="field" id="campo_observacoes">
-         <label>Observação</label>
-         <div class="ui corner labeled left icon input">
-            <textarea type="text" class=" textoLongo" onkeypress="enterSubmit(event);" style="height:10px; max-width:450px; min-width:300px;" placeholder="" name="observacoes"></textarea>
-            <i class="pencil icon"></i>
           </div>
         </div>
 

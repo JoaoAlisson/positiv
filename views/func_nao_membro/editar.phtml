@@ -53,16 +53,33 @@ function fim(){
 			$this->html->campo("cargo");
 			$this->html->campo("salario");
 
+		//	$this->html->campo("situacao");
+      echo "<div class='field' id='campo_situacao'>
+       <label>Situação</label><div class='ui corner labeled left icon input'><div class='ui search dropdown selection' id='select_situacao' onkeypress=\"enterSubmit(event);\" onmouseover=\"registraSelect('select_situacao');\">
+              <input type='hidden' name='situacao' value='".$dados['funcionarios']['situacao']."' id='input_situacao' class='validarObrigatorio' onchange=\"validar('situacao');mostrarDtDemissao('1')\" style='max-width:450px; min-width:300px;''>
+              <i class='triangle down icon disabled'></i>
+              <input class='search' tabindex='0'><div class='text' data-value='' style='max-width:450px; min-width:300px;'></div>
+              <div class='menu transition hidden' tabindex='-1' style=''><div class='item active selected' data-value=''></div><div class='item' data-value='Ativo'>Ativo</div><div class='item' data-value='De Ferias'>De Férias</div><div class='item' data-value='Demitido'>Demitido</div>
+              </div><div class='ui corner label'><i class='icon asterisk'></i></div>
+              </div></div></div>";
+			
+      $mostrar = ($dados['funcionarios']['situacao'] == "Demitido") ? "" : "style='display:none'";
+      echo "<div id='demissaoId1' $mostrar >";
+        $this->html->campo("demissao");
+      echo "</div>";			
+
 			fim();
 			inicio();
 
+			$this->html->campo("admissao");
 	$selecionado = ($dados['funcionarios']['inss'] == 1) ? "checked='checked'" : "";
 	echo "<script type=\"text/javascript\">$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script><br>
 		<div class='ui checkbox'>
 		<input $selecionado name='inss' type='checkbox'>
 		<label><strong>Calcular INSS</strong></label>
-		</div><br><br>";	  
-		  $this->html->campo("situacao");
+		</div><br><br>";	
+
+		  
 		  $this->html->campo("descricao");
 
 	echo "</div></div><br>";

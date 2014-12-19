@@ -28,12 +28,15 @@ class func_nao_membroModel extends Model{
 		$id = $this->lastInsertId();
 		$inss = (isset($_POST['inss'])) ? 1 : 0;
 		
+		$demissao = ($_POST['situacao2'] != "Demitido") ? "" : $_POST['demissao2'];
 		$cargo = (int)$_POST['cargo2'];
 		$campos = array("membro" 	=> 0,
 						"func"		=> $id,
 						"cargo"  	=> $cargo,
 						"salario"	=> $_POST['salario2'],
 						"inss"      => $inss,
+						"admissao"	=> $this->trataData($_POST['admissao2']),
+						"demissao"	=> $this->trataData($demissao),
 						"situacao"	=> $_POST['situacao2'],
 						"descricao" => $_POST['descricao']);
 
@@ -58,5 +61,18 @@ class func_nao_membroModel extends Model{
 		$tabela = PREFIXO."cargos";
 		$sth = $this->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $cargo");
 		$sth->execute();		
+	}
+
+	private function trataData($data){
+		if($data == "")
+			return "";
+
+		$data = explode("/", $data);
+		$dia = (int)$data[0];
+		$mes = (int)$data[1];
+		$ano = (int)$data[2];
+
+		$retorno = "$ano-$mes-$dia";
+		return $retorno;
 	}
 }?>

@@ -29,6 +29,19 @@
 			$html2->campo("nome");		  		
 			$this->html->campo("cargo", true, null, null, "cargo2");
 			$this->html->campo("salario", true, null, null, "salario2");
+		 	//$this->html->campo("situacao", true, null, null, "situacao2");
+     		
+     		echo "<div class='field' id='campo_situacao2'>
+  				 <label>Situação</label><div class='ui corner labeled left icon input'><div class='ui search dropdown selection' id='select_situacao2' onkeypress=\"enterSubmit(event);\" onmouseover=\"registraSelect('select_situacao2');\">
+             	 <input type='hidden' name='situacao2' id='input_situacao2' class='validarObrigatorio' onchange=\"validar('situacao2');mostrarDtDemissao('2')\" style='max-width:450px; min-width:300px;''>
+           		   <i class='triangle down icon disabled'></i>
+         		 <input class='search' tabindex='0'><div class='text' data-value='' style='max-width:450px; min-width:300px;'></div>
+           		  <div class='menu transition hidden' tabindex='-1' style=''><div class='item active selected' data-value=''></div><div class='item' data-value='Ativo'>Ativo</div><div class='item' data-value='De Ferias'>De Férias</div><div class='item' data-value='Demitido'>Demitido</div>
+            	 </div><div class='ui corner label'><i class='icon asterisk'></i></div>
+              	</div></div></div>";			
+			echo "<div id='demissaoId2' style='display:none'>";
+				$this->html->campo("demissao",  true, null, null, "demissao2");
+			echo "</div>";
 
 			fim();
 			inicio();
@@ -38,8 +51,9 @@
 				<input name='inss' type='checkbox'>
 				<label><strong>Calcular INSS</strong></label>
 				</div><br><br>";		  
-		  $this->html->campo("situacao", true, null, null, "situacao2");
-		  $this->html->campo("descricao");
+
+			$this->html->campo("admissao", true, null, null, "admissao2");
+		  	$this->html->campo("descricao");
 
 	echo "</div></div><br>";
 

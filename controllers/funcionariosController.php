@@ -9,6 +9,8 @@ class funcionarios extends ControllerCRUD{
 						   "salario"	=> "Salário",
 						   "inss"		=> "Calcular INSS",
 						   "situacao"	=> "Situação",
+						   "admissao"   => "Data de Admissão",
+						   "demissao"   => "Data de Demissão",
 						   "descricao"  => "Observações");
 
 	public $cor = "black";
@@ -36,12 +38,15 @@ class funcionarios extends ControllerCRUD{
 
 			if($_POST['membro'] != 0 && $_POST['membro'] != ""){
 
+				$demissao = ($_POST['situacao'] != "Demitido") ? "" : $_POST['demissao'];
 				$inss = (isset($_POST['inss'])) ? 1 : 0;
 				$campos = array("membro" 	=> $_POST['membro'],
 								"func"		=> 0,
 								"cargo"  	=> $_POST['cargo'],
 								"salario"	=> $_POST['salario'],
 								"inss"      => $inss,
+								"admissao"	=> $_POST['admissao'],
+								"demissao"	=> $demissao,
 								"situacao"	=> $_POST['situacao'],
 								"descricao" => $_POST['descricao']);
 
@@ -237,6 +242,11 @@ class funcionarios extends ControllerCRUD{
 			$idFunc = $retorno['funcionarios']['func'];
 			$idMembro = $retorno['funcionarios']['membro'];
 
+			$inss = (isset($_POST['inss'])) ? 1 : 0;
+			$_POST['inss'] = $inss;
+			if($_POST['situacao'] != "Demitido")
+				$_POST['demissao'] = "";
+
 			if($idMembro != 0){
 				$campos = array();
 				foreach ($this->campos as $key => $value) {
@@ -276,6 +286,8 @@ class funcionarios extends ControllerCRUD{
 						$campos = array("cargo"  	=> $_POST['cargo'],
 										"salario"	=> $_POST['salario'],
 										"inss"      => $inss,
+										"admissao"	=> $_POST['admissao'],
+										"demissao"	=> $_POST['demissao'],
 										"situacao"	=> $_POST['situacao'],
 										"descricao" => $_POST['descricao']);
 

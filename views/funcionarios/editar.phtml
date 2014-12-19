@@ -39,53 +39,50 @@ function fim(){
 
 <?php 
 	$this->html->formulario();
-	$quantidade = count($dados['campos']);
+
 	echo "<div class=\"ui column center aligned grid\">";
-	if($quantidade <= 6)
-		echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px;\">
-				<div class=\"ui left ".$dados['cor']." aligned segment\" style=\"\">";
-	else
-		echo "<div class=\"column\" style=\"width:auto;\">
-				<div class=\"ui left ".$dados['cor']." aligned segment\" style=\"\">";
+ 	echo "<input type='text' name='id' value='".$dados['id']."' style='display:none;' />
+      <div class=\"column\" style=\"width:auto;\">
+        <div class=\"ui left aligned segment\" style=\"\">";
 
-				echo "<h3>".$dados['nomeFuncionario']."</h3>";
+      inicio();
+  
+      $this->html->campo("membro");
+      $this->html->campo("cargo");
+      $this->html->campo("salario");
+      //$this->html->campo("situacao");
 
-	if($quantidade > 6)
-		inicio();
-	
-	$metade = (int)($quantidade/2) + 1;
-	$ultimo = $quantidade - 1;
+      echo "<div class='field' id='campo_situacao'>
+       <label>Situação</label><div class='ui corner labeled left icon input'><div class='ui search dropdown selection' id='select_situacao' onkeypress=\"enterSubmit(event);\" onmouseover=\"registraSelect('select_situacao');\">
+              <input type='hidden' name='situacao' value='".$dados['funcionarios']['situacao']."' id='input_situacao' class='validarObrigatorio' onchange=\"validar('situacao');mostrarDtDemissao('1')\" style='max-width:450px; min-width:300px;''>
+              <i class='triangle down icon disabled'></i>
+              <input class='search' tabindex='0'><div class='text' data-value='' style='max-width:450px; min-width:300px;'></div>
+              <div class='menu transition hidden' tabindex='-1' style=''><div class='item active selected' data-value=''></div><div class='item' data-value='Ativo'>Ativo</div><div class='item' data-value='De Ferias'>De Férias</div><div class='item' data-value='Demitido'>Demitido</div>
+              </div><div class='ui corner label'><i class='icon asterisk'></i></div>
+              </div></div></div>";
 
-	$cont = 0;	
-	echo "<input type='text' name='id' value='".$dados['id']."' style='display:none;' />";
-	$selecionado = ($dados['funcionarios']['inss'] == 1) ? "checked='checked'" : "";
-	$inss = "<script type=\"text/javascript\">$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script>
+      $mostrar = ($dados['funcionarios']['situacao'] == "Demitido") ? "" : "style='display:none'";
+      echo "<div id='demissaoId1' $mostrar >";
+        $this->html->campo("demissao");
+      echo "</div>";
+      fim();
+      inicio();
+
+  	$this->html->campo("admissao");
+  	$selecionado = ($dados['funcionarios']['inss'] == 1) ? "checked='checked'" : "";
+	echo "<script type=\"text/javascript\">$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script>
 		<div class='ui checkbox'>
 		<input $selecionado name='inss' type='checkbox'>
 		<label><strong>Calcular INSS</strong></label>
 		</div><br><br>";	
-	foreach ($dados['campos'] as $chave => $campo) {
-		if($chave != 'func' && $chave != 'membro'){
-			if($chave == 'inss'){
-				echo $inss;
-			}else{
-				$this->html->campo($chave);
-				$cont++;
-				if($cont == $metade && $quantidade > 6){
-					fim();
-					inicio();
-				}
-			}	
-		}
-	}	
-	
-	if($quantidade > 6)
-		fim();
-
-	echo "<div style='clear: both;'>";
-	$this->html->submeter(null , "editar", "Salvar Alteração", null, $dados['id']); 
-	echo "</div>";
-	fim();
+  
+  $this->html->campo("descricao");
+  
+  echo "<div style='clear: both;'>";
+  $this->html->submeter(null , "editar", "Salvar Alteração", null, $dados['id']); 
+  echo "</div>";
+  fim();
+  echo "</div>";
 	echo "</div>";	
 	$this->html->formularioFim(); 
 }?>

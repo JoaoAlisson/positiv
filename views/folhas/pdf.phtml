@@ -1,16 +1,18 @@
 <?php
-	
-	//header('Content-type: application/pdf');
-	//header('Content-Disposition: attachment; filename="Folha de Pagamento.pdf"');
+
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Folha de Pagamento.pdf"');
 
 	$this->html->pdf();
 
 	class PDF extends FPDF{
 
+		private $mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+
 		function Header(){
 
 		    $this->SetFont('Arial','I',9);
-		    $this->Cell(0, -1.2,'Positv Sistemas',0,0,'R');
+		    $this->Cell(0, -1.2,'Positv, Sistemas Inteligentes',0,0,'R');
 		    $pagina = utf8_decode('Página: ');
 		    $this->Cell(0, -0.5,$pagina.$this->PageNo().'/{nb}',0,0,'R');
 		   	
@@ -22,9 +24,16 @@
 		    $this->SetY(-6);
 		    $this->SetFont('Arial','I',8);
 
+		    $dia = date('d');
+		    $mes = $this->mes[date('m')];
+		    $ano = 2000 + date('y');
+		    $data = $dia.', de '.$mes.' de '.$ano;
+		    $data = utf8_decode($data);
 			$pagina = utf8_decode('Página: ');
-		    $this->Cell(5,10,'20, de dezembro de 2014',0,0,'L');
-		    $this->Cell(0,10,'11:27:33',0,0,'L');
+		    $this->Cell(5,10, $data,0,0,'L');
+		    $hora = date('G').':'.date('i').':'.date('s').' (Brasília)';
+		    $hora = utf8_decode($hora);
+		    $this->Cell(0,10, $hora,0,0,'L');
 		    $this->Cell(0,10,$pagina.$this->PageNo().'/{nb}',0,0,'R');
 		}
 	}	
@@ -45,7 +54,8 @@
 	$igreja = "Estabelecimento: ". strtoupper('Igreja Batista Ágape') ." - CNPJ: 02.324.596/0001-25";
 	$igreja = utf8_decode($igreja);
 
-	$mesano = "Mês/Ano: 12/2014";
+	$mes = ($dados['folha']['mes'] < 10) ? "0".$dados['folha']['mes'] : $dados['folha']['mes'];
+	$mesano = "Mês/Ano: ".$mes."/".$dados['folha']['ano'];
 	$mesano = utf8_decode($mesano);
 
 	$emissao = "Emissão: 19/12/2014";
@@ -59,9 +69,8 @@
 	$pdf->Ln(0.2);
 	$pdf->SetFont('arial','B',9);
 	$pdf->Cell(8, 0.1, 'Empregado', 0, 0, 'L');
-	$pdf->Cell(5, 0.1, 'Evento', 0, 0, 'L');
-	$pdf->Cell(2, 0.1, 'Provento', 0, 0, 'L');
-	$pdf->Cell(2, 0.1, 'Abonos', 0, 0, 'L');
+	$pdf->Cell(7, 0.1, 'Evento', 0, 0, 'L');
+	$pdf->Cell(2, 0.1, 'Proventos', 0, 0, 'L');
 	$pdf->Cell(2, 0.1, 'Descontos', 0, 1, 'L');
 
 	$pdf->Cell(0,0.2,"","B",1,'C');
@@ -69,7 +78,7 @@
 	$pdf->SetFont('arial','',9);
 
 	foreach ($dados['funcionarios'] as $key => $campos)
-		funcionario($pdf, $campos);
+		funcionario($pdf, $campos, $dados);
 
 	$pdf->Ln(1.9);
 	$pdf->SetFont('arial','B',11);
@@ -82,12 +91,13 @@
 	$pdf->Output();	
 
 
-	function funcionario($pdf, $funcionario){
+	function funcionario($pdf, &$funcionario, &$dados){
 
-		global $dados;
 		$eventos = isset($dados['eventos'][$funcionario['id']]) ? $dados['eventos'][$funcionario['id']] : array();
 
 		$eventosTodos = $dados['eventosTodos'];
+
+		$eventos = array_merge($eventos, $eventosTodos);
 
 		$pdf->Ln(0.1);
 		$nome = $funcionario['nome'];
@@ -113,26 +123,48 @@
 		$salarioB = 'Salário-Base';
 		$salarioB = utf8_decode($salarioB);
 		$pdf->Cell(8, 0, '', 0, 0, 'L');
-		$pdf->Cell(5, 0.4, $salarioB, 0, 0, 'L');
-		$pdf->Cell(2, 0.4, '723,89', '0', 0, 'L');
-		$pdf->Cell(2, 0.4, '', 0, 0, 'L');
-		$pdf->Cell(2, 0.4, '', 0, 1, 'L');	
+		$pdf->Cell(7, 0.4, $salarioB, 0, 0, 'L');
+		$pdf->Cell(2, 0.4, formataMoeda($funcionario['salario']), '0', 1, 'L');
 
-		$pdf->Cell(8, 0, '', 0, 0, 'L');
-		$pdf->Cell(5, 0.4, 'INSS', 0, 0, 'L');
-		$pdf->Cell(2, 0.4, '', 'B', 0, 'L');
-		$pdf->Cell(2, 0.4, '', 'B', 0, 'L');
-		$pdf->Cell(2, 0.4, '57,63', 'B', 1, 'L');
+		$totalProventos = $funcionario['salario'];
+		$totalDescontos = $funcionario['inss'];
 
+		if($funcionario['inss'] != 0){
+			$sub = empty($eventos) ? 'B' : 0;
+			$pdf->Cell(8, 0, '', 0, 0, 'L');
+			$pdf->Cell(7, 0.4, 'INSS', 0, 0, 'L');
+			$pdf->Cell(2, 0.4, '', $sub, 0, 'L');
+			$pdf->Cell(2, 0.4, formataMoeda($funcionario['inss']), $sub, 1, 'L');
+		}
+
+		foreach ($eventos as $key => $campo) {
+			$abon = "";
+			$descont = "";
+			if($campo['tipo'] == 1){
+				$abon = formataMoeda($campo['valor']);
+				$totalProventos = $totalProventos + $campo['valor'];
+			}else{
+				$descont = formataMoeda($campo['valor']);
+				$totalDescontos = $totalDescontos + $campo['valor'];
+			}
+			$sub = 0;
+			if(end($eventos) == $campo)
+				$sub = "B";
+			$pdf->Cell(8, 0, '', 0, 0, 'L');
+			$pdf->Cell(7, 0.4, $campo['descricao'], 0, 0, 'L');
+			$pdf->Cell(2, 0.4, $abon, $sub, 0, 'L');
+			$pdf->Cell(2, 0.4, $descont, $sub, 1, 'L');			
+		}
 		//somas
-		$pdf->Cell(13, 0.5, '', 0, 0, 'L');
-		$pdf->Cell(2, 0.5, '723,89', 0, 0, 'L');
-		$pdf->Cell(2, 0.5, '0,0', 0, 0, 'L');
-		$pdf->Cell(2, 0.5, '57,63', 0, 1, 'L');
+		$pdf->Cell(15, 0.5, '', 0, 0, 'L');
+		$pdf->Cell(2, 0.5, formataMoeda($totalProventos), 0, 0, 'L');
+		$pdf->Cell(2, 0.5, formataMoeda($totalDescontos), 0, 1, 'L');
 
+		$total = $totalProventos - $totalDescontos;
+		$total = formataMoeda($total);
 		$pdf->Cell(14, 0.5, '', 0, 0, 'L');
 		$pdf->Cell(3, 0.5, 'Total a receber:', 0, 0, 'L');
-		$pdf->Cell(2, 0.5, '723,89', 0, 1, 'L');
+		$pdf->Cell(2, 0.5, $total, 0, 1, 'L');
 
 		$pdf->Ln(0.3);
 		$pdf->Cell(7, 0.5, 'Data: ', 0, 0, 'R');
@@ -143,5 +175,9 @@
 
 		$pdf->Ln(0.3);
 		$pdf->Cell(0,0.2,"","B",1,'C');		
+	}
+
+	function formataMoeda($valor){
+		return number_format($valor, 2, ',', '.');
 	}
 ?>

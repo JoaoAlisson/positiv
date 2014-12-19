@@ -9,6 +9,8 @@ class funcionariosModel extends Model{
 						   "salario"   => "moeda",
 						   "inss"	   => "inteiro",
 						   "situacao"  => array("Ativo", "De Férias", "Demitido"),
+						   "admissao"  => "data",
+						   "demissao"  => "data",
 						   "descricao" => "textoLongo");
 
 	public $obrigatorios = array("nome", "cargo", "situacao");
