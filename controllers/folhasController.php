@@ -133,6 +133,10 @@ class folhas extends Controller{
 		$this->dados($retorno);
 	}	
 
+	public function recibo(){
+		$this->usarLayout(false);
+	}
+
 	public function pdf(){
 		$this->usarLayout(false);
 		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo');

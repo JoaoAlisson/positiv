@@ -1,0 +1,158 @@
+<?php
+	//header('Content-type: application/pdf');
+	//header('Content-Disposition: attachment; filename="Folha de Pagamento.pdf"');
+
+	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'folhas' . SEPARADOR . 'pdf_recibo_class.php';
+	require($caminho);
+
+	$pdf = new pdf_recibo_class('P', 'cm', 'A4');
+
+	$pdf->Open();
+	$pdf->SetMargins(1, 1, 1);
+	$pdf->AliasNbPages();
+	$pdf->AddPage();
+	$pdf->setPosicaoY(1);
+	recibo($pdf, 0);  
+
+	$pdf->setPosicaoY(14);
+	recibo($pdf, 0);  
+
+	$pdf->Output();
+
+	function recibo(&$pdf, $x){
+
+		$pdf->SetXY(1,1);
+		$pdf->Cell(0,11.255,"",1,1,'L');
+		$pdf->SetXY(1,1);	
+		$pdf->Cell(8,1,"",1,0,'C');
+
+		$pdf->SetXY(1,0.9);
+		$pdf->SetFont('arial','B',9);
+		$pdf->Cell(8,1,"Recibo de Pagamento",0,0,'C');   
+
+		$pdf->SetXY(1,1.2);
+		$pdf->SetFont('arial','',7.6);	
+		$pdf->Cell(8,1,"(Folha de Pagamento)",0,0,'C');   
+
+		$pdf->SetXY(9,1);
+		$pdf->Cell(0,1,"",1,0,'C'); 
+
+		$pdf->SetXY(9,0.75);
+		$pdf->SetFont('arial','',7.6);	
+		$pdf->Cell(8,1,"Data e Assinatura",0,0,'L');
+
+		$pdf->SetXY(9,1.2);
+		$pdf->SetFont('arial','',8);	
+		$pdf->Cell(8,1,"____/____/_______",0,0,'L');
+
+		$pdf->SetXY(11.7,1.2);
+		$pdf->SetFont('arial','',8);	
+		$pdf->Cell(8,1,"__________________________________________________",0,0,'L'); 
+
+		$pdf->SetXY(1,2);	
+		$pdf->Cell(8,0.8,"",1,0,'C');
+
+		$pdf->SetXY(1,1.7);
+		$pdf->SetFont('arial','',7);	
+		$pdf->Cell(8,1,"Empregador",0,0,'L');
+
+		$pdf->SetXY(1,2.05);
+		$pdf->SetFont('arial','',9);	
+		$igreja = "Igreja Batista Ágape";
+		$igreja = strtoupper($igreja);
+		$igreja = utf8_decode($igreja);
+		$pdf->Cell(8,1,$igreja,0,0,'L');
+
+
+		$pdf->SetXY(1, 2.8);	
+		$pdf->Cell(8,0.8,"",1,0,'C');
+
+		$pdf->SetXY(1,2.5);
+		$pdf->SetFont('arial','',7);	
+		$pdf->Cell(8,1,"Empregado",0,0,'L');
+
+		$pdf->SetXY(1,2.85);
+		$pdf->SetFont('arial','',9);	
+		$igreja = "João Alisson da Costa Silva";
+		$igreja = strtoupper($igreja);
+		$igreja = utf8_decode($igreja);
+		$pdf->Cell(8,1,$igreja,0,0,'L');	 			
+
+		$pdf->SetXY(9,2);	
+		$pdf->Cell(4,0.8,"",1,0,'C');
+
+		$pdf->SetXY(9,1.7);
+		$pdf->SetFont('arial','',7);	
+		$pdf->Cell(8,1,"CNPJ",0,0,'L');
+
+		$pdf->SetXY(9,2.05);
+		$pdf->SetFont('arial','',9);	
+		$pdf->Cell(8,1,"02.325.596/0002-06",0,0,'L');
+
+		$pdf->SetXY(13,2);	
+		$pdf->Cell(3,0.8,"",1,0,'C');
+
+		$pdf->SetXY(13,1.7);
+		$pdf->SetFont('arial','',7);	
+		$pdf->Cell(8,1,utf8_decode("Admissão"),0,0,'L');
+
+		$pdf->SetXY(13,2.05);
+		$pdf->SetFont('arial','',9);	
+		$pdf->Cell(8,1,"23/10/2014",0,0,'L');
+
+		$pdf->SetXY(16,2);	
+		$pdf->Cell(4,0.8,"",1,0,'C');
+		$pdf->SetXY(16,1.7);
+		$pdf->SetFont('arial','',7);	
+		$pdf->Cell(8,1,utf8_decode("Competência"),0,0,'L');	
+
+		$pdf->SetXY(16,2.05);
+		$pdf->SetFont('arial','',9);	
+		$pdf->Cell(8,1,"Dezembro de 2014",0,0,'L');				
+
+		$pdf->SetXY(9,2.8);	
+		$pdf->Cell(4,0.8,"",1,0,'C');
+
+		$pdf->SetXY(9,2.5);
+		$pdf->SetFont('arial','',7);	
+		$pdf->Cell(8,1,"CPF/RG",0,0,'L');
+
+		$pdf->SetXY(9,2.85);
+		$pdf->SetFont('arial','',9);	
+		$pdf->Cell(8,1,"040.334.303-85",0,0,'L');
+
+		$pdf->SetXY(13,2.8);	
+		$pdf->Cell(0,0.8,"",1,0,'C');
+
+		$pdf->SetXY(13,2.5);
+		$pdf->SetFont('arial','',7);	
+		$pdf->Cell(8,1,"Cargo",0,0,'L');		
+
+		$pdf->SetXY(13,2.85);
+		$pdf->SetFont('arial','',9);	
+		$pdf->Cell(8,1,"AUXILIAR DE SECRETARIA",0,1,'L');
+
+		$pdf->SetFont('arial','B',9);	
+		$desc = utf8_decode("Discriminação das Verbas");
+		$pdf->Cell(0, 0,"$desc",0,1,'C');
+
+		$pdf->SetFont('arial','',9);	
+		$desc = utf8_decode("Discriminação das Verbas");
+		$pdf->SetXY(1,4.05);
+		$pdf->Cell(13, 0.4,"$desc",1,0,'L');
+		$pdf->Cell(3, 0.4,"Proventos",1,0,'R');
+		$pdf->Cell(0, 0.4,"Descontos",1,1,'R');
+
+		$pdf->Cell(13, 6.4,"",1,0,'L');
+		$pdf->Cell(3, 6.4,"",1,0,'R');
+		$pdf->Cell(0, 6.4,"",1,1,'R');
+
+		$pdf->Cell(13, 0.7,"",0,0,'L');
+		$pdf->Cell(3, 0.7,"",1,0,'R');
+		$pdf->Cell(0, 0.7,"",1,1,'R');
+
+		$pdf->Cell(16, 0.7,"",0,0,'L');
+		$pdf->Cell(0, 0.7,"",1,1,'R');
+
+	}
+?>
