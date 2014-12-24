@@ -556,7 +556,7 @@ function soLetras(id){
 }
 
 function senha(id){
-	if($("#input_"+id).val().length <= 3)
+	if($("#input_"+id).val().length <= 3 && $("#input_"+id).val() != "")
 		return "A senha deve ter no mínimo 4 caracteres."
 	else
 		return "";
@@ -861,6 +861,19 @@ function addItem(controller, id){
 	}
 }
 
-//function prevenir(event){
-//  event.preventDefault();
-//}
+function segundaSenha(id){
+	senha2 = $("#input_2senha2").val();
+	senha1 = $("#input_senha").val();
+
+	if(senha1 != senha2)
+		return "As senhas não conferem";
+	else
+		return "";
+}
+
+function senhaAntiga(id){
+	if($('#input_senha').val() != "" && $('#input_2senha22').val() == "")
+		return "Insira a senha antiga para cadastrar uma nova.";
+	else
+		return "";
+}

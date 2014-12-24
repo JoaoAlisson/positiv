@@ -1,7 +1,7 @@
 <?php
 
-	header('Content-type: application/pdf');
-	header('Content-Disposition: attachment; filename="Folha de Pagamento.pdf"');
+//	header('Content-type: application/pdf');
+//	header('Content-Disposition: attachment; filename="Folha de Pagamento.pdf"');
 
 	$this->html->pdf();
 
@@ -132,7 +132,10 @@
 		if($funcionario['inss'] != 0){
 			$sub = empty($eventos) ? 'B' : 0;
 			$pdf->Cell(8, 0, '', 0, 0, 'L');
-			$pdf->Cell(7, 0.4, 'INSS', 0, 0, 'L');
+			$taixa = retornaTaxa($funcionario['salario'], $dados['tabelaInss']);
+			$taixa .= "%";
+			$inss = "INSS ($taixa)";
+			$pdf->Cell(7, 0.4, $inss, 0, 0, 'L');
 			$pdf->Cell(2, 0.4, '', $sub, 0, 'L');
 			$pdf->Cell(2, 0.4, formataMoeda($funcionario['inss']), $sub, 1, 'L');
 		}
@@ -180,4 +183,16 @@
 	function formataMoeda($valor){
 		return number_format($valor, 2, ',', '.');
 	}
+
+	function retornaTaxa($valor, $tabela){
+
+		if($valor < $tabela[0]['fim']){
+			return $tabela[0]['taxa'];
+		}else{
+			if($valor < $tabela[1]['fim'])
+				return $tabela[1]['taxa'];
+			else
+				return $tabela[2]['taxa'];
+		}
+	}	
 ?>

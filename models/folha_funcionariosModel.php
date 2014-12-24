@@ -8,5 +8,6 @@ class folha_funcionariosModel extends Model{
 						   "rg"			=> "texto",
 						   "salario"	=> "moeda",
 						   "inss"   	=> "moeda",
+						   "admissao"	=> "data",
 						   "cargo" 		=> "texto");
 }

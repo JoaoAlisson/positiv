@@ -41,8 +41,10 @@
 
 		$(document).ready(function(){
       $("a").click(function(event){
-        event.preventDefault();
+        if($(this).attr("target") != "_blank")
+          event.preventDefault();
       });
+
       $('.balao').popup();
       $('.escondeMenu').click(function(){
          $('.ui.sidebar').sidebar("hide");
@@ -105,7 +107,7 @@
         </a>
         <?php }?>
         <a class="balao icon item" data-content="Deslogar" onclick="deslogar();">
-         <div class="esconder" style="float:left;"> <?php echo Sessao::pegar("usuario");?> </div>
+         <div class="esconder" style="float:left;"> <?php echo Sessao::pegar("usuario"); ?> </div>
           <i class="icon sign out"></i>
         </a>
         <a class="balao icon item esconder" data-content="Imprimir" href="#">

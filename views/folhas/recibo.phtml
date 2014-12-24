@@ -1,6 +1,6 @@
 <?php
-	//header('Content-type: application/pdf');
-	//header('Content-Disposition: attachment; filename="Folha de Pagamento.pdf"');
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'folhas' . SEPARADOR . 'pdf_recibo_class.php';
 	require($caminho);
@@ -10,16 +10,25 @@
 	$pdf->Open();
 	$pdf->SetMargins(1, 1, 1);
 	$pdf->AliasNbPages();
-	$pdf->AddPage();
-	$pdf->setPosicaoY(1);
-	recibo($pdf, 0);  
+	
 
-	$pdf->setPosicaoY(14);
-	recibo($pdf, 0);  
+	$i = 1;
+	foreach ($dados['funcionarios'] as $key => $campo) {
+		if($i == 1){
+			$pdf->AddPage();
+			$pdf->setPosicaoY(1);
+			recibo($pdf, $campo['id'], $key, $dados); 
+			$i++;
+		}else{
+			$pdf->setPosicaoY(14);
+			recibo($pdf, $campo['id'], $key, $dados);
+			$i = 1;		
+		}		
+	}
 
 	$pdf->Output();
 
-	function recibo(&$pdf, $x){
+	function recibo(&$pdf, $id, $chave ,&$dados){
 
 		$pdf->SetXY(1,1);
 		$pdf->Cell(0,11.255,"",1,1,'L');
@@ -63,20 +72,21 @@
 		$igreja = utf8_decode($igreja);
 		$pdf->Cell(8,1,$igreja,0,0,'L');
 
-
+		//cor
+		$pdf->SetFillColor(196,196,196);
 		$pdf->SetXY(1, 2.8);	
-		$pdf->Cell(8,0.8,"",1,0,'C');
+		$pdf->Cell(8,0.8,"",1,0,'C', true);
 
 		$pdf->SetXY(1,2.5);
-		$pdf->SetFont('arial','',7);	
+		$pdf->SetFont('arial','',7);
 		$pdf->Cell(8,1,"Empregado",0,0,'L');
 
 		$pdf->SetXY(1,2.85);
 		$pdf->SetFont('arial','',9);	
-		$igreja = "João Alisson da Costa Silva";
-		$igreja = strtoupper($igreja);
-		$igreja = utf8_decode($igreja);
-		$pdf->Cell(8,1,$igreja,0,0,'L');	 			
+		$nome = $dados['funcionarios'][$chave]['nome'];
+		$nome = strtoupper($nome);
+		$nome = utf8_decode($nome);
+		$pdf->Cell(8,1,$nome,0,0,'L');	 			
 
 		$pdf->SetXY(9,2);	
 		$pdf->Cell(4,0.8,"",1,0,'C');
@@ -97,8 +107,9 @@
 		$pdf->Cell(8,1,utf8_decode("Admissão"),0,0,'L');
 
 		$pdf->SetXY(13,2.05);
-		$pdf->SetFont('arial','',9);	
-		$pdf->Cell(8,1,"23/10/2014",0,0,'L');
+		$pdf->SetFont('arial','',9);
+		$data = trataData($dados['funcionarios'][$chave]['admissao']);
+		$pdf->Cell(8,1,$data,0,0,'L');
 
 		$pdf->SetXY(16,2);	
 		$pdf->Cell(4,0.8,"",1,0,'C');
@@ -107,8 +118,11 @@
 		$pdf->Cell(8,1,utf8_decode("Competência"),0,0,'L');	
 
 		$pdf->SetXY(16,2.05);
-		$pdf->SetFont('arial','',9);	
-		$pdf->Cell(8,1,"Dezembro de 2014",0,0,'L');				
+		$pdf->SetFont('arial','',9);
+		$mes = $dados['folha']['mes'];
+		$mes = retornaMes($mes);
+		$data = $mes." de ".$dados['folha']['ano'];	
+		$pdf->Cell(8,1, $data,0,0,'L');				
 
 		$pdf->SetXY(9,2.8);	
 		$pdf->Cell(4,0.8,"",1,0,'C');
@@ -118,8 +132,9 @@
 		$pdf->Cell(8,1,"CPF/RG",0,0,'L');
 
 		$pdf->SetXY(9,2.85);
-		$pdf->SetFont('arial','',9);	
-		$pdf->Cell(8,1,"040.334.303-85",0,0,'L');
+		$pdf->SetFont('arial','',9);
+		$cpf = ($dados['funcionarios'][$chave]['cpf'] != "") ? $dados['funcionarios'][$chave]['cpf'] : $dados['funcionarios'][$chave]['rg'];
+		$pdf->Cell(8,1, $cpf,0,0,'L');
 
 		$pdf->SetXY(13,2.8);	
 		$pdf->Cell(0,0.8,"",1,0,'C');
@@ -129,8 +144,11 @@
 		$pdf->Cell(8,1,"Cargo",0,0,'L');		
 
 		$pdf->SetXY(13,2.85);
-		$pdf->SetFont('arial','',9);	
-		$pdf->Cell(8,1,"AUXILIAR DE SECRETARIA",0,1,'L');
+		$pdf->SetFont('arial','',9);
+		$cargo = $dados['funcionarios'][$chave]['cargo'];
+		$cargo = strtoupper($cargo);
+		$cargo = utf8_decode($cargo);
+		$pdf->Cell(8,1, $cargo,0,1,'L');
 
 		$pdf->SetFont('arial','B',9);	
 		$desc = utf8_decode("Discriminação das Verbas");
@@ -152,7 +170,99 @@
 		$pdf->Cell(0, 0.7,"",1,1,'R');
 
 		$pdf->Cell(16, 0.7,"",0,0,'L');
-		$pdf->Cell(0, 0.7,"",1,1,'R');
+		$pdf->Cell(0, 0.7,"",1,1,'R', true);
+
+		$pdf->SetXY(13, 10.65);
+		$pdf->SetFont('arial','', 6.5);	
+		$pdf->Cell(4, 0.7,"Total de Proventos", 0,0,'R');	
+		$pdf->Cell(0, 0.7,"Total de Descontos", 0,1,'R');		
+
+		$pdf->Cell(0, 0.7,utf8_decode("Líquido a Receber"), 0,1,'R');
+		$pdf->SetXY(13, 10.97);
+		$pdf->SetFont('arial','', 9);
+			
+		$pdf->SetXY(1.1, 4.55);
+		$pdf->Cell(12.9, 0.4,utf8_decode("Salário-Base"),0,0,'L');
+		$salario = $dados['funcionarios'][$chave]['salario'];
+		$totalProventos = $salario;
+		$pdf->Cell(3, 0.4, formataMoeda($salario),0,0,'R');
+		$pdf->Cell(0, 0.4,"",0,1,'R');
+
+		$totalDescontos = 0;
+		if($dados['funcionarios'][$chave]['inss'] != 0){
+			$pdf->SetX(1.1);
+			$taixa = retornaTaxa($dados['funcionarios'][$chave]['salario'], $dados['tabelaInss']);
+			$taixa .= "%";
+			$pdf->Cell(12.9, 0.4,"INSS ($taixa)",0,0,'L');
+			$pdf->Cell(3, 0.4,"",0,0,'R');
+			$inss = $dados['funcionarios'][$chave]['inss'];
+			$totalDescontos = $inss;
+			$pdf->Cell(0, 0.4, formataMoeda($inss),0,1,'R');
+		}
+
+		$eventos = isset($dados['eventos'][$id]) ? $dados['eventos'][$id] : array();
+
+		$eventosTodos = $dados['eventosTodos'];
+
+		$eventos = array_merge($eventos, $eventosTodos);
+
+		foreach ($eventos as $chave => $evento) {
+			$pdf->SetX(1.1);
+			$eventoNome = $evento['descricao'];
+			$eventoNome = strtoupper($eventoNome);
+			$eventoNome = utf8_decode($eventoNome);
+			$pdf->Cell(12.9, 0.4, $eventoNome,0,0,'L');
+
+			$valor = $evento['valor'];
+			
+			$valor = formataMoeda($valor);
+			if($evento['tipo'] == 2){
+				$pdf->Cell(3, 0.4, '',0,0,'R');
+				$totalDescontos = $totalDescontos + $evento['valor'];
+			}else{
+				$totalProventos = $totalProventos + $evento['valor'];
+			}
+			$pdf->Cell(3, 0.4, $valor,0,1,'R');
+		}		
+
+		$pdf->SetXY(13, 10.95);
+		$pdf->Cell(4, 0.7,formataMoeda($totalProventos), 0,0,'R');	
+		$pdf->Cell(0, 0.7, formataMoeda($totalDescontos), 0,1,'R');
+		$receber = $totalProventos - $totalDescontos;
+		$pdf->Cell(0, 0.7, formataMoeda($receber), 0,1,'R');
 
 	}
+
+	function trataData($data){
+		if($data == "0000-00-00")
+			return "";
+
+		$data = explode("-", $data);
+		$ano = $data[0];
+		$mes = $data[1];
+		$dia = $data[2];
+		$data = "$dia/$mes/$ano";
+		return $data;
+	}
+
+	function formataMoeda($valor){
+		return number_format($valor, 2, ',', '.');
+	}
+
+	function retornaMes($m){
+		$mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+		return utf8_decode($mes[$m]);	
+	}
+
+	function retornaTaxa($valor, $tabela){
+
+		if($valor < $tabela[0]['fim']){
+			return $tabela[0]['taxa'];
+		}else{
+			if($valor < $tabela[1]['fim'])
+				return $tabela[1]['taxa'];
+			else
+				return $tabela[2]['taxa'];
+		}
+	}		
 ?>

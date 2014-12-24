@@ -245,8 +245,6 @@ class ControllerCRUD extends Controller{
 		if($id == "")
 			header('location: '. URL . $this->nomeController());
 
-		//$id = $_POST['idSet'];
-		//$id= 2;
 		$retorno = $this->model->visualizar($id);
 		$retorno['nome'] = $this->nome;
 		$retorno['id'] = $id;

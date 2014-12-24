@@ -26,6 +26,21 @@ class funcionariosModel extends Model{
 
 	}
 
+	public function verificaCadastrado($id){
+		$id = (int)$id;
+		$tabela = PREFIXO."funcionarios";
+
+		$consulta = $this->prepare("SELECT COUNT(*) AS quantidade FROM $tabela WHERE membro = {$id}");
+		$consulta->execute();
+		$quantidade = $consulta->fetchAll(PDO::FETCH_ASSOC);
+		$quantidade = $quantidade[0]['quantidade'];
+
+		if($quantidade > 0)
+			return false;
+		else
+			return true;	
+	}
+
 	public function antesDeEditar($id, $dados){
 		$idConsAntigo = $this->pegarCampo($id, "cargo");
 		if($dados['cargo'] != $idConsAntigo){

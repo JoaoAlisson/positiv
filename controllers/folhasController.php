@@ -134,14 +134,27 @@ class folhas extends Controller{
 	}	
 
 	public function recibo(){
-		$this->usarLayout(false);
-	}
 
-	public function pdf(){
+		if(!isset($this->GET['cod']))
+			header('location: '.URL.'folhas');
+
+		$id = $this->GET['cod'];
+		$folha = $this->model->visualizar($id);
+		if(empty($folha['folhas']))
+			header('location: '.URL.'folhas');
+
+		$func = isset($this->GET['func']) ? $this->GET['func'] : 0;
+		$func = (int)$func;
+
 		$this->usarLayout(false);
-		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo');
-		$funcionarios = $this->model->funcsDaFolha('24', $array);
-		$eventos = $this->model->pegarTodosOsEventos(24);
+
+		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo', 'admissao');
+		if($func == 0)
+			$funcionarios = $this->model->funcsDaFolha($id, $array);
+		else
+			$funcionarios = $this->model->pegarFuncionario($func);
+
+		$eventos = $this->model->pegarTodosOsEventos($id, $func);
 		$eventosOrd = array();
 		$eventosTodos = array();
 
@@ -157,8 +170,67 @@ class folhas extends Controller{
 			}
 		}
 
-		$folha = $this->model->visualizar(24);
+		//$folha = $this->model->visualizar(25);
+		$retorno['tabelaInss'] = $this->model->pegarTabelaInss();
 		$retorno['folha'] = $folha['folhas'];
+		$retorno['funcionarios'] = $funcionarios;
+		$retorno['eventos'] = $eventosOrd;
+		$retorno['eventosTodos'] = $eventosTodos;
+
+		$this->dados($retorno);			
+	}
+
+	public function reciboEscolha(){
+		if(!isset($this->GET['cod']))
+			header('location: '.URL.'folhas');
+
+		$idFolha = $this->GET['cod'];
+	
+		$retorna['funcs'] = $this->model->funcsDaFolha($idFolha);
+		$this->dados($retorna);	
+
+
+		$retorna['id'] = $idFolha;
+		$retorna['idFolha'] = $idFolha;
+		$retorna['folha'] = $this->model->visualizar($idFolha);
+		$retorna['folha'] = $retorna['folha']['folhas'];
+		$retorna['dados'] = $this->model->informacoesFolha($idFolha);
+		
+		$this->dados($retorna);		
+	}
+
+	public function pdf(){
+
+		if(!isset($this->GET['cod']))
+			header('location: '.URL.'folhas');
+
+		$id = $this->GET['cod'];
+		$folha = $this->model->visualizar($id);
+		if(empty($folha['folhas']))
+			header('location: '.URL.'folhas');
+
+		$this->usarLayout(false);
+		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo');
+		$funcionarios = $this->model->funcsDaFolha($id, $array);
+		$eventos = $this->model->pegarTodosOsEventos($id, 0);
+		$eventosOrd = array();
+		$eventosTodos = array();
+
+		foreach ($eventos as $key => $campos) {
+
+			if($campos['todos'] != 0){
+				array_push($eventosTodos, $eventos[$key]);
+			}else{
+				if(isset($eventosOrd[$campos['funcionario']]))
+					array_push($eventosOrd[$campos['funcionario']], $eventos[$key]);
+				else
+					$eventosOrd[$campos['funcionario']][0] = $eventos[$key];
+			}
+		}
+
+		//$folha = $this->model->visualizar($id);
+		$retorno['folha'] = $folha['folhas'];
+		$retorno['tabelaInss'] = $this->model->pegarTabelaInss();
 		$retorno['funcionarios'] = $funcionarios;
 		$retorno['eventos'] = $eventosOrd;
 		$retorno['eventosTodos'] = $eventosTodos;
@@ -171,6 +243,7 @@ class folhas extends Controller{
 			header('location: '.URL.'folhas');
 
 		$idFolha = $this->GET['cod'];
+		$retorna['id'] = $idFolha;
 		$retorna['folha'] = $this->model->visualizar($idFolha);
 		$retorna['folha'] = $retorna['folha']['folhas'];
 		$retorna['dados'] = $this->model->informacoesFolha($idFolha);

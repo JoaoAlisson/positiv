@@ -68,7 +68,7 @@ function gerarOk(mes, action){
     	caminho = URL+controller+action;
 
 		$.post(caminho, { mesSet : mes , anoSet : ano }, function(retorno){
-	
+			
 			try{
 				retorno = jQuery.parseJSON(retorno);
 			}
@@ -118,4 +118,33 @@ function mostrarDtDemissao(id){
 		$("#demissaoId"+id).slideDown();
 	else
 		$("#demissaoId"+id).slideUp();
+}
+
+function recibo(){
+	id = $("#input_funcionario").val();
+	idFolha = $("#idFolha").val();
+	controller = 'folhas/';
+	if(id != "-1")
+		action = 'recibo/cod:'+ idFolha +'/func:'+id;
+	else
+		action = 'recibo/cod:'+ idFolha;
+
+	link = URL + controller + action;
+	$("#reciboLink").attr("href", link);
+
+	jQuery('#reciboLink')[0].click();
+	action = 'visualizar/cod:'+idFolha;
+	navegacaoSub('folhas/', action);
+}
+
+function permicaoTodos(){
+
+	if($("#campoTodos").prop("checked"))
+		$(".modulos").prop("checked", false);
+	else
+		$(".modulos").prop("checked", true);
+}
+
+function moduloClick(){
+	$("#campoTodos").prop("checked", false);
 }

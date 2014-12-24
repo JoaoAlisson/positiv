@@ -38,20 +38,27 @@ class funcionarios extends ControllerCRUD{
 
 			if($_POST['membro'] != 0 && $_POST['membro'] != ""){
 
-				$demissao = ($_POST['situacao'] != "Demitido") ? "" : $_POST['demissao'];
-				$inss = (isset($_POST['inss'])) ? 1 : 0;
-				$campos = array("membro" 	=> $_POST['membro'],
-								"func"		=> 0,
-								"cargo"  	=> $_POST['cargo'],
-								"salario"	=> $_POST['salario'],
-								"inss"      => $inss,
-								"admissao"	=> $_POST['admissao'],
-								"demissao"	=> $demissao,
-								"situacao"	=> $_POST['situacao'],
-								"descricao" => $_POST['descricao']);
+				$valido   = $this->model->verificaCadastrado($_POST['membro']);
+				if($valido){
+					$demissao = ($_POST['situacao'] != "Demitido") ? "" : $_POST['demissao'];
+					$inss = (isset($_POST['inss'])) ? 1 : 0;
+					$campos = array("membro" 	=> $_POST['membro'],
+									"func"		=> 0,
+									"cargo"  	=> $_POST['cargo'],
+									"salario"	=> $_POST['salario'],
+									"inss"      => $inss,
+									"admissao"	=> $_POST['admissao'],
+									"demissao"	=> $demissao,
+									"situacao"	=> $_POST['situacao'],
+									"descricao" => $_POST['descricao']);
 
-				$retornou = $this->model->inserir($campos);
-				$retorno['retorno'] = $retornou; 
+					$retornou = $this->model->inserir($campos);
+					$retorno['retorno'] = $retornou;
+				}else{
+					$retorno['retorno'][0] = "erro";
+					$retorno['retorno'][1] = "O funcionário não foi cadastrado";
+					$retorno['retorno'][2]['membro'][0] = "Este membro já está cadastrado como um funcionário"; 					
+				} 
 			}
 
 		}

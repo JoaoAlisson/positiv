@@ -6,10 +6,11 @@
   	foreach ($array["subMenus"] as $chave => $valor)
   		array_push($controllers, $valor[0]);
 
+  	 $this->html->menuPrincialItem($array["nome"], $controllers, $array["view"], $array["icone"], $array["cor"], $array["naoInvertido"]);
+
     if($cont == 1)
       funcionarios();
-    else
-  	 $this->html->menuPrincialItem($array["nome"], $controllers, $array["view"], $array["icone"], $array["cor"], $array["naoInvertido"]);
+
     $cont++;
   }	
     

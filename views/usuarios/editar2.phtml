@@ -1,0 +1,114 @@
+<?php
+function inicio(){
+	echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px; float: left; margin: 10px;\">";
+}
+
+function fim(){
+	echo "</div>";
+}
+?>
+<?php 
+	if(isset($dados['retorno'])){
+			$retornoJson['valido'] = $dados['retorno'][0];
+			$retornoJson['mensagem'] = $dados['retorno'][1];
+			$retornoJson['erros'] = isset($dados['retorno'][2]) ? $dados['retorno'][2] : "";
+
+			$retornoJson = json_encode($retornoJson);
+			echo $retornoJson;
+	
+	}else{
+?>
+<style>
+@media (min-width: 460px) {
+  .divForm {
+    width:450px !important;
+  }
+}
+</style>
+  <?php 
+    $nomeSingular = "";
+    if(isset($dados['nome'][0]))
+      $nomeSingular = $dados['nome'][0];
+    else
+      $nomeSingular = $dados['nomeController'];
+  ?>
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?>Editar <?php echo $nomeSingular;?></h2>
+</div>
+
+
+<?php 
+	$this->html->formulario();
+	$quantidade = count($dados['campos']);
+	echo "<div class=\"ui column center aligned grid\">";
+
+	if($quantidade <= 6)
+		echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px;\">
+				<div class=\"ui left ".$dados['cor']." aligned segment\" style=\"text-align:left;\">";
+	else
+		echo "<div class=\"column\" style=\"width:auto;\">
+				<div class=\"ui left ".$dados['cor']." aligned segment\" style=\"text-align:left;\">";
+
+	if($quantidade > 6)
+		inicio();
+	
+	echo "<input type='text' name='id' value='".$dados['id']."' style='display:none;' />";	
+	$this->html->campo('nome');
+
+	if($quantidade > 6)
+		fim();
+
+?>
+<h5>MÓDULOS COM PERMISSÃO</h5>
+<script type='text/javascript'>$(document).ready(function(){ $('.ui.checkbox').checkbox(); });</script>
+<div style="width:auto; float: left; margin:5px;">
+
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='igrejas' class='modulos' type='checkbox' <?php if(in_array('igrejas',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='university icon'></i><strong>Igrejas</strong></label>
+	</div><br>
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='usuarios' class='modulos' type='checkbox' <?php if(in_array('usuarios',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='users icon'></i><strong>Usuários</strong></label>
+	</div><br>
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='funcionarios' class='modulos' type='checkbox' <?php if(in_array('funcionarios',$dados['modulos'])) echo 'checked'; ?>>
+		<label>
+<img style="width:16px; height:7;float:left; margin-right:6px;" src="http://localhost/mvcPHP/public/images/icons/funcionario.png">
+			<strong>Funcionários</strong></label>
+	</div><br>
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='programacao' class='modulos' type='checkbox' <?php if(in_array('programacao',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='calendar icon'></i><strong>Programação</strong></label>
+	</div><br><br>
+	<div class='ui checkbox' onclick="permicaoTodos();">
+		<input name='todos' id="campoTodos" type='checkbox'>
+		<label><strong>Todos</strong></label>
+	</div>
+</div>
+<div style="width:auto; float: left; margin:5px;">
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='patrimonio' class='modulos' type='checkbox' <?php if(in_array('patrimonio',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='suitcase icon'></i><strong>Patrimônio</strong></label>
+	</div><br>
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='financas' class='modulos' type='checkbox' <?php if(in_array('financas',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='dollar icon'></i><strong>Finanças</strong></label>
+	</div><br>
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='relatorios' class='modulos' type='checkbox' <?php if(in_array('relatorios',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='bar chart icon'></i><strong>Relatórios</strong></label>
+	</div><br>
+	<div class='ui checkbox' onclick="moduloClick();">
+		<input name='documentos' class='modulos' type='checkbox' <?php if(in_array('documentos',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='file icon'></i><strong>Documentos</strong></label>
+	</div>
+</div>
+<?php
+	echo "<div style='clear: both;'>";
+	$this->html->submeter(null , "editar", "Salvar Alterações", null, $dados['id']); 
+	echo "</div>";
+	fim();
+	echo "</div>";	
+	$this->html->formularioFim(); 
+}?>

@@ -1,0 +1,90 @@
+<?php
+function inicio(){
+	echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px; float: left; margin: 10px;\">";
+}
+
+function fim(){
+	echo "</div>";
+}
+?>
+<?php 
+	if(isset($dados['retorno'])){
+			$retornoJson['valido'] = $dados['retorno'][0];
+			$retornoJson['mensagem'] = $dados['retorno'][1];
+			$retornoJson['erros'] = isset($dados['retorno'][2]) ? $dados['retorno'][2] : "";
+
+			$retornoJson = json_encode($retornoJson);
+			echo $retornoJson;
+	
+	}else{
+?>
+<style>
+@media (min-width: 460px) {
+  .divForm {
+    width:450px !important;
+  }
+}
+</style>
+  <?php 
+    $nomeSingular = "";
+    if(isset($dados['nome'][0]))
+      $nomeSingular = $dados['nome'][0];
+    else
+      $nomeSingular = $dados['nomeController'];
+  ?>
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?>Editar <?php echo $nomeSingular;?></h2>
+</div>
+
+
+<?php 
+	$this->html->formulario();
+	$quantidade = count($dados['campos']);
+	echo "<div class=\"ui column center aligned grid\">";
+
+	if($quantidade <= 6)
+		echo "<div class=\"column divForm\" style=\"width:auto; max-width: 450px;\">
+				<div class=\"ui left ".$dados['cor']." aligned segment\" style=\"\">";
+	else
+		echo "<div class=\"column\" style=\"width:auto;\">
+				<div class=\"ui left ".$dados['cor']." aligned segment\" style=\"\">";
+
+	if($quantidade > 6)
+		inicio();
+	echo "<input type='text' name='id' value='".$dados['id']."' style='display:none;' />";	
+	$this->html->campo('nome');
+	$this->html->campo('login');
+?>
+<div class="field" id="campo_2senha22">
+	<label>Senha Antiga</label>
+	<div class="ui corner labeled left icon input">
+		<input type="password" class="senha senhaAntiga" onkeypress="enterSubmit(event);" value="" style="max-width:450px; min-width:300px;" id="input_2senha22" maxlength="20" placeholder="**********" name="2senha22" onkeyup="validar('2senha22');" onblur="validar('2senha22');">
+			<i class="lock icon"></i>
+	</div>
+</div>
+<div class="field" id="campo_senha">
+	<label>Nova Senha</label>
+	<div class="ui corner labeled left icon input">
+		<input type="password" class="senha" onkeypress="enterSubmit(event);" value="" style="max-width:450px; min-width:300px;" id="input_senha" maxlength="20" placeholder="**********" name="senha" onkeyup="validar('senha');" onblur="validar('senha');">
+			<i class="lock icon"></i>
+	</div>
+</div>
+<div class="field" id="campo_2senha2">
+	<label>Repita a Nova Senha</label>
+	<div class="ui corner labeled left icon input">
+		<input type="password" class="senha segundaSenha" onkeypress="enterSubmit(event);" value="" style="max-width:450px; min-width:300px;" id="input_2senha2" maxlength="20" placeholder="**********" name="2senha2" onkeyup="validar('2senha2');" onblur="validar('2senha2');">
+			<i class="lock icon"></i>
+	</div>
+</div>
+<?php	
+	
+	if($quantidade > 6)
+		fim();
+
+	echo "<div style='clear: both;'>";
+	$this->html->submeter(null , "editar", "Salvar Alterações", null, $dados['id']); 
+	echo "</div>";
+	fim();
+	echo "</div>";	
+	$this->html->formularioFim(); 
+}?>
