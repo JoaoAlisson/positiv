@@ -15,7 +15,7 @@ class loginModel extends Model{
 		if($validar[0] == "ok"){
 			$tabela = PREFIXO."usuarios";
 			$senha = Hash::criar($senha, CHAVE_LOGIN);
-			$sth = $this->prepare("SELECT id, login FROM $tabela WHERE login = :login AND senha = :senha");
+			$sth = $this->prepare("SELECT id, login, nome FROM $tabela WHERE login = :login AND senha = :senha");
 
 			$sth->execute(array(
 					':login' => $login,

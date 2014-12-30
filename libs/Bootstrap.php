@@ -2,6 +2,7 @@
 class Bootstrap {
 	
 	function __construct(){
+		
 		if($this->verificarLogado()){
 			$this->carregarPgs();
 		}else{

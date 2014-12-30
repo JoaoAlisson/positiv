@@ -22,7 +22,7 @@ class login extends Controller {
 					Sessao::iniciar();
 					Sessao::inserir("logado", true);
 					Sessao::inserir("tipo", $tipo);
-					Sessao::inserir("usuario", $retorno[1]["login"]);
+					Sessao::inserir("usuario", $retorno[1]["nome"]);
 					Sessao::inserir("id", $retorno[1]["id"]);
 					header('location: ' . URL);
 				}else{

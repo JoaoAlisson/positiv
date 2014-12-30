@@ -338,14 +338,14 @@ function submeter(controller, action, id, mudarPg, idForm){
 		        	
 		        	classeMostrar = "";
 		        	imagemm = "";
-					 alert(result);
+					//alert(result);
 					//$(".textoLongo").val(result);
 					var retorno;
 					try{
 		        		retorno = jQuery.parseJSON(result);
 		        	}
 		        	catch(e){
-						//$(window.document.location).attr('href', URL);
+						$(window.document.location).attr('href', URL);
 		        	}
 		        	
 		        	if(retorno.valido == "ok"){

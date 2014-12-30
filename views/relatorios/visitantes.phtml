@@ -1,0 +1,52 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="bar chart icon"></i>Relatório de Visitantes</h2>
+
+	<h3>Selecione os filtros</h3>
+</div>
+<a id="reciboLink" style="display:none" href="" target="_blank">teste</a> 
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+<div class="field" id="campo_funcionario" style="margin: 2px; float:left; text-align:left;">
+     <label>Sexo </label><br>
+<div class="ui corner labeled left icon input"> <div class="ui search dropdown selection" id="select_sexo" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_sexo');">
+              <input type="hidden" name="sexo" id="input_sexo" style="min-width:50px;" onchange="validar('sexo'); trocaImgSexo('sexo');">
+              <i class="male icon disabled" id="masculino_sexo"></i><i class="female icon disabled" id="feminino_sexo"></i>
+              <input class="search" tabindex="0"><div class="text" style="min-width:50px;" data-value=""></div>
+              <i class="dropdown icon"></i>
+              <div class="menu transition hidden" tabindex="" style="">
+              <div class="item active selected" data-value=""></div>
+                <div class="item" data-value="1"><i class="male icon"></i>Masculino</div>
+                <div class="item" data-value="2"><i class="female icon"></i>Feminino</div>
+              </div>
+              </div></div>
+</div>  
+<div class="field" id="campo_funcionario" style="margin: 2px; float:left; text-align:left;">
+     <label>Estado Civil </label><br>
+<div class="ui corner labeled left icon input"><div class="ui search dropdown selection" id="select_estadocivil" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_estadocivil');">
+              <input type="hidden" name="estadocivil" id="input_estadocivil" class="" onchange="validar('estadocivil');" style="max-width:150px; min-width:100px;">
+              <i class="triangle down icon disabled"></i>
+              <input class="search" tabindex="0"><div class="text" data-value="" style="max-width:250px; min-width:100px;"></div>
+              <div class="menu transition hidden" tabindex="-1" style="">
+                <div class="item active selected" data-value=""></div>
+                <div class="item" data-value="Solteiro">Solteiro</div>
+                <div class="item" data-value="Casado">Casado</div>
+                <div class="item" data-value="Divorciado">Divorciado</div>
+              </div>
+              </div></div>
+</div>  
+<br>
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="submtRelatorio()">
+	   				<i class="checkmark icon"></i>Selecionar
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

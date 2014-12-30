@@ -3,7 +3,8 @@ class usuariosModel extends Model{
  
 	public $tipos = array( "nome"     	=> "nome",
 						   "login"		=> "login",
-						   "senha"		=> "senha");
+						   "senha"		=> "senha",
+						   "dono"		=> "inteiro");
 
 	public $obrigatorios = array("nome", "login", "senha");
 
@@ -103,7 +104,33 @@ class usuariosModel extends Model{
 		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
 		$resultado = $resultado[0];
 		return $resultado['senha'];
-	}	
+	}
+
+	private function pegarEmUsuarios($id, $campo){
+		$id = (int)$id;
+		$tabela = PREFIXO."usuarios";
+		$consulta = $this->prepare("SELECT $campo FROM $tabela WHERE id = {$id}");
+		$consulta->execute();
+
+		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+		$resultado = $resultado[0];
+		return $resultado[$campo];
+	}
+
+	public function pegarDono($id){
+		return $this->pegarEmUsuarios($id, "dono");		
+	}
+
+	public function pegarODono(){
+
+		$tabela = PREFIXO."usuarios";
+		$consulta = $this->prepare("SELECT id FROM $tabela WHERE dono = '1'");
+		$consulta->execute();
+
+		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+		$resultado = $resultado[0];
+		return $resultado['id'];
+	}
 
 	public function pegarModulos($id){
 		$tabela = PREFIXO."usuariostipos";

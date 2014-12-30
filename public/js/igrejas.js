@@ -148,3 +148,7 @@ function permicaoTodos(){
 function moduloClick(){
 	$("#campoTodos").prop("checked", false);
 }
+
+function submtRelatorio(){
+	$("#formRelatorio").submit();
+}

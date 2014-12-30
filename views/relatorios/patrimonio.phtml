@@ -1,0 +1,53 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="bar chart icon"></i>Relatório de Patrimônio</h2>
+
+	<h3>Selecione os filtros</h3>
+</div>
+<a id="reciboLink" style="display:none" href="" target="_blank">teste</a> 
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+<div class="field" id="campo_ministerio" style="margin: 2px; float:left; text-align:left;">
+     <label>Ministério </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_ministerio" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_ministerio');">
+            <input type="hidden" name="ministerio" id="input_ministerio" class="" onchange="" value="" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:100px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php 
+                  foreach ($dados as $campo)
+                    echo "<div class='item' data-value='". $campo['id'] ."'>". $campo['nome'] ."</div>";
+                ?>
+              </div>                                     
+            </div></div>
+</div>	
+<div class="field" id="campo_situacao" style="margin: 2px; float:left; text-align:left;">
+     <label>Situação</label><br>
+<div class="ui corner labeled left icon input"><div class="ui search dropdown selection" id="select_situacao" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_situacao');">
+              <input type="hidden" name="situacao" id="input_situacao" class="" onchange="validar('situacao');" style="max-width:150px; min-width:100px;">
+              <i class="triangle down icon disabled"></i>
+              <input class="search" tabindex="0"><div class="text" data-value="" style="max-width:250px; min-width:100px;"></div>
+              <div class="menu transition hidden" tabindex="-1" style="">
+                <div class="item active selected" data-value=""></div>
+                <div class="item" data-value="Disponivel">Disponível</div>
+                <div class="item" data-value="Em Manutencao">Em Manutenção</div>
+                <div class="item" data-value="Doado">Doado</div>
+                <div class="item" data-value="Com Defeito">Com Defeito</div>
+              </div>
+              </div></div>
+</div>  
+ <br>
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="submtRelatorio()">
+	   				<i class="checkmark icon"></i>Selecionar
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

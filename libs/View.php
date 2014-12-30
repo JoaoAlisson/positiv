@@ -25,7 +25,6 @@ class View {
 	}
 
 	public function render($controller, $view, $noInclude = false){
-
 		$paginacaoAjax = false;
 		if(isset($_POST['ajaxPg']))
 			$paginacaoAjax = true;

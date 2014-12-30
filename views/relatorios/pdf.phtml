@@ -1,0 +1,205 @@
+<?php
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+
+	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'folhas' . SEPARADOR . 'pdf_recibo_class.php';
+	require($caminho);
+
+	class PDF extends pdf_recibo_class
+	{
+
+		private $mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+
+		private $tipos = array();
+
+		function Header()
+		{
+			$this->SetTextColor(85, 85, 85);
+		    $this->SetFont('Arial','I',9);
+		    $this->Cell(0, -1.2,'Positv, Sistemas Inteligentes',0,0,'R');
+		    $pagina = utf8_decode('Página: ');
+		    $this->Cell(0, -0.5,$pagina.$this->PageNo().'/{nb}',0,0,'R');
+		   	
+		    $this->Ln(0);
+		}
+
+		function Footer()
+		{
+
+		    $this->SetY(-6);
+		    $this->SetFont('Arial','I',8);
+		    $this->SetTextColor(85, 85, 85);
+		    $dia = date('d');
+		    $mes = $this->mes[date('m')];
+		    $ano = 2000 + date('y');
+		    $data = $dia.', de '.$mes.' de '.$ano;
+		    $data = utf8_decode($data);
+			$pagina = utf8_decode('Página: ');
+		    $this->Cell(5,10, $data,0,0,'L');
+		    $hora = date('G').':'.date('i').':'.date('s').' (Brasília)';
+		    $hora = utf8_decode($hora);
+		    $this->Cell(0,10, $hora,0,0,'L');
+		    $this->Cell(0,10,$pagina.$this->PageNo().'/{nb}',0,0,'R');
+		}
+
+		function tabela(&$header, &$data, &$tamanhosCelulas, &$celulas, &$tipos)
+		{
+		    // Colors, line width and bold font
+		    $this->tipos = $tipos;
+		    $this->SetFillColor(55, 181, 70);
+		    $this->SetTextColor(255);
+		    $this->SetDrawColor(53, 165, 66);
+		    $this->SetLineWidth(.05);
+		    $this->SetFont('','B', 11);
+		    // Header
+		    $w = array();
+		    foreach ($tamanhosCelulas as $key => $valor)
+		    {
+		    	$t = $valor * 0.19;
+		    	array_push($w, $t);
+		    }
+		    for($i=0;$i<count($header);$i++)
+		        $this->Cell($w[$i],0.7,$header[$i],1,0,'C',true);
+		    $this->Ln();
+		    // Color and font restoration
+		    $this->SetFillColor(185, 234, 191);
+		    $this->SetTextColor(85, 85, 85);
+		    $this->SetFont('', '', 9.5);
+		    // Data
+		    $fill = false;
+		    foreach($data as $row)
+		    {
+		    	$i = 0;
+		    	foreach ($celulas as $key => $valor){
+		    		$formatado = $this->formatar($row[$key], $key);
+		    		$this->Cell($w[$i],0.6,$formatado,'LR',0,'L',$fill);
+		    		$i++;
+		    	}
+		        $this->Ln();
+		        $fill = !$fill;
+		    }
+		    // Closing line
+		    $this->Cell(array_sum($w),0,'','T');
+		}
+
+		private function formatar($valor, $campo)
+		{
+			$retorna;
+			if(isset($this->tipos[$campo])){
+				$funcao  = "formata_".$this->tipos[$campo];
+				$retorna = $this->$funcao($valor);
+			}else{
+				$retorna = utf8_decode($valor);
+			}
+			return $retorna;
+		}	
+
+		private function formata_moeda($valor)
+		{
+			$formatado = number_format($valor, 2, ',', '.');
+
+			if(strlen($valor) > 53)
+				$formatado = substr($formatado, 0, 50) . "...";
+
+			return $formatado;
+		}
+
+		private function formata_data($valor)
+		{
+			if($valor == '0000-00-00'){
+				return '';
+				break;
+			}
+			$valor = explode('-', $valor);
+			$ano   = $valor[0];
+			$mes   = $valor[1];
+			$dia   = $valor[2];
+			return $dia . '/' . $mes . '/' . $ano;
+		}
+	}	
+
+	$pdf = new PDF('P', 'cm', 'A4');	
+
+	$pdf->Open();
+	$pdf->SetMargins(1, 1, 1);
+	$pdf->AliasNbPages();
+	$pdf->AddPage();
+
+	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes_igreja' . SEPARADOR . 'logo.png';
+	$pdf->Image($imagem,1,1, null, 2.5);
+
+	$pdf->SetTextColor(85, 85, 85);
+
+	$pdf->SetXY(1,0.9);
+	$pdf->SetFont('arial','B',12);
+	$nomeIgreja = utf8_decode("Igreja Batista Ágape");
+	$pdf->Cell(0, 1,$nomeIgreja, 0, 1,'C');  
+
+	$pdf->SetFont('arial','', 12);
+	$estado = utf8_decode("Sobral - CE");
+	$pdf->Cell(0, 0.3,$estado, 0, 1,'C'); 	
+
+	$pdf->SetFont('arial','', 12);
+	$estado = utf8_decode("Telefone: (88) 3614-5416");
+	$pdf->Cell(0, 0.6,$estado, 0, 1,'C');	
+
+	$nomeRelatorio = utf8_decode($dados['nome']);
+
+	$pdf->Ln(0.3);
+	$pdf->SetFont('arial','B',13);
+	$nomeRelatorio = utf8_decode($dados['nome']);
+	$pdf->Cell(0, 1,$nomeRelatorio, 0, 1,'C'); 
+
+	if(isset($dados['subTitulo']))
+	{
+		$pdf->SetFont('arial','B',11);
+		$subTitulo = utf8_decode($dados['subTitulo']);
+		$pdf->Cell(0, 0.5,$subTitulo, 0, 1,'C'); 
+	}
+
+	$pdf->Ln(0.3);
+
+
+	if(isset($dados['filtros']))
+	{
+		$pdf->SetFont('arial','',9);
+		$subTitulo = "Filtros: " . utf8_decode($dados['filtros']);
+		$pdf->Cell(0, 0.5,$subTitulo, 0, 1,'L'); 
+	}
+
+	$tamanhosCelulas = tamanhoCelulas($dados['titulos']);
+	$titulos = array();
+	foreach ($dados['titulos'] as $key => $titulo)
+		array_push($titulos, utf8_decode($titulo[0]));
+
+	$tipos = (isset($dados['tipos'])) ? $dados['tipos'] : array();
+
+	$pdf->tabela($titulos, $dados['linhas'], $tamanhosCelulas, $dados['titulos'], $tipos);
+
+	$pdf->Ln(1.9);
+	$pdf->SetFont('arial','B',11);
+	$pdf->Cell(0, 0.1, utf8_decode('Responsável'), 0, 1, 'C');
+	$pdf->Ln(0.8);
+	$pdf->Cell(0, 0.1, '_____________________________', 0, 1, 'C');
+	$pdf->SetFont('arial', '', 10);
+	$usuario = utf8_decode($_POST['usuario']);
+	$pdf->Cell(0, 0.8, $usuario, 0, 1, 'C');	
+
+	$pdf->Output();
+
+
+	function tamanhoCelulas(&$celulas)
+	{
+		$total = 0;
+		foreach ($celulas as $key => $celula)
+			$total = $total + $celula[1];
+
+		$retorna;
+
+		foreach ($celulas as $key => $celula)
+			$retorna[$key] = ($celula[1]*100)/$total;
+
+		return $retorna;
+	}
+?>
+
