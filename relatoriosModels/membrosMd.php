@@ -30,19 +30,19 @@ class membrosMd extends classePdo{
 			$where = "`$tabela`.`consagracao` = '" . (int)$array['consagracao'] . "'";
 
 		if($array['sexo'] != "")
-			$where .= ($where == "") ? "`$tabela`.`sexo` = '" . (int)$array['sexo'] . "'" : ", `$tabela`.`sexo` = '" . (int)$array['sexo'] . "'";
+			$where .= ($where == "") ? "`$tabela`.`sexo` = '" . (int)$array['sexo'] . "'" : " AND `$tabela`.`sexo` = '" . (int)$array['sexo'] . "'";
 
 		if($array['estadocivil'] != "")
 		{
 			mysql_connect(DB_HOST, DB_USER, DB_PASS);
 			$estadoC = mysql_real_escape_string($array['estadocivil']);
-			$where .= ($where == "") ? "`$tabela`.`estadocivil` = '" . $estadoC . "'" : ", `$tabela`.`estadocivil` = '" . $estadoC . "'";
+			$where .= ($where == "") ? "`$tabela`.`estadocivil` = '" . $estadoC . "'" : " AND `$tabela`.`estadocivil` = '" . $estadoC . "'";
 		}
 
 		if($array['batizado'] != "")
 		{
 			$batizado = ($array['batizado'] == 1) ? "`$tabela`.`dataBatismo` != '0000-00-00'" : "`$tabela`.`dataBatismo` = '0000-00-00'";
-			$where .= ($where != "") ? ", $batizado" : $batizado;
+			$where .= ($where != "") ? " AND $batizado" : $batizado;
 		}
 
 		if($where != "")

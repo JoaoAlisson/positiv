@@ -1,0 +1,35 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="bar chart icon"></i>Relatório de Programções</h2>
+
+	<h3>Selecione o Período</h3>
+</div>
+<a id="reciboLink" style="display:none" href="" target="_blank">teste</a> 
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+
+<div style="margin-top: 0px;"> <label>Período de</label> </div>
+
+<div class='ui left corner labeled icon input'>
+  <input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='width:300px; margin-top:2px;' value='' id='input_inicio' placeholder='__/__/____' name='inicio' onfocus="datapick('input_inicio');"><i class='empty calendar icon'></i>
+  </div>
+  <br>
+   <labe>a</label>
+  <br>
+<div class='ui left corner labeled icon input'><input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='width:300px; margin-top:2px;' value='' id='input_fim' placeholder='__/__/____' name='fim' onfocus="datapick('input_fim');"><i class='empty calendar icon'></i></div>
+<br>  
+
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="submtRelatorio()">
+	   				<i class="checkmark icon"></i>Selecionar
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

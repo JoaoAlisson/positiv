@@ -151,11 +151,11 @@ class Relatorios extends Controller
 		return $retorna;
 	}
 
-	private function pdf()
+	private function pdf($pdf = "pdf")
 	{
 		$_POST['usuario'] = Sessao::pegar('usuario');
 		$this->usarLayout(false);
-		$this->renderizar('relatorios/pdf');		
+		$this->renderizar('relatorios/'.$pdf);		
 	}
 
 	private function pegaModel($class)
@@ -288,9 +288,7 @@ class Relatorios extends Controller
 
 	private function patrimonioPdf()
 	{
-		$_POST['usuario'] = Sessao::pegar('usuario');
-		$this->usarLayout(false);
-		$this->renderizar('relatorios/patrimonioPdf');
+		$this->pdf("somaPdf");
 
 		$model 	 = $this->pegaModel('patrimonio');
 		$campos  = array("codigo", "cod", "nome", "quantidade", "total");
@@ -329,7 +327,6 @@ class Relatorios extends Controller
 		if($onde['ministerio'] != "")
 			$retorna = 'Ministério ' . $model->pegaMinisterio($onde['ministerio']);
 
-		
 		$situacao = "";
 		if($onde['situacao'] != ""){
 			$situacaoArray = array('Disponivel' 	=> 'Disponível',
@@ -345,6 +342,177 @@ class Relatorios extends Controller
 		$retorna .= ($retorna != "") ? "." : "";
 
 		return $retorna;		
-	}	
+	}
+
+	public function funcionarios()
+	{
+		if(!isset($_POST['postado']))
+		{
+			$model = $this->pegaModel('funcionarios');
+			$cargos = $model->cargos();
+			$this->dados($cargos);
+		}
+		else{
+			$this->funcionariosPdf();
+		}	
+	}
+
+	private function funcionariosPdf()
+	{
+		$this->pdf("somaPdf");
+
+		$model 	 = $this->pegaModel('funcionarios');
+		$campos  = array("salario");
+
+		$cargo    = isset($_POST['cargo'])    ? $_POST['cargo'] : "";
+		$situacao = isset($_POST['situacao']) ? $_POST['situacao'] : "";
+		$inss     = isset($_POST['inss']) 	  ? $_POST['inss'] : "";
+
+
+		$onde = array("cargo"    => $cargo,
+					  "situacao" => $situacao,
+					  "inss"	 => $inss);
+
+		$funcionarios = $model->pegarFuncionarios($campos, $onde);
+
+		$dados['nome']	  = "Relatório de Funcionários";
+
+		$dados['titulos'] = array("nome" 	  => array("Nome", 4),
+								  "cargo"	  => array("Cargo", 2.1),
+								  "cpf"    	  => array("Cpf", 1.3),
+								  "salario"   => array("Salário", 1),);
+
+		$dados['tipos']   = array('salario' => 'moeda');
+
+		$filtros = $this->escrvFiltFuncionarios($onde, $model);
+		if($filtros != "")
+			$dados['filtros'] = $filtros;
+
+		$dados['linhas']  = $funcionarios;
+		$this->dados($dados);			
+	}
+
+	private function escrvFiltFuncionarios(&$onde, &$model)
+	{
+		$retorna = "";
+		if($onde['cargo'] != "")
+			$retorna = 'Cargo: ' . $model->pegaCargo($onde['cargo']);
+		
+		$situacao = "";
+		if($onde['situacao'] != ""){
+			$situacaoArray = array('Ativo' 	   => 'Ativo',
+								   'De Ferias' => 'De Férias',
+								   'Demitido'  => 'Demitido');
+			$situacao = isset($situacaoArray[$onde['situacao']]) ? $situacaoArray[$onde['situacao']] : "";
+		}
+
+		$inss = "";
+		if($onde['inss'] != "")
+			$inss = ($onde['inss'] == 1) ? "Com Cálculo de INSS" : "Sem Cálculo de INSS";
+
+		if($situacao != "")
+			$retorna .= ($retorna != "") ? ", " . $situacao : $situacao;
+
+		if($inss != "")
+			$retorna .= ($retorna != "") ? ", " . $inss : $inss;
+
+		$retorna .= ($retorna != "") ? "." : "";
+
+		return $retorna;
+	}
+
+	public function programacoes()
+	{
+		if(isset($_POST['postado']))
+			$this->programacoesPdf();
+	}
+
+	private function programacoesPdf()
+	{
+		$this->pdf();
+
+		$model 	 = $this->pegaModel('programacoes');
+		$campos  = array("nome", "inicio", "fim", "local");
+
+		$inicio = isset($_POST['inicio']) ? $_POST['inicio'] : "";
+		$fim    = isset($_POST['fim']) 	  ? $_POST['fim']    : "";
+
+		$onde = array("inicio" => $inicio,
+					  "fim"    => $fim);
+
+		$funcionarios = $model->pegarEventos($campos, $onde);
+
+		$dados['nome']	  = "Relatório de Programações";
+
+		$dados['titulos'] = array("nome" 	  => array("Evento", 4),
+								  "local"     => array("Local", 2),
+								  "inicio"	  => array("Início", 1),
+								  "fim"    	  => array("Fim", 1));
+
+		$dados['tipos']   = array('inicio' => 'data',
+								  'fim'	   => 'data');
+
+		$filtros = $this->escrvFiltProgramacoes($onde);
+		if($filtros != "")
+			$dados['filtros'] = $filtros;
+
+		$dados['linhas']  = $funcionarios;
+		$this->dados($dados);			
+	}
+
+	private function escrvFiltProgramacoes($onde)
+	{	
+		$retorna = "";
+		if($onde['inicio'] != "" && $onde['fim'] != "")
+		{
+			$retorna = "Entre " . $onde['inicio'] . " e " . $onde['fim'] . ".";
+		}
+		else
+		{
+			if($onde['inicio'] != "")
+				$retorna = "Desde " . $onde['inicio'] . ".";
+			else
+				$retorna = "Até " . $onde['fim'] . ".";
+		}
+
+		return $retorna;
+	}
+
+	public function folhas_de_pagamentos()
+	{
+		if(isset($_POST['postado']))
+			$this->folhasPdf();
+	}
+
+	private function folhasPdf()
+	{
+		$this->pdf('folhasPdf');
+
+		$model 	 = $this->pegaModel('folhas');
+
+		$ano = isset($_POST['ano']) ? $_POST['ano'] : "2014";
+
+		$folhas = $model->pegarFolhas($ano);
+
+		$dados['nome']	  = "Folhas de Pagamentos";
+		$dados['subTitulo']	= "Ano de $ano";
+
+		$dados['titulos'] = array("mes" 	  => array("Mês", 1),
+								  "qtdFuncionarios" => array("Funcs.", 0.5),
+								  "salarios"  => array("Salários", 1),
+								  "inss"	  => array("INSS", 1),
+								  "abonos"    => array("Abonos", 1),
+								  "descontos" => array("Descontos", 1),
+								  "total"	  => array("Total", 1));
+
+		$dados['tipos']   = array('salarios'  => 'moeda',
+								  'inss'      => 'moeda',
+								  'abonos'	  => 'moeda',
+								  'descontos' => 'moeda',
+								  'mes'		  => 'mes');
+
+		$dados['linhas']  = $folhas;
+		$this->dados($dados);
+	}
 }
 ?>

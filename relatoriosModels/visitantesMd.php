@@ -28,7 +28,7 @@ class visitantesMd extends classePdo{
 		{
 			mysql_connect(DB_HOST, DB_USER, DB_PASS);
 			$estadoC = mysql_real_escape_string($array['estadocivil']);
-			$where .= ($where == "") ? "`$tabela`.`estadocivil` = '" . $estadoC . "'" : ", `$tabela`.`estadocivil` = '" . $estadoC . "'";
+			$where .= ($where == "") ? "`$tabela`.`estadocivil` = '" . $estadoC . "'" : " AND `$tabela`.`estadocivil` = '" . $estadoC . "'";
 		}
 
 		if($where != "")

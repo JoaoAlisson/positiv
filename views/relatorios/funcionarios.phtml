@@ -1,0 +1,67 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="bar chart icon"></i>Relatório de Funcionários</h2>
+
+	<h3>Selecione os filtros</h3>
+</div>
+<a id="reciboLink" style="display:none" href="" target="_blank">teste</a> 
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+<div class="field" id="campo_cargo" style="margin: 2px; float:left; text-align:left;">
+     <label>Cargo </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_cargo" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_cargo');">
+            <input type="hidden" name="cargo" id="input_cargo" class="" onchange="" value="" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:100px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php
+                	foreach ($dados as $cargo)
+                		echo "<div class='item' data-value='".$cargo['id']."'>".$cargo['nome']."</div>";
+                ?>
+              </div>                                     
+            </div></div>
+</div>	
+
+<div class="field" id="campo_situacao" style="margin: 2px; float:left; text-align:left;">
+     <label>Situação</label><br>
+<div class="ui corner labeled left icon input"><div class="ui search dropdown selection" id="select_situacao" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_situacao');">
+              <input type="hidden" name="situacao" id="input_situacao" class="" onchange="validar('situacao');" style="max-width:150px; min-width:100px;">
+              <i class="triangle down icon disabled"></i>
+              <input class="search" tabindex="0"><div class="text" data-value="" style="max-width:250px; min-width:100px;"></div>
+              <div class="menu transition hidden" tabindex="-1" style="">
+                <div class="item active selected" data-value=""></div>
+                <div class="item" data-value="Ativo">Ativo</div>
+                <div class="item" data-value="De Ferias">De Férias</div>
+                <div class="item" data-value="Demitido">Demitido</div>
+              </div>
+              </div></div>
+</div>  
+<br>
+
+<div class="field" id="campo_inss" style="margin: 2px; float:left; text-align:left;">
+     <label>Com Cálculo de INSS</label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_inss" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_inss');">
+            <input type="hidden" name="inss" id="input_inss" onchange="" value="" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:100px;"></div>
+              <div class="menu ui ">
+                <div class="item active selected" data-value=""></div>
+                <div class="item" data-value="1">Sim</div>
+                <div class="item" data-value="2">Não</div>
+              </div>                                     
+            </div></div>
+</div>
+
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="submtRelatorio()">
+	   				<i class="checkmark icon"></i>Selecionar
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

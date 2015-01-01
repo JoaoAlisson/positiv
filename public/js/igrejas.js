@@ -2,7 +2,7 @@ var GERANDOFOLHA = false;
 function filtrarFolha(){
 	ano = $('#input_ano').val();
 	action = '/index/ano:' + ano,
-	navegacaoSub('folhas', action, null);
+	navegacaoSub('folhas/', action, null);
 }
 
 function selecionarFunc(){

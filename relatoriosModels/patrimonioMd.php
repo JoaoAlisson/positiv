@@ -40,7 +40,7 @@ class patrimonioMd extends classePdo{
 		{
 			mysql_connect(DB_HOST, DB_USER, DB_PASS);
 			$situacao = mysql_real_escape_string($array['situacao']);
-			$where .= ($where == "") ? "`$tabela`.`situacao` = '" . $situacao . "'" : ", `$tabela`.`situacao` = '" . $situacao . "'";
+			$where .= ($where == "") ? "`$tabela`.`situacao` = '" . $situacao . "'" : " AND `$tabela`.`situacao` = '" . $situacao . "'";
 		}
 
 		if($where != "")

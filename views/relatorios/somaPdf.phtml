@@ -1,6 +1,6 @@
 <?php
-//	header('Content-type: application/pdf');
-//	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'folhas' . SEPARADOR . 'pdf_recibo_class.php';
 	require($caminho);
@@ -11,6 +11,8 @@
 		private $mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
 
 		private $tipos = array();
+
+		private $total = 0;
 
 		function Header()
 		{
@@ -80,6 +82,10 @@
 		    }
 		    // Closing line
 		    $this->Cell(array_sum($w),0,'','T');
+
+		    $retorna['total']    = $this->formata_moeda($this->total);
+		    $retorna['tamanhos'] = $w;
+		    return $retorna;
 		}
 
 		private function formatar($valor, $campo)
@@ -95,19 +101,14 @@
 		}	
 
 		private function formata_moeda($valor)
-		{
+		{	
+			$this->total = $this->total + $valor;
 			$formatado = number_format($valor, 2, ',', '.');
 
 			if(strlen($valor) > 53)
 				$formatado = substr($formatado, 0, 50) . "...";
 
 			return $formatado;
-		}
-
-		private function formata_mes($mes)
-		{
-			$mes = utf8_decode($this->mes[$mes/1]);
-			return $mes;
 		}
 
 		private function formata_data($valor)
@@ -180,10 +181,26 @@
 
 	$tipos = (isset($dados['tipos'])) ? $dados['tipos'] : array();
 
-	$pdf->tabela($titulos, $dados['linhas'], $tamanhosCelulas, $dados['titulos'], $tipos);
+	$retornou = $pdf->tabela($titulos, $dados['linhas'], $tamanhosCelulas, $dados['titulos'], $tipos);
+
+	$total = $retornou['total'];
+	$w = $retornou['tamanhos'];
+
+	$pdf->Ln(0.2);
+	$pdf->Cell(13,0.6,'', 0, 0,'L');
+	$pdf->SetFillColor(55, 181, 70);
+	$pdf->SetFont('','B', 11);
+	$pdf->SetTextColor(255);
+	$pdf->Cell(2,0.6,'Soma: ',1,0,'R', true);
+
+    $pdf->SetTextColor(55, 181, 70);
+    $pdf->SetFont('', 'B', 9.5);
+	$pdf->Cell(0,0.6, 'R$ '.$total,1,0,'L');	
+
 
 	$pdf->Ln(1.9);
 	$pdf->SetFont('arial','B',11);
+	$pdf->SetTextColor(85, 85, 85);
 	$pdf->Cell(0, 0.1, utf8_decode('Responsável'), 0, 1, 'C');
 	$pdf->Ln(0.8);
 	$pdf->Cell(0, 0.1, '_____________________________', 0, 1, 'C');

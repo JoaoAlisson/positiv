@@ -1,6 +1,6 @@
 <?php
-	//header('Content-type: application/pdf');
-	//header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'folhas' . SEPARADOR . 'pdf_recibo_class.php';
 	require($caminho);
@@ -11,8 +11,6 @@
 		private $mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
 
 		private $tipos = array();
-
-		private $total = 0;
 
 		function Header()
 		{
@@ -32,7 +30,7 @@
 		    $this->SetFont('Arial','I',8);
 		    $this->SetTextColor(85, 85, 85);
 		    $dia = date('d');
-		    $mes = $this->mes[date('m')];
+		    $mes = $this->mes[date('m')/1];
 		    $ano = 2000 + date('y');
 		    $data = $dia.', de '.$mes.' de '.$ano;
 		    $data = utf8_decode($data);
@@ -69,23 +67,64 @@
 		    $this->SetFont('', '', 9.5);
 		    // Data
 		    $fill = false;
+		    $tTotal = (double)0;
+		    $totais = array("salarios"  => 0,
+							"inss"	    => 0,
+							"abonos"    => 0,
+							"descontos" => 0);
+
 		    foreach($data as $row)
 		    {
 		    	$i = 0;
 		    	foreach ($celulas as $key => $valor){
-		    		$formatado = $this->formatar($row[$key], $key);
-		    		$this->Cell($w[$i],0.6,$formatado,'LR',0,'L',$fill);
+		    		if($key != "total")
+		    		{	
+		    			if($key != 'mes' && $key != 'qtdFuncionarios')
+		    				$totais[$key] = $totais[$key] + $row[$key];
+		    			$formatado = $this->formatar($row[$key], $key);
+		    			$this->Cell($w[$i],0.6,$formatado,'LR',0,'L',$fill);
+		    		}
+		    		else
+		    		{	
+		    			$salarios  = (double)$row['salarios'];
+		    			$abonos    = (double)$row['abonos'];
+		    			$descontos = (double)$row['descontos'];
+		    			$inss      = (double)$row['inss'];
+
+		    			$total = $salarios + $abonos - $descontos - $inss;
+		    			$tTotal = $tTotal + $total;
+
+		    			$total = $this->formata_moeda($total);
+		    			$this->Cell($w[$i],0.6,$total,'LR',0,'L',$fill);
+		    		}
+		    		
 		    		$i++;
 		    	}
 		        $this->Ln();
 		        $fill = !$fill;
 		    }
+
 		    // Closing line
 		    $this->Cell(array_sum($w),0,'','T');
 
-		    $retorna['total']    = $this->formata_moeda($this->total);
-		    $retorna['tamanhos'] = $w;
-		    return $retorna;
+			$this->Ln(0.4);
+			$ww = $w[0] + $w[1];
+			$this->SetFillColor(55, 181, 70);
+			$this->SetFont('','B', 11);
+			$this->SetTextColor(255);
+		    $this->Cell($ww, 0.6,  'Somas: ', 1,0,'R', true);
+
+		    $this->SetTextColor(55, 181, 70);
+		    $this->SetFont('', 'B', 9.5);
+
+		    $this->Cell($w[2],0.6, $this->formata_moeda($totais['salarios']), 1,0,'L');
+		    $this->Cell($w[3],0.6, $this->formata_moeda($totais['inss']), 1,0,'L');
+		    $this->Cell($w[4],0.6, $this->formata_moeda($totais['abonos']), 1,0,'L');
+		    $this->Cell($w[5],0.6, $this->formata_moeda($totais['descontos']), 1,0,'L');
+		    $this->Cell($w[6],0.6, $this->formata_moeda($tTotal), 1,0,'L');
+		    //$this->Ln();
+			$this->SetFont('arial','B',11);
+			$this->SetTextColor(85, 85, 85);
 		}
 
 		private function formatar($valor, $campo)
@@ -101,14 +140,19 @@
 		}	
 
 		private function formata_moeda($valor)
-		{	
-			$this->total = $this->total + $valor;
+		{
 			$formatado = number_format($valor, 2, ',', '.');
 
 			if(strlen($valor) > 53)
 				$formatado = substr($formatado, 0, 50) . "...";
 
 			return $formatado;
+		}
+
+		private function formata_mes($mes)
+		{
+			$mes = utf8_decode($this->mes[$mes/1]);
+			return $mes;
 		}
 
 		private function formata_data($valor)
@@ -181,26 +225,10 @@
 
 	$tipos = (isset($dados['tipos'])) ? $dados['tipos'] : array();
 
-	$retornou = $pdf->tabela($titulos, $dados['linhas'], $tamanhosCelulas, $dados['titulos'], $tipos);
-
-	$total = $retornou['total'];
-	$w = $retornou['tamanhos'];
-
-	$pdf->Ln(0.2);
-	$pdf->Cell(13,0.6,'', 0, 0,'L');
-	$pdf->SetFillColor(55, 181, 70);
-	$pdf->SetFont('','B', 11);
-	$pdf->SetTextColor(255);
-	$pdf->Cell(2,0.6,'Soma: ',1,0,'R', true);
-
-    $pdf->SetTextColor(55, 181, 70);
-    $pdf->SetFont('', 'B', 9.5);
-	$pdf->Cell(0,0.6, 'R$ '.$total,1,0,'L');	
-
+	$pdf->tabela($titulos, $dados['linhas'], $tamanhosCelulas, $dados['titulos'], $tipos);
 
 	$pdf->Ln(1.9);
 	$pdf->SetFont('arial','B',11);
-	$pdf->SetTextColor(85, 85, 85);
 	$pdf->Cell(0, 0.1, utf8_decode('Responsável'), 0, 1, 'C');
 	$pdf->Ln(0.8);
 	$pdf->Cell(0, 0.1, '_____________________________', 0, 1, 'C');
