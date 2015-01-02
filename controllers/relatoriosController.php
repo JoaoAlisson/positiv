@@ -628,5 +628,154 @@ class Relatorios extends Controller
 		$dados['linhas']  = $retornou;
 		$this->dados($dados);
 	}
+
+	public function contas_a_pagar()
+	{
+		$this->pdf('somaPdf');
+
+		$model 	  = $this->pegaModel('contasPagar');
+
+		$campos   = array("saida", "nota", "valor", "vencimento");
+		$retornou = $model->contas($campos);
+
+		$dados['nome'] = "Contas a Pagar";
+
+		$dados['titulos'] = array("saida"      => array("Saída", 1),
+								  "nota"       => array("Nº Nota", 1),
+								  "categoria"  => array("Categoria", 0.8),
+								  "vencimento" => array("Vencimento", 0.6),
+								  "valor"      => array("Valor", 0.7));
+
+		$dados['tipos']   = array('valor' 	   => 'moeda',
+								  'vencimento' => 'data');
+
+		$dados['linhas']  = $retornou;
+		$this->dados($dados);
+	}
+
+	public function contas_a_receber()
+	{
+		$this->pdf('somaPdf');
+
+		$model 	  = $this->pegaModel('contasReceber');
+
+		$campos   = array("entrada", "valor", "vencimento");
+		$retornou = $model->contas($campos);
+
+		$dados['nome'] = "Contas a Receber";
+
+		$dados['titulos'] = array("entrada"    => array("Entrada", 1),
+								  "categoria"  => array("Categoria", 0.8),
+								  "vencimento" => array("Vencimento", 0.6),
+								  "valor"      => array("Valor", 0.7));
+
+		$dados['tipos']   = array('valor' 	   => 'moeda',
+								  'vencimento' => 'data');
+
+		$dados['linhas']  = $retornou;
+		$this->dados($dados);
+	}
+
+	public function saidas_por_categoria()
+	{
+		if(!isset($_POST['postado']))
+		{
+			$model      = $this->pegaModel('saidasCategoria');
+			$categorias = $model->categorias();
+			$this->dados($categorias);
+		}
+		else
+			$this->saidasCategoriaPdf();				
+	}	
+
+	private function saidasCategoriaPdf()
+	{
+		$this->pdf('somaPdf');
+
+		$model 	  = $this->pegaModel('saidasCategoria');
+
+		$categoria = isset($_POST['categoria']) ? (int)$_POST['categoria'] : "0";
+		$pagamento = isset($_POST['pagamento']) ? (int)$_POST['pagamento'] : "";
+		$inicio    = isset($_POST['inicio'])    ? $_POST['inicio'] : "";
+		$fim       = isset($_POST['fim'])    	? $_POST['fim'] : "";
+
+		$onde = array('pagamento' => $pagamento,
+					  'inicio'	  => $inicio,
+					  'fim'		  => $fim);
+
+		$campos   = array("saida", "nota", "valor", "pago", "vencimento");	
+		$retornou = $model->saidas($campos, $categoria, $onde);
+
+		$dados['nome'] = "Saídas";
+		$dados['subTitulo']	= "Categoria: " . $model->categoria($categoria);
+
+		$dados['titulos'] = array("saida"      => array("Entrada", 1),
+								  "nota"	   => array("Nº Nota", 0.5),
+								  "vencimento" => array("Vencimento", 0.35),
+								  "pago"       => array("Pagamento", 0.35),
+								  "valor"      => array("Valor", 0.5));
+
+		$dados['tipos']   = array('valor' 	   => 'moeda',
+								  'vencimento' => 'data',
+								  'pago'	   => 'pagamento');
+
+		$filtros = $model->escreveFiltros($onde);
+		if($filtros != "")
+			$dados['filtros'] = $filtros;		
+
+		$dados['linhas']  = $retornou;
+		$this->dados($dados);		
+	}
+
+	public function entradas_por_categoria()
+	{
+		if(!isset($_POST['postado']))
+		{
+			$model      = $this->pegaModel('entradasCategoria');
+			$categorias = $model->categorias();
+			$this->dados($categorias);
+		}
+		else
+			$this->entradasCategoriaPdf();				
+	}	
+
+	private function entradasCategoriaPdf()
+	{
+		$this->pdf('somaPdf');
+
+		$model 	  = $this->pegaModel('entradasCategoria');
+
+		$categoria = isset($_POST['categoria']) ? (int)$_POST['categoria'] : "0";
+		$pagamento = isset($_POST['pagamento']) ? (int)$_POST['pagamento'] : "";
+		$inicio    = isset($_POST['inicio'])    ? $_POST['inicio'] : "";
+		$fim       = isset($_POST['fim'])    	? $_POST['fim'] : "";
+
+		$onde = array('pagamento' => $pagamento,
+					  'inicio'	  => $inicio,
+					  'fim'		  => $fim);
+
+		$campos   = array("entrada", "valor", "pago", "vencimento");
+		$retornou = $model->entradas($campos, $categoria, $onde);
+
+		$dados['nome'] = "Entradas";
+		$dados['subTitulo']	= "Categoria: " . $model->categoria($categoria);
+
+		$dados['titulos'] = array("entrada"      => array("Entrada", 1),
+								  "vencimento" => array("Vencimento", 0.4),
+								  "pago"       => array("Pagamento", 0.4),
+								  "valor"      => array("Valor", 0.5));
+
+		$dados['tipos']   = array('valor' 	   => 'moeda',
+								  'vencimento' => 'data',
+								  'pago'	   => 'pagamento');
+
+		$filtros = $model->escreveFiltros($onde);
+		if($filtros != "")
+			$dados['filtros'] = $filtros;		
+
+		$dados['linhas']  = $retornou;
+		$this->dados($dados);		
+	}
+
 }
 ?>

@@ -42,23 +42,23 @@
 					<td>Lista os dízimos e as ofertas de um determinado Membro.</td>
 				</tr>
 				<tr>
-					<td><a><i class="circular orange inverted small dollar icon"></i>Contas a Pargar</a></td>
-					<td>Lista as contas a pagar no mês selecionado.</td>
+					<td><a href="<?php echo URL; ?>relatorios/contas_a_pagar" target="_blank" onclick="function(event){ return true; }"><i class="circular orange inverted small dollar icon"></i>Contas a Pargar</a></td>
+					<td>Lista todas as contas a pagar.</td>
 				</tr>
 				<tr>
-					<td><a><i class="circular orange inverted small dollar icon"></i>Contas a Receber</a></td>
-					<td>Lista as contas a receber no mês selecionado.</td>
+					<td><a href="<?php echo URL; ?>relatorios/contas_a_receber" target="_blank" onclick="function(event){ return true; }"><i class="circular orange inverted small dollar icon"></i>Contas a Receber</a></td>
+					<td>Lista todas as contas a receber.</td>
 				</tr>
 				<tr>
 					<td><a><i class="circular orange inverted small dollar icon"></i>Entradas X Saídas</a></td>
 					<td>Comparativo das Entradas e Saídas.</td>
 				</tr>
 				<tr>
-					<td><a><i class="circular orange inverted small dollar icon"></i>Entradas por Categorias</a></td>
+					<td><a onclick="navegacaoSub('relatorios/','entradas_por_categoria', '');"><i class="circular orange inverted small dollar icon"></i>Entradas por Categorias</a></td>
 					<td>Lista as Entradas pelas Categorias.</td>
 				</tr>
 				<tr>
-					<td><a><i class="circular orange inverted small dollar icon"></i>Saídas por Categorias</a></td>
+					<td><a onclick="navegacaoSub('relatorios/','saidas_por_categoria', '');"><i class="circular orange inverted small dollar icon"></i>Saídas por Categorias</a></td>
 					<td>Lista as Saídas pelas Categorias.</td>
 				</tr>
 				<tr>

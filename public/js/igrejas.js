@@ -157,3 +157,8 @@ function submtRelatPagamFunc(){
 	if($("#input_funcionario").val() != "")
 		$("#formRelatorio").submit();
 }
+
+function submtRelatSaidEntCateg(){
+	if($("#input_categoria").val() != "")
+		$("#formRelatorio").submit();
+}

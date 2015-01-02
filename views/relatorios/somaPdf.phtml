@@ -111,6 +111,12 @@
 			return $formatado;
 		}
 
+		private function formata_pagamento($valor)
+		{
+			$retorna = ($valor == 'Efetuado') ? $valor : 'Não Efetuado';
+			return utf8_decode($retorna);
+		}
+
 		private function formata_data($valor)
 		{
 			if($valor == '0000-00-00'){
