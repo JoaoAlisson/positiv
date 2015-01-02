@@ -1,6 +1,6 @@
 <?php
-	header('Content-type: application/pdf');
-	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+//	header('Content-type: application/pdf');
+//	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'folhas' . SEPARADOR . 'pdf_recibo_class.php';
 	require($caminho);
@@ -67,19 +67,99 @@
 		    $this->SetFont('', '', 9.5);
 		    // Data
 		    $fill = false;
+		    $tTotal = (double)0;
+		    $totais = array("Dizimo"  => 0, "Oferta" => 0);
+
 		    foreach($data as $row)
 		    {
 		    	$i = 0;
 		    	foreach ($celulas as $key => $valor){
-		    		$formatado = $this->formatar($row[$key], $key);
-		    		$this->Cell($w[$i],0.6,$formatado,'LR',0,'L',$fill);
+		    		if($key != "total")
+		    		{	
+		    			if($key != 'data' && $key != 'tipo')
+		   					$totais[$row['tipo']] = $totais[$row['tipo']] + $row[$key];
+
+		    			$formatado = $this->formatar($row[$key], $key);
+		    			$this->Cell($w[$i],0.6,$formatado,'LR',0,'L',$fill);
+		    		}
+		    		else
+		    		{	
+		    			$salarios  = (double)$row['valor'];
+
+		    			$total = $salarios + $abonos - $descontos - $inss;
+		    			$tTotal = $tTotal + $total;
+
+		    			$total = $this->formata_moeda($total);
+		    			$this->Cell($w[$i],0.6,$total,'LR',0,'L',$fill);
+		    		}
+		    		
 		    		$i++;
 		    	}
 		        $this->Ln();
 		        $fill = !$fill;
 		    }
+
 		    // Closing line
 		    $this->Cell(array_sum($w),0,'','T');
+
+			$this->Ln(0.9);
+			$this->SetFillColor(55, 181, 70);
+			$this->SetFont('','B', 11);
+			$this->SetTextColor(255);		
+
+		    if($totais['Dizimo'] != 0.00)
+		    {
+				$this->Cell($w[0], 0.6,  '', 0,0,'R');
+			    $this->Cell($w[1], 0.6,  utf8_decode('Total de Dízimos: '), 1,0,'R', true);
+
+			    $this->SetTextColor(55, 181, 70);
+			    $this->SetFont('', 'B', 9.5);
+			    $this->Cell( 0,0.6, 'R$ '.$this->formata_moeda($totais['Dizimo']), 1, 1,'L');
+			}
+
+		    if($totais['Oferta'] != 0.00)
+		    {
+			    
+				$this->Cell($w[0], 0.6,  '', 0,0,'R');
+				$this->SetFont('','B', 11);
+				$this->SetTextColor(255);
+			    $this->Cell($w[1], 0.6,  'Total de Ofertas: ', 1,0,'R', true);		   
+
+			    $this->SetTextColor(55, 181, 70);
+			    $this->SetFont('', 'B', 9.5);
+
+			    $this->Cell( 0,0.6, 'R$ '.$this->formata_moeda($totais['Oferta']), 1, 1,'L');		     
+			}
+
+		    if($totais['Oferta'] != 0.00 && $totais['Dizimo'] != 0.00)
+		    {
+				$this->Cell($w[0], 0.6,  '', 0,0,'R');
+				$this->SetFont('','B', 11);
+				$this->SetTextColor(255);
+			    $this->Cell($w[1], 0.6,  'Soma: ', 1,0,'R', true);		   
+
+			    $this->SetTextColor(55, 181, 70);
+			    $this->SetFont('', 'B', 9.5);
+			    $total = $totais['Oferta'] + $totais['Dizimo'];
+			    $this->Cell(0,0.6, 'R$ '.$this->formata_moeda($total), 1, 1,'L');		
+			}
+
+		    if($totais['Oferta'] == 0.00 && $totais['Dizimo'] == 0.00)
+		    {
+				$this->Cell($w[0], 0.6,  '', 0,0,'R');
+				$this->SetFont('','B', 11);
+				$this->SetTextColor(255);
+			    $this->Cell($w[1], 0.6,  'Soma: ', 1,0,'R', true);		   
+
+			    $this->SetTextColor(55, 181, 70);
+			    $this->SetFont('', 'B', 9.5);
+			    $total = $totais['Oferta'] + $totais['Dizimo'];
+			    $this->Cell(0,0.6, 'R$ '.$this->formata_moeda($total), 1, 1,'L');	
+		    }			
+
+		    //$this->Ln();
+			$this->SetFont('arial','B',11);
+			$this->SetTextColor(85, 85, 85);
 		}
 
 		private function formatar($valor, $campo)
@@ -103,6 +183,12 @@
 
 			return $formatado;
 		}
+
+		private function formata_tipo($tipo)
+		{	
+			$array = array("Dizimo" => "Dízimo", "Oferta" => "Oferta");
+			return utf8_decode($array[$tipo]);
+		}		
 
 		private function formata_mes($mes)
 		{

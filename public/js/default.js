@@ -532,7 +532,8 @@ function cpf(id){
 }
 
 function nome(id){
-	if($("#input_"+id).val().length <= 2)
+
+	if($("#input_"+id).val().length <= 2 && $("#input_"+id).val() != "")
 		return "O nome deve ter no mínimo 3 caracteres.";
 	else
 		return "";

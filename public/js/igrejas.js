@@ -152,3 +152,8 @@ function moduloClick(){
 function submtRelatorio(){
 	$("#formRelatorio").submit();
 }
+
+function submtRelatPagamFunc(){
+	if($("#input_funcionario").val() != "")
+		$("#formRelatorio").submit();
+}

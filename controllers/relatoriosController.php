@@ -514,5 +514,119 @@ class Relatorios extends Controller
 		$dados['linhas']  = $folhas;
 		$this->dados($dados);
 	}
+
+	public function pagamentos_por_funcionario()
+	{
+		if(!isset($_POST['postado']))
+		{
+			$model = $this->pegaModel('pagamentoFunc');
+			$funcionarios = $model->pegarFuncionarios();
+			$this->dados($funcionarios);
+		}
+		else
+			$this->pagamento_funcPdf();		
+	}
+
+	private function pagamento_funcPdf()
+	{
+		$this->pdf('pagamentosFuncPdf');
+
+		$model 	 = $this->pegaModel('pagamentoFunc');
+
+		$funcionario = isset($_POST['funcionario']) ? $_POST['funcionario'] : "";
+
+		$retornou = $model->pegarPagamentos($funcionario);
+
+		$dados['nome']	    = "Pagamentos por Funcionário";
+		$infos = $model->pegarNome($funcionario);
+		$nome  = $infos['nome'];
+		$cpf   = $infos['cpf'];
+		$rg    = $infos['rg']; 
+
+		$sub = ($cpf != "") ? ', CPF: ' . $cpf  : '';
+		if($sub == "")
+			$sub = ($rg != "") ? ', RG: ' . $rg : '';
+
+		$sub = $nome . $sub;
+
+		$dados['subTitulo']	= $sub;
+	
+		$dados['titulos'] = array("folha" 	  => array("Folha", 1),
+								  "salario"   => array("Salário", 1),
+								  "inss"	  => array("INSS", 1),
+								  "abonos"    => array("Abono", 1),
+								  "descontos" => array("Desconto", 1),
+								  "total"	  => array("Total", 1));
+
+		$dados['tipos']   = array('salario'   => 'moeda',
+								  'inss'      => 'moeda',
+								  'abonos'	  => 'moeda',
+								  'descontos' => 'moeda');
+
+		$dados['linhas']  = $retornou;
+		$this->dados($dados);		
+	}
+
+	public function dizimos_ofertas_membro() 
+	{	
+		if(!isset($_POST['postado']))
+		{
+			$model   = $this->pegaModel('dizimosOfertasMembro');
+			$membros = $model->membros();
+			$this->dados($membros);
+		}
+		else
+			$this->dizimosMembroPdf();
+	}
+
+	private function dizimosMembroPdf()
+	{
+		$this->pdf('dizimosMembroPdf');
+
+		$model 	 = $this->pegaModel('dizimosOfertasMembro');
+
+		$membro = isset($_POST['membro']) ? $_POST['membro'] : "";
+		$tipo   = isset($_POST['tipo'])   ? $_POST['tipo']   : "";
+
+		if($tipo != "")
+		{
+			$tipo = (int)$tipo;
+			$tipo = ($tipo == 1) ? "Dizimo" : "Oferta";
+		}
+
+		$retornou = $model->dizimosOfertas($membro, $tipo);
+
+		$dados['nome'] = "Dízimos/Ofertas";
+		$infos = $model->pegarMembro($membro);
+		$nome  = $infos['nome'];
+		$cpf   = $infos['cpf'];
+		$rg    = $infos['rg']; 
+
+		$sub = ($cpf != "") ? ', CPF: ' . $cpf  : '';
+		if($sub == "")
+			$sub = ($rg != "") ? ', RG: ' . $rg : '';
+
+		$sub = $nome . $sub;
+
+		$dados['subTitulo']	= $sub;
+	
+		$dados['titulos'] = array("data"  => array("Data", 1),
+								  "tipo"  => array("Tipo", 1),
+								  "valor" => array("Valor", 1));
+
+		$dados['tipos']   = array('valor' => 'moeda',
+								  'tipo'  => 'tipo',
+								  'data'  => 'data');
+		if($tipo != "")
+		{
+			if($tipo == "Dizimo")
+				$dados['filtros'] = "Apenas Dízimos.";
+			else
+				$dados['filtros'] = "Apenas Ofertas.";
+		}
+
+		$dados['linhas']  = $retornou;
+		$this->dados($dados);
+	}
 }
 ?>

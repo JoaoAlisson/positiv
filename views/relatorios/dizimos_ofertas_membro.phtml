@@ -1,0 +1,50 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="bar chart icon"></i>Relatório <br> Dízimos e Ofertas</h2>
+
+	<h3>Selecione o Membro</h3>
+</div>
+<a id="reciboLink" style="display:none" href="" target="_blank">teste</a> 
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+<div class="field" id="campo_membro" style="margin: 2px; float:left; text-align:left;">
+     <label>Membro </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_membro" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_membro');">
+            <input type="hidden" name="membro" id="input_membro" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:200px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php 
+                 foreach ($dados as $campo)
+                    echo "<div class='item' data-value='". $campo['id'] ."'>". $campo['nome'] ."</div>";
+                ?>
+              </div>                                     
+            </div></div>
+</div>	
+
+<div class="field" id="campo_tipo" style="margin: 2px; float:left; text-align:left;">
+     <label>Tipo </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_tipo" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_tipo');">
+            <input type="hidden" name="tipo" id="input_tipo" style="">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="width:60px;"></div>
+              <div class="menu ui ">
+              		<div class="item" data-value=""></div>
+                    <div class='item' data-value='1'>Dízimos</div>
+                    <div class='item' data-value='2'>Ofertas</div>
+              </div>                                     
+            </div></div>
+</div>	<br>
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="submtRelatPagamFunc();">
+	   				<i class="checkmark icon"></i>Selecionar
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

@@ -320,7 +320,10 @@ class Model extends Database{
 	}
 
 	public function validarNome($nome, $campo = null){
-	
+		
+		if($nome == "")
+			return "ok";
+		
 		$retorno;
 		if(strlen($nome) <= 2){
 			$retorno[0] = "O nome deve ter mais de 3 caracteres";
