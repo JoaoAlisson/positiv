@@ -777,5 +777,31 @@ class Relatorios extends Controller
 		$this->dados($dados);		
 	}
 
+	public function entradasXsaidas()
+	{	
+		if(isset($_POST['postado']))
+			$this->entradaSaidasPdf();
+	}
+
+	public function entradaSaidasPdf()
+	{	
+
+		$ano = isset($_POST['ano']) ? $_POST['ano'] : 0;
+		$ano = (int)$ano;
+		
+		$this->pdf('entradasSaidasPdf');
+		$model = $this->pegaModel('saidasEntradas');
+
+		$dados['nome'] = 'Entradas X Saídas';
+		$dados['subTitulo'] = 'Ano de ' . $ano;
+
+		$movimento = $model->movimento($ano);
+
+		$dados['entradas'] = $movimento['entradas'];
+		$dados['saidas']   = $movimento['saidas'];
+		$dados['ano']      = $ano;
+		
+		$this->dados($dados);
+	}
 }
 ?>
