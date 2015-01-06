@@ -162,3 +162,8 @@ function submtRelatSaidEntCateg(){
 	if($("#input_categoria").val() != "")
 		$("#formRelatorio").submit();
 }
+
+function subDizmPmemb(){
+	if($("#input_membro").val() != "")
+		$("#formRelatorio").submit();	
+}

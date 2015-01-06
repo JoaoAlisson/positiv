@@ -1,0 +1,81 @@
+<?php
+  $mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+?>
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+	<h2><i class="bar chart icon"></i>Relatório <br> Dízimos e Ofertas</h2>
+
+	<h3>Selecione os Filtros</h3>
+</div>
+<a id="reciboLink" style="display:none" href="" target="_blank">teste</a> 
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+
+<div class="field" id="campo_consagracao" style="margin: 2px; float:left; text-align:left;">
+     <label>Mês </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_consagracao" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_consagracao');">
+            <input type="hidden" name="mes" id="input_consagracao" class="" onchange=";" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="<?php echo date('m'); ?>" style="max-width:450px; min-width:100px;">
+              <?php echo $mes[date('m')/1]; ?>
+            </div>
+              <div class="menu ui ">
+                <div class="item" data-value="1">Janeiro</div>
+                <div class="item" data-value="2">Fevereiro</div>
+                <div class="item" data-value="3">Março</div>
+                <div class="item" data-value="4">Abril</div>
+                <div class="item" data-value="5">Maio</div>
+                <div class="item" data-value="6">Junio</div>
+                <div class="item" data-value="7">Julho</div>
+                <div class="item" data-value="8">Agosto</div>
+                <div class="item" data-value="9">Setembro</div>
+                <div class="item" data-value="10">Outubro</div>
+                <div class="item" data-value="11">Novembro</div>
+                <div class="item" data-value="12">Dezembro</div>
+              </div>                                     
+            </div></div>
+</div>
+
+<div class="field" id="campo_ano" style="margin: 2px; float:left; text-align:left;">
+     <label>Ano</label><br>
+<div class="ui corner labeled left icon input"><div class="ui search dropdown selection" id="select_ano" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_ano');">
+        <?php $atual = date('y') + 2000; ?>
+              <input type="hidden" name="ano" id="input_ano" value="<?php echo $atual; ?>" class="" style="max-width:150px; min-width:100px;">
+              <i class="triangle down icon disabled"></i>
+              <input class="search" tabindex="0">
+        <div class="text" data-value=""><?php echo $atual; ?></div>
+              <div class="menu ui ">
+                
+                <?php 
+                    for($ano = 2010; $ano <= 2030; $ano++)
+                        echo " <div class='item' data-value='$ano'>$ano</div>";
+                 ?>
+              </div>
+              </div></div>
+</div> 
+
+<div class="field" id="campo_tipo" style="margin: 2px; float:left; text-align:left;">
+     <label>Tipo </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_tipo" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_tipo');">
+            <input type="hidden" name="tipo" id="input_tipo" style="">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="width:60px;"></div>
+              <div class="menu ui ">
+              		<div class="item" data-value=""></div>
+                    <div class='item' data-value='1'>Dízimos</div>
+                    <div class='item' data-value='2'>Ofertas</div>
+              </div>                                     
+            </div></div>
+</div>	<br>
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="submtRelatPagamFunc();">
+	   				<i class="checkmark icon"></i>Selecionar
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

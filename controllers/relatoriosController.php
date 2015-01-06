@@ -175,7 +175,7 @@ class Relatorios extends Controller
 	private function mes($key)
 	{
 		$mes = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
-		return $mes[$key];
+		return $mes[$key/1];
 	}
 
 	public function aniversariantesMembros()
@@ -802,6 +802,54 @@ class Relatorios extends Controller
 		$dados['ano']      = $ano;
 		
 		$this->dados($dados);
+	}
+
+	public function dizimosOfertas()
+	{
+		if(isset($_POST['postado']))
+			$this->dizimosOfertasPdf();
+	}
+
+	private function dizimosOfertasPdf()
+	{
+		$this->pdf('dizimosMembroPdf');
+
+		$model 	 = $this->pegaModel('dizimosOfertas');
+
+		$mes  = isset($_POST['mes'])  ? $_POST['mes'] :  "";
+		$ano  = isset($_POST['ano'])  ? $_POST['ano'] :  "";
+		$tipo = isset($_POST['tipo']) ? $_POST['tipo'] : "";
+
+		if($tipo != "")
+		{
+			$tipo = (int)$tipo;
+			$tipo = ($tipo == 1) ? "Dizimo" : "Oferta";
+		}
+
+		$retornou = $model->dizimosOfertas($mes, $ano, $tipo);
+
+		$dados['nome'] = "Dízimos/Ofertas";
+
+		$dados['subTitulo']	= $this->mes($mes) . ' de ' . $ano;
+	
+		$dados['titulos'] = array("membro" => array("membro", 3),
+								  "data"   => array("Data", 1.2),
+								  "tipo"   => array("Tipo", 0.7),
+								  "valor"  => array("Valor", 1));
+
+		$dados['tipos']   = array('valor' => 'moeda',
+								  'tipo'  => 'tipo',
+								  'data'  => 'data');
+		if($tipo != "")
+		{
+			if($tipo == "Dizimo")
+				$dados['filtros'] = "Apenas Dízimos.";
+			else
+				$dados['filtros'] = "Apenas Ofertas.";
+		}
+
+		$dados['linhas']  = $retornou;
+		$this->dados($dados);		
 	}
 }
 ?>

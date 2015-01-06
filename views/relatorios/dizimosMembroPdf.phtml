@@ -1,6 +1,6 @@
 <?php
-//	header('Content-type: application/pdf');
-//	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'folhas' . SEPARADOR . 'pdf_recibo_class.php';
 	require($caminho);
@@ -76,7 +76,7 @@
 		    	foreach ($celulas as $key => $valor){
 		    		if($key != "total")
 		    		{	
-		    			if($key != 'data' && $key != 'tipo')
+		    			if($key != 'data' && $key != 'tipo' && $key != 'membro')
 		   					$totais[$row['tipo']] = $totais[$row['tipo']] + $row[$key];
 
 		    			$formatado = $this->formatar($row[$key], $key);
