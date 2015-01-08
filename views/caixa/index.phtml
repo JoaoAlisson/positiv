@@ -112,7 +112,7 @@ $cores = array(
      <label>Mês </label><div class="ui left labeled icon input"><div class="ui dropdown selection" id="select_consagracao" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_consagracao');">
             <input type="hidden" value="<?php echo $dados['mes']; ?>" name="mes" id="input_consagracao" class="" onchange="" style="max-width:450px; min-width:300px;">
             <i class="triangle down icon disabled"></i>
-            <div class="text" data-value="<?php echo $dados['mes']; ?>" style="max-width:450px; min-width:100px;"><?php echo $mesArray[$dados['mes']]; ?></div>
+            <div class="text" data-value="<?php echo $dados['mes']; ?>" style="max-width:450px; min-width:100px;"><?php echo $mesArray[$dados['mes']/1]; ?></div>
               <div class="menu ui ">
                 <div class="item" data-value=""></div>
                 <div class="item" data-value="1">Janeiro</div>
@@ -145,10 +145,12 @@ $cores = array(
               </div>                                     
             </div></div>
 </div>
-
-<div class="ui inverted orange vertical labeled circular icon submit button submeterForm" style="margin:2px;" onClick="filtrarRedi('caixa');">
-  <i class=" search icon"></i>Filtrar
-</div>
+<div style="width:auto; float: left; text-align:left;">
+     <br>
+    <div class="ui orange vertical labeled circular icon submit button submeterForm" style="" onclick="filtrarRedi('caixa');">
+      <i class=" search icon"></i>Filtrar
+    </div>
+  </div>
 
         </div>
       </div>

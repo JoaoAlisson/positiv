@@ -1,5 +1,4 @@
 <?php 
-//print_r($dados['itens']);
 $paginacao = "";
  if(!isset($dados['filtro'])){
   $filtrosValores = "";
@@ -15,10 +14,11 @@ $paginacao = "";
     else
       $nomeSingular = $dados['nomeController'];
   ?>
-  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
+  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
     <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
   </div>
-</div>    
+</div>  
+<br>  
 <?php if(isset($dados['filtros'])){ ?>
   <form class="formulario">
     <div class="ui column center aligned grid">
@@ -36,11 +36,11 @@ $paginacao = "";
   <br>
 <div style="margin-top: 0px;"> <label>Período de</label> </div>
 
-<div class='ui left labeled icon input'><input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='max-width:350px; min-width:100px; margin-top:2px;' value='' id='input_inicio' placeholder='__/__/____' name='inicio' onfocus="datapick('input_inicio');"><i class='empty calendar icon'></i></div>
-   <labe>a</label>
-<div class='ui left labeled icon input'><input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='max-width:350px; min-width:100px; margin-top:2px;' value='' id='input_fim' placeholder='__/__/____' name='fim' onfocus="datapick('input_fim');"><i class='empty calendar icon'></i></div>
+<div class='ui corner labeled left icon input' style='margin:5px;'><input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='max-width:350px; min-width:100px; margin-top:2px;' value='' id='input_inicio' placeholder='__/__/____' name='inicio' onfocus="datapick('input_inicio');"><i class='empty calendar icon'></i></div>
+  <labe>a</label>
+<div class='ui corner labeled left icon input' style='margin:5px;'><input type='text' class='' tabindex="2" onkeypress="enterSubmit(event);" style='max-width:350px; min-width:100px; margin-top:2px;' value='' id='input_fim' placeholder='__/__/____' name='fim' onfocus="datapick('input_fim');"><i class='empty calendar icon'></i></div>
 <br>
-    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:10px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
+    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:10px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
       <i class=" search icon"></i>Filtrar
     </div>
 

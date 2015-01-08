@@ -243,7 +243,8 @@ class HTML{
 		
 		$incone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "pencil";
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
-		$incluir = "<div class='ui corner labeled left icon input'>";
+		$incluir = ($validar == false) ? '<br>' : '';
+		$incluir .= "<div class='ui corner labeled left icon input'>";
 		$incluir .= "<input type='text' class='$requerido' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$id' placeholder='$placeholder' name='$id' onkeyup=\"$validacaoJs\" onblur=\"$validacaoJs\">";
 		$incluir .= "<i class='$incone icon'></i>";
 		if($requerido == "validarObrigatorio")
@@ -389,8 +390,12 @@ class HTML{
 		$icone =  isset($this->dados['icones'][$campo]) ? $this->dados['icones'][$campo] : "";	
 		$numeros = ($icone == "") ? "0-9:" : ""; 	
 		$placeholder = isset($this->dados['placeholders'][$campo]) ?  $this->dados['placeholders'][$campo] : "";
-		$incluir = "<div class='ui corner labeled left icon input'>";
-		$incluir .= "<input type='text' class='$requerido' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$campo' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs inteiroMask('input_$campo');\" onblur=\"$validacaoJs\">";
+		$incluir = ($validar == false) ? '<br>' : ''; 
+		$incluir .= "<div class='ui corner labeled left icon input'>";
+		if($validar)
+			$incluir .= "<input type='text' class='$requerido' value='$valor' ".$this->getTabindex()." style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;' id='input_$campo' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs inteiroMask('input_$campo');\" onblur=\"$validacaoJs\">";
+		else
+			$incluir .= "<input type='text' class='$requerido' value='$valor' ".$this->getTabindex()." style='width:150px;' id='input_$campo' placeholder='$placeholder' name='$campo' onkeyup=\"$validacaoJs inteiroMask('input_$campo');\" onblur=\"$validacaoJs\">";
 		$incluir .= "<i class='$icone icon'>$numeros</i>";
 		if($requerido == "validarObrigatorio")
 			$incluir .= "<div class='ui corner label'><i class='icon asterisk'></i></div>";
@@ -674,7 +679,6 @@ class HTML{
 		$selecionado = "";
 		$value = "";
 	
-
 		//$estados = $this->pegarCidades();
 		$opcoes = "<div class=\"item\" data-value=\"\"></div>";
 
@@ -687,11 +691,11 @@ class HTML{
 			}			
 		}
 
-		$incluir = "<div class='ui corner labeled left icon input'>";
+		$incluir = "<div class='ui left labeled icon input'>";
 		$incluir .= "<div class=\"ui search dropdown selection\" id=\"select_$id\" ".$this->getTabindex()." onmouseover=\"registraSelect('select_$id');\">
-				      <input type=\"hidden\" name='$id' $value id='input_$id' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>
+				      <input type=\"hidden\" name='$id' $value id='input_$id' class='$requerido' onChange=\"$validacaoJs;\" style='max-width:px; min-width:px;'>
 				      <i class='$icone icon disabled'></i>
-				      <div class=\"text\" data-value=\"$valor\" style='max-width:".$this->tamanhoMaximoCampos."px; min-width:".$this->tamanhoMinimoCampos."px;'>$selecionado</div>
+				      <div class=\"text\" data-value=\"$valor\" style='max-width:px; min-width:px;'>$selecionado</div>
 				      <div class=\"menu\">$opcoes
 				      </div>$asterisco
 				      </div>";

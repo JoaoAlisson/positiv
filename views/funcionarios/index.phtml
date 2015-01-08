@@ -1,5 +1,4 @@
 <?php 
-//print_r($dados['itens']);
 $paginacao = "";
  if(!isset($dados['filtro'])){
   $filtrosValores = "";
@@ -16,7 +15,7 @@ $paginacao = "";
       $nomeSingular = $dados['nomeController'];
   ?>
   <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
-    <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
+    <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular; ?>
   </div>
 </div>   
 <br> 
@@ -27,8 +26,9 @@ $paginacao = "";
     <div class="ui <?php echo $dados['cor']; ?> segment" style="width: auto;">
 
       <div style='width:auto; float: left; text-align:left; margin-right: 20px;'>
-       <label>Nome</label><div class="ui left labeled icon input"><input type="text" class=" nome" value="<?php if(isset($dados['filtrosValores']['nome'])) echo $dados['filtrosValores']['nome']; ?>" tabindex="1" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_nome" placeholder="Isira seu nome" name="nome" onkeyup="; limpaNome('nome');" onblur=""><i class="user icon"></i></div></div>
-
+       <label>Nome</label><br>
+       <div class="ui corner labeled left icon input">
+          <input type="text" class=" nome" value="<?php if(isset($dados['filtrosValores']['nome'])) echo $dados['filtrosValores']['nome']; ?>" tabindex="1" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_nome" placeholder="Isira seu nome" name="nome" onkeyup="; limpaNome('nome');" onblur=""><i class="user icon"></i></div></div>
   <?php
       foreach ($dados['filtros'] as $campo => $nome) {
         echo "<div style='width:auto; float: left; text-align:left; margin-right: 20px;'>";
@@ -36,7 +36,8 @@ $paginacao = "";
           $this->html->campo($campo, false, $valorFiltros);
         echo "</div>";
       }
-  ?> 
+  ?>
+    <br>
     <div style="width:auto; float: left; text-align:left;">
      <br>
     <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="" onClick="filtrar('<?php echo $dados['controller'];?>')">

@@ -1,5 +1,4 @@
 <?php 
-//print_r($dados['itens']);
 $paginacao = "";
  if(!isset($dados['filtro'])){
   $filtrosValores = "";
@@ -15,7 +14,7 @@ $paginacao = "";
     else
       $nomeSingular = $dados['nomeController'];
   ?>
-  <div class="ui <?php echo $dados['cor']; ?> inverted vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
+  <div class="ui <?php echo $dados['cor']; ?> vertical labeled icon submit small button" style="margin-top:-10px;" onclick="navegacaoSub('<?php echo CONTROLLER;?>/','cadastrar', '');">
     <i class="plus icon"></i>Cadastrar <?php echo $nomeSingular;?>
   </div>
 </div>    
@@ -28,18 +27,26 @@ $paginacao = "";
     <br>
        <div class="column" style="width: auto;">
     <div class="ui <?php echo $dados['cor']; ?> segment" style="width: auto;">
-
+    <div>
   <?php
+      $i=0;
       foreach ($dados['filtros'] as $campo => $nome) {
-        echo "<div style='width:auto; float: left; text-align:left; margin-right: 20px;'>";
+        if($i == 2)
+          echo '</div><div>';
+        echo "<div style='width:auto; float:left; text-align:left; margin-right: 20px;'>";
           $valorFiltros = isset($dados['filtrosValores'][$campo]) ? $dados['filtrosValores'][$campo] : null;
           $this->html->campo($campo, false, $valorFiltros);
         echo "</div>";
+        $i++;
       }
   ?>
-    <div class="ui inverted <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:0px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
+</div>
+<br>
+<div>
+    <div class="ui <?php echo $dados['cor']; ?> vertical labeled circular icon submit button submeterForm" style="margin-top:10px;" onClick="filtrar('<?php echo $dados['controller'];?>')">
       <i class=" search icon"></i>Filtrar
     </div>
+</div>
 
   </div>
     <div class="ui <?php echo $dados['cor']; ?> circular label" style="float:left;">
