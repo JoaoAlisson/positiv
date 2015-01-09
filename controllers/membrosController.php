@@ -33,7 +33,7 @@ class membros extends ControllerCRUD{
 
 	public $icones = array("nome" => "user");
 
-	public $placeholders = array("nome" => "Isira seu nome");
+	//public $placeholders = array("nome" => "Isira seu nome");
 
 	public $listar = array("face","nome", "consagracao", "celular", "nascimento");
 

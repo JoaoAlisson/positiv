@@ -10,6 +10,11 @@
 
 	$this->html->menu("Usuários", "usuarios", "", "basic users", "green", false, array());
 
+	$this->html->menu("Funcionários", "funcionarios", "", "basic users", "", false, 
+					  array("Funcionários"  => array("funcionarios", "", "users"),
+					  	    "Cargos"		=> array("cargos", "", "sitemap"),
+					  	    "Folhas"		=> array("folhas", "", "file powerpoint outline")));
+
 	$this->html->menu("Programação", "programacao", "", "calendar", "blue", false,
 					  array("Cadastrar Evento"     => array("programacao", "cadastrar", "plus", false)));
 

@@ -811,7 +811,7 @@ class HTML{
 				$this->subMenu['itens'] = $item["subMenus"];
 				$this->subMenu['cor'] = $item["cor"]; 	
 			}
-				
+			
 			$icone = ($item["icone"] != "") ? "<i class=\"".$item["icone"]." icon\"></i>" : "";
 			echo "<div class=\"item escondeMenu\">
 					<a onclick=\"navegacao('".$item["controller"]."/','". $item["view"]."', '". $item["nome"]."')\"><b>".$icone.$item["nome"]."</b></a>";
@@ -828,6 +828,43 @@ class HTML{
 			echo "</div></div>";
 		}
 	}
+
+	/*
+		Ganbyarra
+	*/
+	public function menuLateralGanby(){
+		foreach ($this->menu as $key => $item) {
+			if($item["controller"] == CONTROLLER){
+				$this->subMenu['itens'] = $item["subMenus"];
+				$this->subMenu['cor'] = $item["cor"]; 	
+			}
+			
+			$icone = ($item["icone"] != "") ? "<i class=\"".$item["icone"]." icon\"></i>" : "";
+			if($item['controller'] != 'funcionarios') {
+				echo "<div class=\"item escondeMenu\">
+						<a onclick=\"navegacao('".$item["controller"]."/','". $item["view"]."', '". $item["nome"]."')\">
+						  <b>".$icone.$item["nome"]."</b>
+						</a>";
+			} else {
+				$img = "<div style='float:left; padding-left:45px;'><img style='width:20px;' src='". URL ."public/images/icons/funcionario.png'></div>";
+				echo "<div class=\"item escondeMenu\">
+						<a onclick=\"navegacao('".$item["controller"]."/','". $item["view"]."', '". $item["nome"]."')\">
+						  <b>".$img."<div style='float:left; padding-left:2px; '>".$item["nome"]."</div></b>
+						</a><br>";				
+			}
+			echo 	"<div class=\"menu\">";
+			foreach ($item["subMenus"] as $nomeSub => $submenu) {
+				if($submenu[0] == CONTROLLER){
+					$this->subMenu['itens'] = $item["subMenus"];
+					$this->subMenu['cor'] = $item["cor"]; 
+				}
+				$icone = ($submenu[2] != "") ? "<i class=\"".$submenu[2]." icon\"></i>" : "";
+				echo "<a class=\"item escondeMenu\" onclick=\"navegacao('".$submenu[0]."/','".$submenu[1]."', '".$item["nome"]."')\">".$icone.$nomeSub."</a>";
+			}
+
+			echo "</div></div>";
+		}
+	}	
 
 	public function pdf(){
 		$caminho = RAIZ . SEPARADOR . 'fpdf' . SEPARADOR . 'fpdf.php';

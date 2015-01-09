@@ -431,7 +431,7 @@ class funcionarios extends ControllerCRUD{
 		$retorno['icone'] = $this->informacoes['icone'];
 
 		$this->dados($retorno);
-		$this->renderizar('CRUD/visualizar');
+		//$this->renderizar('CRUD/visualizar');
 	}
 
 	private function outrosCampos(){

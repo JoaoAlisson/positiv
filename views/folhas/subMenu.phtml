@@ -1,6 +1,13 @@
 <?php
 	$this->html->subMenuCor("black", "");
-	$this->html->subMenuItem("Funcioários", "funcionarios", "", "male");
+?>
+<a class="item submenu <?php if(CONTROLLER == 'funcionarios') echo 'active'; ?>" href="<?php echo URL; ?>funcionarios/" id="subMenu_Funcioários" style="min-width:120px;" onclick="navegacaoSub('funcionarios/','', 'Funcioários'); evento(event);">
+<div style='margin-top: 1px; float:left; height: 10px;'>
+	<img style="width:16px;" src="<?php echo URL; ?>public/images/icons/funcionario.png">
+</div>	
+<div style='float:left; margin-top: 2px; margin-left: 2px;'>Funcioários</div>
+</a>
+<?php
 	$this->html->subMenuItem("Cargos", "cargos", "", "sitemap");
 	$this->html->subMenuItem("Folhas", "folhas", "", "file powerpoint outline");
 ?>

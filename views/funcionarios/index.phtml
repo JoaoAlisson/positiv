@@ -6,7 +6,11 @@ $paginacao = "";
       $filtrosValores .= "/$campo:$valor";
   }
   echo "<script type='text/javascript'>setOrdemPag('".$dados['pagina']."','".$dados['ordem']."', '".$dados['ordenacao']."'); FILTROS = '$filtrosValores';</script>"; ?>
-<div style="width:100%; text-align:center; text-transform: uppercase;"><h2><?php if($dados['icone'] != "") echo "<i class=\"".$dados['icone']." icon\"></i>"; ?><?php echo $dados['nome'][1];?></h2>
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+  <h2>
+    <img style="width:34px; margin-bottom:-5px;" src="<?php echo URL; ?>public/images/icons/funcionario.png">
+  <?php echo $dados['nome'][1];?>
+  </h2>
   <?php 
     $nomeSingular = "";
     if(isset($dados['nome'][0]))
@@ -28,7 +32,7 @@ $paginacao = "";
       <div style='width:auto; float: left; text-align:left; margin-right: 20px;'>
        <label>Nome</label><br>
        <div class="ui corner labeled left icon input">
-          <input type="text" class=" nome" value="<?php if(isset($dados['filtrosValores']['nome'])) echo $dados['filtrosValores']['nome']; ?>" tabindex="1" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_nome" placeholder="Isira seu nome" name="nome" onkeyup="; limpaNome('nome');" onblur=""><i class="user icon"></i></div></div>
+          <input type="text" class=" nome" value="<?php if(isset($dados['filtrosValores']['nome'])) echo $dados['filtrosValores']['nome']; ?>" tabindex="1" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_nome" name="nome" onkeyup="; limpaNome('nome');" onblur=""><i class="user icon"></i></div></div>
   <?php
       foreach ($dados['filtros'] as $campo => $nome) {
         echo "<div style='width:auto; float: left; text-align:left; margin-right: 20px;'>";
