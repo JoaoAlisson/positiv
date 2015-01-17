@@ -387,7 +387,7 @@ class funcionarios extends ControllerCRUD{
 		else
 			$retorno['funcionarios']['inss'] = "Não";
 
-		$retorno['funcionarios']['salario'] = "R$ ".$retorno['funcionarios']['salario'];
+		$retorno['funcionarios']['salario'] = $retorno['funcionarios']['salario'];
 		
 		if($retorno['funcionarios']['func']){
 

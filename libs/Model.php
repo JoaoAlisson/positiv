@@ -98,7 +98,7 @@ class Model extends Database{
 								$retorno[$campo] = $valor;
 							}
 						}else{
-							$retorno[$campo] = $valor;
+							$retorno[$campo] = $this->formataEnum($campo, $valor, $integro);
 						}
 					}												
 				}				
@@ -109,15 +109,53 @@ class Model extends Database{
 	public function formataEnum($campo, $valor = "", $integro){
 
 		if(!$integro && $valor != ""){
-			$array = array();
-			foreach ($this->tipos[$campo] as $chave => $val)
-				$array[$this->removeAcentos($val)] = $val;
-			$valor = $array[$valor];
+			//$array = array();
+			//foreach ($this->tipos[$campo] as $chave => $val)
+			//	$array[$this->removeAcentos($val)] = $val;
+			//$valor = $array[$valor];
+			foreach ($this->tipos[$campo] as $chave => $val){
+				if($this->removeAcentos($val) == $valor)
+					$valor = $val;
+			}
 		}
 
 		return $valor;
 
 	}
+
+	public function formataEstado($campo, $valor = "", $integro){
+		if(!$integro && $valor != "0"){
+			$tabela = PREFIXO."estados";
+
+			$valor = (int)$valor;
+	    	$sql = "SELECT estado FROM $tabela WHERE id = $valor";
+
+			$query = $this->prepare($sql);
+			$query->execute();
+
+			$valor = $query->fetchAll(PDO::FETCH_ASSOC);
+			$valor = $valor[0]['estado'];
+		}
+
+		return $valor;		
+	}
+
+	public function formataCidade($campo, $valor = "", $integro){
+		if(!$integro && $valor != "0"){
+			$tabela = PREFIXO."cidades";
+
+			$valor = (int)$valor;
+	    	$sql = "SELECT cidade FROM $tabela WHERE id = $valor";
+
+			$query = $this->prepare($sql);
+			$query->execute();
+
+			$valor = $query->fetchAll(PDO::FETCH_ASSOC);
+			$valor = $valor[0]['cidade'];
+		}
+
+		return $valor;		
+	}	
 
 	public function formataSexo($campo, $valor, $integro){
 		if(!$integro){

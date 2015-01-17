@@ -233,7 +233,7 @@ class Database extends PDO{
 
 		$resultado = (isset($resultado[0])) ? $resultado[0] : $resultado;
 		$retorna[$controller] = $resultado;
-		$this->formataSaida($retorna[$controller], true);
+		$this->formataSaida($retorna[$controller], false);
 
 		return $retorna;
 	}	

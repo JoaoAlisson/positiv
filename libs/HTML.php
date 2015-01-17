@@ -846,7 +846,7 @@ class HTML{
 						  <b>".$icone.$item["nome"]."</b>
 						</a>";
 			} else {
-				$img = "<div style='float:left; padding-left:45px;'><img style='width:20px;' src='". URL ."public/images/icons/funcionario.png'></div>";
+				$img = "<div style='float:left; padding-left:45px;'><img style='width:20px;' src='". URL ."public/images/icons/funcionarioB.png'></div>";
 				echo "<div class=\"item escondeMenu\">
 						<a onclick=\"navegacao('".$item["controller"]."/','". $item["view"]."', '". $item["nome"]."')\">
 						  <b>".$img."<div style='float:left; padding-left:2px; '>".$item["nome"]."</div></b>
