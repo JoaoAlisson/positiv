@@ -1,10 +1,10 @@
 <?php 
 class patrimonio extends ControllerCRUD{
 
-	public $nome = array("Patrimonio","Patrimonio");
+	public $nome = array("Patrimônio","Patrimônio");
 
 	public $campos = array("codigo"    => "Código",
-						   "cod"	   => "Cod. Sist.",
+						   "cod"	   => "Nº",
 						   "nota"	   => "Número da Nota Fiscal/Cupom",
 						   "nome" 	   => "Nome",
 						   "descricao" => "Descrição",
@@ -33,7 +33,7 @@ class patrimonio extends ControllerCRUD{
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;
 
-	public function index(){
+	public function index() {
 		parent::index();
 		$dados = $this->getDados();
 
@@ -43,6 +43,28 @@ class patrimonio extends ControllerCRUD{
 		$this->dados($dados);
 
 		$this->renderizar("patrimonio/index");
+	}
+
+	public function etiqueta() {
+
+		$cod = "";
+		if(isset($this->GET['cod']))
+			$cod = (int)$this->GET['cod'];
+		
+		if($cod == "")
+			header('location: '. URL . $this->nomeController());
+
+		$informacoes = $this->model->pegarInformacao($cod);
+
+		if(empty($informacoes))
+			header('location: '. URL . $this->nomeController());
+
+		$dados['cod'] 	 = $cod;
+		$dados['qtd']    = $informacoes['quantidade'];
+		$dados['codigo'] = $informacoes['codigo'];
+
+		$this->usarLayout(false);
+		$this->dados($dados);
 	}
 }
 ?>

@@ -84,5 +84,16 @@ class patrimonioModel extends Model{
 		$sth = $this->prepare("UPDATE $tabela SET cod = '$id' WHERE id = $id");
 		$sth->execute();	
 	}
+
+	public function pegarInformacao($cod) {
+
+		$tabela = PREFIXO.'patrimonio';
+		$consulta = $this->prepare("SELECT codigo, quantidade FROM $tabela WHERE cod = {$cod}");
+		$consulta->execute();
+
+		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
+	
+		return $resultado[0];	
+	}
 }
 ?>

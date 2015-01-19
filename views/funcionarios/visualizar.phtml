@@ -69,10 +69,9 @@
 					$campo = array_search('nome', $dados['tipos']);
 				?>
 					<div style="float:left; text-transform: uppercase; margin-top:10px;"><h3><?php echo $dados[CONTROLLER][$campo]; unset($dados['campos'][$campo]); ?></h3></div>
-					<br>
 					
 				<?php } ?>
-			</div>
+			</div><br>
 			<div class="ui divider"></div>
 			<?php foreach ($dados['campos'] as $campo => $campoNome) { 
 				if($dados[CONTROLLER][$campo] != "" && $dados[CONTROLLER][$campo] != '0'){

@@ -1,0 +1,151 @@
+<?php
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+
+	$caminho = RAIZ . SEPARADOR . 'views' . SEPARADOR . 'patrimonio' . SEPARADOR . 'imagens.class.php';
+	require($caminho);
+
+	class etiqueta_pdf extends PDF{
+		private $posicaoY = 0;
+		private $posicaoX = 0;
+
+		public function setPosicaoY($y){
+			$this->posicaoY = $y;
+		}
+
+		public function setPosicaoX($x){
+			$this->posicaoX = $x;
+		}
+		
+		public function SetXY($x, $y){
+			$y = $y + $this->posicaoY;
+			$x = $x + $this->posicaoX;
+			parent::SetXY($x, $y);
+		}
+
+		public function RoundedRect($x, $y, $w, $h, $r, $style = '', $angle = '1234')
+		    {
+		        $k = $this->k;
+		        $hp = $this->h;
+		        if($style=='F')
+		            $op='f';
+		        elseif($style=='FD' or $style=='DF')
+		            $op='B';
+		        else
+		            $op='S';
+		        $MyArc = 4/3 * (sqrt(2) - 1);
+		        $this->_out(sprintf('%.2f %.2f m', ($x+$r)*$k, ($hp-$y)*$k ));
+
+		        $xc = $x+$w-$r;
+		        $yc = $y+$r;
+		        $this->_out(sprintf('%.2f %.2f l', $xc*$k, ($hp-$y)*$k ));
+		        if (strpos($angle, '2')===false)
+		            $this->_out(sprintf('%.2f %.2f l', ($x+$w)*$k, ($hp-$y)*$k ));
+		        else
+		            $this->_Arc($xc + $r*$MyArc, $yc - $r, $xc + $r, $yc - $r*$MyArc, $xc + $r, $yc);
+
+		        $xc = $x+$w-$r;
+		        $yc = $y+$h-$r;
+		        $this->_out(sprintf('%.2f %.2f l', ($x+$w)*$k, ($hp-$yc)*$k));
+		        if (strpos($angle, '3')===false)
+		            $this->_out(sprintf('%.2f %.2f l', ($x+$w)*$k, ($hp-($y+$h))*$k));
+		        else
+		            $this->_Arc($xc + $r, $yc + $r*$MyArc, $xc + $r*$MyArc, $yc + $r, $xc, $yc + $r);
+
+		        $xc = $x+$r;
+		        $yc = $y+$h-$r;
+		        $this->_out(sprintf('%.2f %.2f l', $xc*$k, ($hp-($y+$h))*$k));
+		        if (strpos($angle, '4')===false)
+		            $this->_out(sprintf('%.2f %.2f l', ($x)*$k, ($hp-($y+$h))*$k));
+		        else
+		            $this->_Arc($xc - $r*$MyArc, $yc + $r, $xc - $r, $yc + $r*$MyArc, $xc - $r, $yc);
+
+		        $xc = $x+$r ;
+		        $yc = $y+$r;
+		        $this->_out(sprintf('%.2f %.2f l', ($x)*$k, ($hp-$yc)*$k ));
+		        if (strpos($angle, '1')===false)
+		        {
+		            $this->_out(sprintf('%.2f %.2f l', ($x)*$k, ($hp-$y)*$k ));
+		            $this->_out(sprintf('%.2f %.2f l', ($x+$r)*$k, ($hp-$y)*$k ));
+		        }
+		        else
+		            $this->_Arc($xc - $r, $yc - $r*$MyArc, $xc - $r*$MyArc, $yc - $r, $xc, $yc - $r);
+		        $this->_out($op);
+		    }
+
+		    function _Arc($x1, $y1, $x2, $y2, $x3, $y3)
+		    {
+		        $h = $this->h;
+		        $this->_out(sprintf('%.2f %.2f %.2f %.2f %.2f %.2f c ', $x1*$this->k, ($h-$y1)*$this->k, 
+		            $x2*$this->k, ($h-$y2)*$this->k, $x3*$this->k, ($h-$y3)*$this->k));
+		    }		
+
+		public function etiqueta(&$nomeIgreja, &$imagemCod, &$qrNome, $cod, $codigo = '', $cont) {
+			$x = $this->posicaoX;
+			$y = $this->posicaoY;
+
+			$this->Image($imagemCod , $x + 1, $y + 1.18, null, null, 'GIF');	
+			$this->Image($qrNome , $x + 4.4, $y + 0.1, null, 2.4, 'PNG');
+			
+			$this->RoundedRect( $x, $y, 7, 2.6, 1, 'D', '1234');
+			$this->SetXY($x, $y);
+
+			$this->SetTextColor(85, 85, 85);
+			$this->SetFont('arial','B', 10);
+			$nome = utf8_decode($nomeIgreja);
+
+			$yN = $y - 2;
+			$xN = $x + 1.1;
+			$this->SetXY(0.2, 0.2);
+			$this->Cell(4.4, 1, $nome, 0, 1, 'C');  	
+
+
+			$this->SetXY(1, 1.93);
+			$this->SetFont('arial','B', 7);
+			$numero = utf8_decode('Nº ');
+			$this->Cell(7, 1, $numero .$cod, 0, 1, 'L'); 	
+
+			$this->SetXY(0, -0.3);
+			$this->SetFont('arial','B', 7);
+			$numero = utf8_decode('Nº ');
+			$this->Cell(7, 1, 'Positiv Sistemas', 0, 1, 'C'); 
+
+			if($codigo != '') {
+				$this->SetXY(0.2, 0.6);
+				$this->SetFont('arial','', 8);
+				$codigo = utf8_decode('Código: '.$codigo);
+				$this->Cell(4.4, 1, $codigo, 0, 1, 'C'); 				
+			}
+
+		}
+	}
+
+	$pdf = new etiqueta_pdf('L','cm','A4'); 
+
+	$pdf->Open();
+	$pdf->SetMargins(1, 1, 1);
+	$pdf->AliasNbPages();
+	$pdf->AddPage();	
+
+	$nomeIgreja = "Batista Ágape Sobral";
+	$cod        = $dados['cod'];
+	$codigo     = $dados['codigo'];
+
+ 	$imagem = new imagensCodigos();
+ 	$nomes = $imagem->gerarImagens($cod);
+
+	$pdf->SetPosicaoY(1);
+	$pdf->setPosicaoX(1);
+
+	if(strlen($nomeIgreja) > 26)
+		$nomeIgreja = substr($nomeIgreja, 0, 26) . '...';
+
+	if(strlen($codigo) > 22)
+		$codigo = substr($codigo, 0, 22) . '...';
+
+	$pdf->etiqueta($nomeIgreja, $nomes['codNome'], $nomes['qrNome'], $cod, $codigo, 1);
+
+	$imagem->deletarImagens();
+	$pdf->Output();
+
+?>

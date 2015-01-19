@@ -281,8 +281,8 @@ function filtrar(controller, action){
 	var data = $(".formulario").serializeArray();
 	filtrs = "";
 	$.each(data, function(chave, valor){
-		nome = valor.name;
-		if(nome.indexOf("_submit") == -1){
+		nomes = valor.name;
+		if(nomes.indexOf("_submit") == -1){
 			valorcampo = valor.value;
 			valorcampo = valorcampo.replace(/[/]+/g,'-');
 			filtrs = filtrs + "/" + valor.name + ":" + valorcampo;
@@ -439,7 +439,9 @@ function validar(idCampo){
 			var funcao = tipoValidacao+"(\'"+idCampo+"\')";
 			var funcaoCompara = "(\'"+ idCampo +"\')";
 			if(funcao != funcaoCompara){
-				var texto = eval(funcao);
+
+				var fn = window[tipoValidacao];
+				var texto = fn.apply(null, [idCampo]);
 				textoMantem = texto;
 				if(texto != "") texto = "<i class='attention icon'></i>"+texto; 
 				if(mensagem != ""){
