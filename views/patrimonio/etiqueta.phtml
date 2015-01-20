@@ -99,16 +99,10 @@
 			$this->SetXY(0.2, 0.2);
 			$this->Cell(4.4, 1, $nome, 0, 1, 'C');  	
 
-
-			$this->SetXY(1, 1.93);
-			$this->SetFont('arial','B', 7);
-			$numero = utf8_decode('Nº ');
-			$this->Cell(7, 1, $numero .$cod, 0, 1, 'L'); 	
-
 			$this->SetXY(0, -0.3);
 			$this->SetFont('arial','B', 7);
 			$numero = utf8_decode('Nº ');
-			$this->Cell(7, 1, 'Positiv Sistemas', 0, 1, 'C'); 
+			$this->Cell(7, 1, 'Positiv Sistemas', 0, 1, 'C');
 
 			if($codigo != '') {
 				$this->SetXY(0.2, 0.6);
@@ -117,14 +111,21 @@
 				$this->Cell(4.4, 1, $codigo, 0, 1, 'C'); 				
 			}
 
+			$this->SetXY(1, 2.359);
+			$this->SetFont('arial','B', 7);
+			$numero = utf8_decode('Nº ');
+			$this->Cell(5, 0.1, $numero .$cod, 0, 0, 'L'); 
+
+	       $this->SetPosicaoY($y);
+	       $this->setPosicaoX($x);
 		}
 	}
 
 	$pdf = new etiqueta_pdf('L','cm','A4'); 
 
 	$pdf->Open();
-	$pdf->SetMargins(1, 1, 1);
-	$pdf->AliasNbPages();
+	$pdf->SetMargins(0, 0, 0);
+//	$pdf->AliasNbPages();
 	$pdf->AddPage();	
 
 	$nomeIgreja = "Batista Ágape Sobral";
@@ -134,16 +135,42 @@
  	$imagem = new imagensCodigos();
  	$nomes = $imagem->gerarImagens($cod);
 
-	$pdf->SetPosicaoY(1);
-	$pdf->setPosicaoX(1);
-
 	if(strlen($nomeIgreja) > 26)
 		$nomeIgreja = substr($nomeIgreja, 0, 26) . '...';
 
 	if(strlen($codigo) > 22)
 		$codigo = substr($codigo, 0, 22) . '...';
 
-	$pdf->etiqueta($nomeIgreja, $nomes['codNome'], $nomes['qrNome'], $cod, $codigo, 1);
+	$qtd = (int)$dados['qtd'];
+	if($qtd > 2000){
+		$pdf->SetPosicaoY(1.5);
+		$pdf->setPosicaoX(0.6);
+		$pdf->etiqueta($nomeIgreja, $nomes['codNome'], $nomes['qrNome'], $cod, $codigo, 1);
+	} else {
+
+		$x = 0.6;
+		$y = 1.5;
+		$contLinha = 1;
+		for ($i=1; $i <= $qtd;) { 
+			$pdf->setPosicaoY($y);
+			$y = $y + 3;
+			for ($j=0; $j < 4; $j++) { 
+				$pdf->SetPosicaoX($x);
+				$cod2 = ($qtd > 1) ? $cod . ' -' . $i : $cod;
+				$pdf->etiqueta($nomeIgreja, $nomes['codNome'], $nomes['qrNome'], $cod2, $codigo, 1);
+				$i++;
+				$x = $x + 7.2;
+			}
+			$x = 0.6;
+			$contLinha++;
+			if($contLinha == 7) {
+				$pdf->AddPage();
+				$x = 0.6;
+				$y = 1.5;
+				$contLinha = 1;
+			}
+		}
+	}
 
 	$imagem->deletarImagens();
 	$pdf->Output();
