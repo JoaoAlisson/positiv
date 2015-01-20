@@ -9,6 +9,8 @@ class folhas extends Controller{
 						    "ano"	=> "Ano",
 						    "total" => "Total");	
 
+	public $regraUsuarios = array("Administrador" => "tudo", "funcionarios" => "tudo");
+
 	public $cor = "";
 
 	public $icone = "file powerpoint outline";

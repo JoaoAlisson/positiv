@@ -124,14 +124,14 @@ class ControllerCRUD extends Controller{
 
 	public function cadastrar(){
 
-		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
-			if(isset($_POST['ajaxPg'])){
-				require "views/erro/index.php";
-				exit();
-			}else{ 
-				header('location: '.URL.'erro');
+			if($this->permissao == "ver" || $this->permissao == "nenhuma"){
+				if(isset($_POST['ajaxPg'])){
+					require RAIZ . SEPARADOR . "views" . SEPARADOR . "erro" . SEPARADOR ."negado.phtml";
+					exit();
+				}else{ 
+					header('location: '.URL.'erro/negado');
+				}
 			}
-		}
 
 		//verificar se algum campo foi postado
 		$foiPostado = false;
@@ -189,10 +189,10 @@ class ControllerCRUD extends Controller{
 
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
 			if(isset($_POST['ajaxPg'])){
-				require "views/erro/index.php";
+				require RAIZ . SEPARADOR . "views" . SEPARADOR . "erro" . SEPARADOR ."negado.phtml";
 				exit();
 			}else{ 
-				header('location: '.URL.'erro');
+				header('location: '.URL.'erro/negado');
 			}
 		}
 				
@@ -260,7 +260,7 @@ class ControllerCRUD extends Controller{
 	}
 
 	public function deletar(){
-		
+
 		$retorno;
 		if(!isset($_POST['id']) || !isset($_POST['model'])){
 			$retorno['flag'] = "erro";

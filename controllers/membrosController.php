@@ -39,7 +39,7 @@ class membros extends ControllerCRUD{
 
 	public $filtros = array("nome", "consagracao");
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
+	public $regraUsuarios = array("Administrador" => "tudo", "igreja" => "tudo");
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;

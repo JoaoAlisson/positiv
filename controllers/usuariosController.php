@@ -14,7 +14,7 @@ class usuarios extends ControllerCRUD{
 
 	//public $filtros = array("categoria", "pago");	
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver", "usuarios" => "tudo");	
+	public $regraUsuarios = array("Administrador" => "tudo", "usuarios" => "tudo");	
 
 	public function index(){
 
@@ -55,7 +55,7 @@ class usuarios extends ControllerCRUD{
 	private function editar1($id){
 
 		$retorno;
-
+		$_POST['editar1'] = 1;
 		if(isset($_POST['id'])){
 			$campos = array("nome" => $_POST['nome'], "login" => $_POST['login']);
 			if($_POST['senha'] != "")
@@ -158,7 +158,7 @@ class usuarios extends ControllerCRUD{
 		$modulos = $this->model->pegarModulos($id);
 		$permissoes = "";
 
-		$modulosNomes = array("igrejas" 	=> "Igrejas", 
+		$modulosNomes = array("igreja"	 	=> "Igreja", 
 							  "usuarios"	=> "Usuários",
 							  "funcionarios"=> "Funcionários",
 							  "programacao"	=> "Programação",

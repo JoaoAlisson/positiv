@@ -5,6 +5,9 @@ class erro extends Controller {
 					
 	}
 
+	public function negado() {
+		
+	}
 
 }
 ?> 

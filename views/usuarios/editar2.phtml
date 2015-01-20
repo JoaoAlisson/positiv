@@ -64,8 +64,8 @@ function fim(){
 <div style="width:auto; float: left; margin:5px;">
 
 	<div class='ui checkbox' onclick="moduloClick();">
-		<input name='igrejas' class='modulos' type='checkbox' <?php if(in_array('igrejas',$dados['modulos'])) echo 'checked'; ?>>
-		<label><i class='university icon'></i><strong>Igrejas</strong></label>
+		<input name='igreja' class='modulos' type='checkbox' <?php if(in_array('igreja',$dados['modulos'])) echo 'checked'; ?>>
+		<label><i class='university icon'></i><strong>Igreja</strong></label>
 	</div><br>
 	<div class='ui checkbox' onclick="moduloClick();">
 		<input name='usuarios' class='modulos' type='checkbox' <?php if(in_array('usuarios',$dados['modulos'])) echo 'checked'; ?>>
@@ -74,7 +74,7 @@ function fim(){
 	<div class='ui checkbox' onclick="moduloClick();">
 		<input name='funcionarios' class='modulos' type='checkbox' <?php if(in_array('funcionarios',$dados['modulos'])) echo 'checked'; ?>>
 		<label>
-<img style="width:16px; height:7;float:left; margin-right:6px;" src="http://localhost/mvcPHP/public/images/icons/funcionario.png">
+<img style="width:16px; height:7;float:left; margin-right:6px;" src="<?php echo URL; ?>public/images/icons/funcionario.png">
 			<strong>Funcionários</strong></label>
 	</div><br>
 	<div class='ui checkbox' onclick="moduloClick();">
@@ -95,10 +95,12 @@ function fim(){
 		<input name='financas' class='modulos' type='checkbox' <?php if(in_array('financas',$dados['modulos'])) echo 'checked'; ?>>
 		<label><i class='dollar icon'></i><strong>Finanças</strong></label>
 	</div><br>
-	<div class='ui checkbox' onclick="moduloClick();">
+<?php 
+	/* <div class='ui checkbox' onclick="moduloClick();">
 		<input name='relatorios' class='modulos' type='checkbox' <?php if(in_array('relatorios',$dados['modulos'])) echo 'checked'; ?>>
 		<label><i class='bar chart icon'></i><strong>Relatórios</strong></label>
-	</div><br>
+	</div><br> */
+?>
 	<div class='ui checkbox' onclick="moduloClick();">
 		<input name='documentos' class='modulos' type='checkbox' <?php if(in_array('documentos',$dados['modulos'])) echo 'checked'; ?>>
 		<label><i class='file icon'></i><strong>Documentos</strong></label>

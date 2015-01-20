@@ -1,6 +1,9 @@
 <?php 
 class caixa extends ControllerCRUD{
 
+	public $regraUsuarios = array("Administrador" => "tudo", "financas" => "tudo");
+
+
 	public function index(){
 		
 		$mes = (isset($this->GET['mes'])) ? (int)$this->GET['mes'] : date('m');

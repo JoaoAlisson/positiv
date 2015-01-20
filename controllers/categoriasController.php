@@ -11,7 +11,7 @@ class categorias extends ControllerCRUD{
 
 	public $listar = array("nome", "tipo");
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
+	public $regraUsuarios = array("Administrador" => "tudo", "financas" => "tudo");
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;

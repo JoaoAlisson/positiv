@@ -18,7 +18,7 @@ class entradas extends ControllerCRUD{
 
 	public $filtros = array("categoria", "pago");	
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
+	public $regraUsuarios = array("Administrador" => "tudo", "financas" => "tudo");
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;

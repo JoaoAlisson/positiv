@@ -45,16 +45,15 @@ class Controller{
 		}
 
 		//echo $this->permissao;
-		/*
+		
 		if($this->permissao == "nenhuma"){
 			if(isset($_POST['ajaxPg'])){
-				require "views/erro/index.php";
+				require RAIZ . SEPARADOR . "views" . SEPARADOR . "erro" . SEPARADOR ."negado.phtml";
 				exit();
 			}else{ 
-				header('location: '.URL.'erro');
+				header('location: '.URL.'erro/negado');
 			}
 		} 
-		*/
 
 		if(isset($this->model))
 			$this->model->inserirPermissao($this->permissao);

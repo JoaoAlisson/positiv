@@ -32,8 +32,10 @@ class usuariosModel extends Model{
 	}
 
 	public function depoisDeEditar($id, &$dados){
-		$this->depoisDeDeletar($id);
-		$this->addPermissoes($id);
+		if(!isset($_POST['editar1'])) {
+			$this->depoisDeDeletar($id);
+			$this->addPermissoes($id);
+		}
 	}	
 
 	public function depoisDeCadastrar(&$dados){
@@ -42,7 +44,7 @@ class usuariosModel extends Model{
 	}
 
 	private function addPermissoes($id){
-		$campos = array("igrejas", "usuarios", "funcionarios", "programacao", "patrimonio", "financas", "relatorios", "documentos");
+		$campos = array("igreja", "usuarios", "funcionarios", "programacao", "patrimonio", "financas", "relatorios", "documentos");
 
 		$tabela = PREFIXO."usuariostipos";
 		$sql = "INSERT INTO $tabela (id_usuario, tipo) VALUES";

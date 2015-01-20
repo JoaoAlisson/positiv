@@ -1,6 +1,11 @@
 <?php
 	$token = Hash::criar(time(), CHAVE_GERAL);
 	Sessao::inserir("token", $token);
+	$server = $_SERVER['SERVER_NAME']; 
+	$endereco = $_SERVER ['REQUEST_URI'];
+
+	$url = 'http://' . $server . $endereco;
+	Sessao::inserir("URL", $url);
 ?>
 <?php if(!isset($_POST['ajaxPg']) && !Sessao::pegar("logado")) { ?>
 <!doctype html>

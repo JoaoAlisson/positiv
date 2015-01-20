@@ -22,7 +22,7 @@ class programacao extends ControllerCRUD{
 
 	public $filtros = array("nome");
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
+	public $regraUsuarios = array("Administrador" => "tudo", "programacao" => "tudo");
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;

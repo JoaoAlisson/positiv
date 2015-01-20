@@ -23,7 +23,7 @@ class funcionarios extends ControllerCRUD{
 
 	public $filtros = array("cargo", "situacao");
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
+	public $regraUsuarios = array("Administrador" => "tudo", "funcionarios" => "tudo");
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;

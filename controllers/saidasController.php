@@ -19,7 +19,7 @@ class saidas extends ControllerCRUD{
 
 	public $listar = array("saida", "categoria", "pago", "vencimento", "valor");
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
+	public $regraUsuarios = array("Administrador" => "tudo", "financas" => "tudo");
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;

@@ -7,6 +7,8 @@ class func_nao_membro extends ControllerCRUD{
 
 	public $icone = "users";
 
+	public $regraUsuarios = array("Administrador" => "tudo", "funcionarios" => "tudo");
+
 	public $campos = array("nome"     	=> "Nome",
 						   "face"	    => "Facebook (http://facebook.com/exemplo)",
 						   "cpf"		=> "CPF",

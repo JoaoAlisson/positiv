@@ -12,7 +12,7 @@ class login extends Controller {
 		if(isset($_POST['token'])){
 
 			if($_POST['token'] == Sessao::pegar('token')){
-				
+				$url = Sessao::pegar('URL');
 				$retorno = $this->model->verificaLogin($_POST['login'], $_POST['senha']);
 				if($retorno[0] == "ok") {
 					//logar
@@ -24,7 +24,7 @@ class login extends Controller {
 					Sessao::inserir("tipo", $tipo);
 					Sessao::inserir("usuario", $retorno[1]["nome"]);
 					Sessao::inserir("id", $retorno[1]["id"]);
-					header('location: ' . URL);
+					header('location: ' . $url);
 				}else{
 					$this->dados($retorno);
 					$this->renderizar("login/index");

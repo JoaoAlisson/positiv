@@ -16,7 +16,7 @@ class funcoes extends ControllerCRUD{
 
 	//public $filtros = array("nome", "nascimento");
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
+	public $regraUsuarios = array("Administrador" => "tudo", "igreja" => "tudo");
 
 	public $qtdPorPagina = 10;
 	private $tipoIndex = 1;
