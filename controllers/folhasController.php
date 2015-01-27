@@ -17,8 +17,6 @@ class folhas extends Controller{
 
 	public $listar = array("mes", "total");
 
-	public $regraUsuarios = array("Administrador" => "tudo", "Atendente" => "ver");
-
 	public $qtdPorPagina = 10;
 
 	public function index(){
