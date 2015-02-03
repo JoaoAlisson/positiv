@@ -34,9 +34,12 @@ class classePdo extends PDO{
 			$campos = implode(", ", $campos);
 
 		$tabela = PREFIXO."$tabela";
-
-		$id = (int)$id;
-		$where = ($id != 0) ? "WHERE id = '".$id."'" : "";
+		$where = '';
+		if($id != 0) {
+			$id = (int)$id;
+			$where = ($id != 0) ? "WHERE id = '".$id."'" : "";
+		}
+		
 		$sql = "SELECT $campos FROM $tabela $where";
 
 		$query = $this->prepare($sql);

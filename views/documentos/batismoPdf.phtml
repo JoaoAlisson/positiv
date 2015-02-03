@@ -22,9 +22,9 @@
 	$pdf->AddFont('CrimsonText-Regular','I','CrimsonText-Italic.php');
 	$pdf->AddFont('CrimsonText-SemiboldItalic','','CrimsonText-SemiboldItalic.php');
 
-	$mesArray = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+
 	$dia = date('d');
-	$mes = $mesArray[date('m')/1];
+	$mes = pegaMes(date('m'));
 	$ano = date('y') + 2000;
 
 	$data = $dia . ' de ' . $mes . ', ' . $ano;
@@ -32,17 +32,21 @@
 
 	$pdf->SetFont('CrimsonText-Regular','', 25);
 	$pdf->SetTextColor(133, 166, 175);
-	$pdf->Cell( null, 1, "Certificado de Membro", 0, 1,'C');
+	$pdf->Cell( null, 1, "Certificado de Batismo", 0, 1,'C');
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 29);
 	$pdf->SetTextColor(80, 113, 128);
 	$pdf->Cell( null, 1.2, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
+	$batismo = formataData($dados['dataBatismo']);
+	if($batismo != '')
+		$batismo = ' em ' . $batismo;
 
-	$text = "<p>          Certificamos que <strong>". $dados ."</strong> faz parte do hall de membros da Igreja " . $IGREJA. ", bem como do corpo de Cristo.<br><br>\"<i>Ora, vós sois o corpo de Cristo, e seus membros em particular.</i>\"
+	$batisado = ($dados['sexo'] == 1) ? 'batisado' : 'batisada';
 
-1 Coríntios 12:27</p>";
+	$text = "<p>          Certificamos que <strong>". $dados['nome'] ."</strong> foi $batisado$batismo, cumprindo o mandamento sagrado do nosso Senho Jesus Cristo em Mateus 28:19.<br><i>          \"Portanto ide, fazei discípulos de todas as nações, batizando-os em nome do Pai, e do Filho, e do Espírito Santo.\"</i> Mateus 28:19<br><i>          \"Quem crer e for batizado será salvo.</i>\"
+Marcos 16:16</p>";
 	$text = utf8_decode($text);
 	$pdf->Ln(-6.7);
 	$pdf->WriteHTML($text);
@@ -66,5 +70,26 @@
 	$pdf->Cell( null, 1, $data, 0, 1,'L');		
 
 	$pdf->Output();
+
+	function pegaMes($mes) {
+		$mes = (int)$mes;
+		$mesArray = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");		
+
+		return $mesArray[$mes];
+	}
+
+
+	function formataData($data) {
+
+		if($data == '0000-00-00')
+			return '';
+
+		$data = explode('-', $data);
+		$ano  = $data[0];
+		$mes  = $data[1];
+		$dia  = $data[2];
+
+		return $dia . ' de ' . pegaMes($mes) . ' de ' . $ano;
+	}
 ?>
 

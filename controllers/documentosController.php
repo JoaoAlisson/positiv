@@ -32,8 +32,9 @@ class documentos extends Controller{
 	}
 
 	private function pdf($funcao) {
-		$this->certificado_membroPdf();
-		$this->renderizar('documentos' . SEPARADOR. $funcao .'Pdf');
+		$action = $funcao . "Pdf";
+		$this->$action();
+		$this->renderizar('documentos' . SEPARADOR . $funcao .'Pdf');
 		$this->usarLayout(false);
 	}
 
@@ -44,6 +45,53 @@ class documentos extends Controller{
 		$membro = $model->membro($id);
 
 		$this->dados($membro);
+	}
+
+	public function batismo() {
+		if(!isset($_POST['postado'])) {
+			$model = $this->pegaModel('batismo');
+			$membros = $model->membros();
+			$this->dados($membros);
+		} else {
+			$this->pdf('batismo');
+		}		
+	}
+
+	private function batismoPdf() {
+		$id = isset($_POST['membro']) ? (int)$_POST['membro'] : '';
+		$model = $this->pegaModel('batismo');
+		$retorna = $model->membro($id);
+		$this->dados($retorna);		
+	}
+
+	public function consagracao() {
+		if(!isset($_POST['postado'])) {
+			$model = $this->pegaModel('consagracao');
+			$retorna['membros']      = $model->membros();
+			$retorna['consagracoes'] = $model->consagracoes();
+			$this->dados($retorna);
+		} else
+			$this->pdf('consagracao');
+		
+	}
+
+	private function consagracaoPdf() {
+		$id  		 = isset($_POST['membro'])      ? (int)$_POST['membro']      : '';
+		$consagracao = isset($_POST['consagracao']) ? (int)$_POST['consagracao'] : '';
+
+		$model   = $this->pegaModel('consagracao');
+		$retorna = $model->membro($id);
+
+		if($consagracao != '')
+			$consagracao = $model->consagracao($consagracao);
+		else
+			$consagracao = $model->consagracao($retorna['consagracao']);
+		
+		$dados['nome'] 		  = $retorna['nome'];
+		$dados['sexo']        = $retorna['sexo'];
+		$dados['consagracao'] = $consagracao;
+
+		$this->dados($dados);	
 	}
 }
 ?>

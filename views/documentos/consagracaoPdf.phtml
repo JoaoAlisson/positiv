@@ -1,7 +1,7 @@
 <?php
 	require(RAIZ . SEPARADOR . 'views' . SEPARADOR . 'documentos' . SEPARADOR . 'htmlPdf.php');
-	header('Content-type: application/pdf');
-	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+	//header('Content-type: application/pdf');
+	//header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$pdf = new PDF_HTML('L', 'cm', 'A4');	
 
@@ -22,9 +22,9 @@
 	$pdf->AddFont('CrimsonText-Regular','I','CrimsonText-Italic.php');
 	$pdf->AddFont('CrimsonText-SemiboldItalic','','CrimsonText-SemiboldItalic.php');
 
-	$mesArray = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");
+
 	$dia = date('d');
-	$mes = $mesArray[date('m')/1];
+	$mes = pegaMes(date('m'));
 	$ano = date('y') + 2000;
 
 	$data = $dia . ' de ' . $mes . ', ' . $ano;
@@ -32,7 +32,7 @@
 
 	$pdf->SetFont('CrimsonText-Regular','', 25);
 	$pdf->SetTextColor(133, 166, 175);
-	$pdf->Cell( null, 1, "Certificado de Membro", 0, 1,'C');
+	$pdf->Cell( null, 1, utf8_decode("Certificado de Consagração"), 0, 1,'C');
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 29);
 	$pdf->SetTextColor(80, 113, 128);
@@ -40,9 +40,9 @@
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
 
-	$text = "<p>          Certificamos que <strong>". $dados ."</strong> faz parte do hall de membros da Igreja " . $IGREJA. ", bem como do corpo de Cristo.<br><br>\"<i>Ora, vós sois o corpo de Cristo, e seus membros em particular.</i>\"
+	$consagrado = ($dados['sexo'] = 1) ? 'consagrado' : 'consagrada';
 
-1 Coríntios 12:27</p>";
+	$text = "<p>          Certificamos que <strong>". $dados['nome'] ."</strong>, membro da Igreja ". $IGREJA . ", tendo provado sua vocação divina, conforme a Palavra de Deus, e sendo chamado ao ministério do Evangélio de Cristo, estando em comunhão com a Igreja, foi regularmente ". $consagrado ." à <strong>". $dados['consagracao'] . "</strong> para exercer as funções pertencentes ao mesmo ministério.";
 	$text = utf8_decode($text);
 	$pdf->Ln(-6.7);
 	$pdf->WriteHTML($text);
@@ -66,5 +66,12 @@
 	$pdf->Cell( null, 1, $data, 0, 1,'L');		
 
 	$pdf->Output();
+
+	function pegaMes($mes) {
+		$mes = (int)$mes;
+		$mesArray = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");		
+
+		return $mesArray[$mes];
+	}
 ?>
 
