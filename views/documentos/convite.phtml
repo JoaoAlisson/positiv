@@ -1,0 +1,36 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+    <h2><i class="file icon"></i>Documento</h2>
+    <h3>Convite</h3>
+</div>
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+<div class="field" id="campo_membro" style="margin: 2px; float:left; text-align:left;">
+     <label>Evento </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_membro" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_membro');">
+            <input type="hidden" name="membro" id="input_membro" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:200px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php 
+                 foreach ($dados as $campo)
+                    echo "<div class='item' data-value='". $campo['id'] ."'>". $campo['nome'] ."</div>";
+                ?>
+              </div>                                     
+            </div></div>
+</div>	
+
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="subDizmPmemb();">
+	   				<i class="checkmark icon"></i>Selecionar
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

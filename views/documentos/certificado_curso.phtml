@@ -1,0 +1,72 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+    <h2><i class="file icon"></i>Documento</h2>
+    <h3>Certificado de Curso</h3>
+</div>
+
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+<div class="field" id="campo_membro" style="margin: 2px; float:left; text-align:left;">
+     <label>Aluno(a) </label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_membro" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_membro');">
+            <input type="hidden" name="membro" id="input_membro" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:200px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php 
+                 foreach ($dados as $campo)
+                    echo "<div class='item' data-value='". $campo['id'] ."'>". $campo['nome'] ."</div>";
+                ?>
+              </div>                                     
+            </div>
+			<div class="ui corner label"><i class="icon asterisk"></i></div>
+        </div>
+
+</div>	
+<br>
+<div class="field" id="campo_nome" style="margin: 2px; float:left; text-align:left;">
+<label>Ou diginte o nome aqui</label><br>
+<div class="ui corner labeled left icon input">
+		<input type="text" class="obrigatorio nome" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_nome" placeholder="" name="nome" onkeyup="; limpaNome('nome');" onblur=""><i class="user icon"></i>
+</div>
+</div>
+
+<br>			 
+<div class="field" id="campo_curso" style="margin: 2px; float:left; text-align:left;">
+			 <label>Nome do Curso</label><br><div class="ui corner labeled left icon input"><input type="text" class=" nome" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_curso" placeholder="" name="curso" onkeyup="; limpaNome('nome');" onblur=""><i class="pencil icon"></i> <div class="ui corner label"><i class="icon asterisk"></i></div> </div></div>
+
+<br>
+
+<div class="field" id="campo_quantidade" style="margin: 2px; float:left; text-align:left;">
+			 <label>Carga horária</label><br><div class="ui corner labeled left icon input"><input type="text" class="" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_quantidade" placeholder="" name="quantidade" onkeyup="validar('quantidade'); inteiroMask('input_quantidade');" onblur="validar('quantidade');"><i class=" icon">0-9:</i></div></div>
+<br>
+
+<div class="field" id="campo_responsavel" style="margin: 2px; float:left; text-align:left;">
+     <label>Responsável pelo curso</label><div class="ui left labeled icon input"><div class="ui search dropdown selection" id="select_responsavel" tabindex="2" onkeypress="enterSubmit(event);" onmouseover="registraSelect('select_responsavel');">
+            <input type="hidden" name="responsavel" id="input_responsavel" style="max-width:450px; min-width:300px;">
+            <i class="triangle down icon disabled"></i>
+            <div class="text" data-value="" style="max-width:450px; min-width:200px;"></div>
+              <div class="menu ui ">
+                <div class="item" data-value=""></div>
+                <?php 
+                 foreach ($dados as $campo)
+                    echo "<div class='item' data-value='". $campo['id'] ."'>". $campo['nome'] ."</div>";
+                ?>
+              </div>                                     
+           <div class="ui corner label"><i class="icon asterisk"></i></div> </div></div>
+</div>
+<br>
+
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="subCertifCurso();">
+	   				<i class="checkmark icon"></i>Criar Certificado
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

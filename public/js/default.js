@@ -404,7 +404,7 @@ function erroValidacaoAoSubmeter(campo, mensagens){
 	texto = "";
 
 	$.each(mensagens, function(chave, mensagem){
-		if(texto =="")
+		if(texto == "")
 			texto = "<i class='attention icon'></i>"+mensagem;
 		else
 			texto = texto + "<br><i class='attention icon'></i>"+mensagem;

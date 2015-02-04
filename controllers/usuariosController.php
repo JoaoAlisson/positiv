@@ -158,17 +158,19 @@ class usuarios extends ControllerCRUD{
 		$modulos = $this->model->pegarModulos($id);
 		$permissoes = "";
 
-		$modulosNomes = array("igreja"	 	=> "Igreja", 
-							  "usuarios"	=> "Usuários",
-							  "funcionarios"=> "Funcionários",
-							  "programacao"	=> "Programação",
-							  "patrimonio"	=> "Patrimônio",
-							  "financas"	=> "Finanças",
-							  "relatorios"	=> "Relatórios",
-							  "documentos"	=> "Documentos");
+		$modulosNomes = array("igrejas"	 	 => "Igreja", 
+							  "igreja"	 	 => "Igreja",
+							  "usuarios"	 => "Usuários",
+							  "funcionarios" => "Funcionários",
+							  "programacao"	 => "Programação",
+							  "patrimonio"   => "Patrimônio",
+							  "financas"	 => "Finanças",
+							  "relatorios"	 => "Relatórios",
+							  "documentos"	 => "Documentos");
 
 		foreach ($modulos as $key => $modulo)
-			$permissoes .= ($key == 0) ? $modulosNomes[$modulo] : " - ".$modulosNomes[$modulo];
+			if($modulo != 'Administrador')
+				$permissoes .= ($key == 0) ? $modulosNomes[$modulo] : " - ".$modulosNomes[$modulo];
 			
 		
 		$retorno['usuarios']['modulos'] = $permissoes;

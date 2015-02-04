@@ -167,3 +167,36 @@ function subDizmPmemb(){
 	if($("#input_membro").val() != "")
 		$("#formRelatorio").submit();	
 }
+
+function subCertifCurso(){
+	mensagemErro = '';
+	iconeErro = '<i class=\'warning icon\'></i>';
+	if($("#input_membro").val() == "" && $("#input_nome").val() == "")
+		mensagemErro = iconeErro + 'Selecione um Membro como Aluno, ou informe um nome.';
+
+	if($("#input_curso").val() == "")
+		if(mensagemErro != '')
+			mensagemErro = mensagemErro + '<br>' + iconeErro + 'Informe o nome do curso.';
+		else
+			mensagemErro = iconeErro + 'informe o nome do curso.';
+
+	if($("#input_responsavel").val() == "")
+		if(mensagemErro != '')
+			mensagemErro = mensagemErro + '<br>' + iconeErro + 'Informe o Membro responsável pelo Curso.';
+		else
+			mensagemErro = iconeErro + 'Informe o Membro responsável pelo Curso.';		
+	
+	if(mensagemErro == '')
+		$("#formRelatorio").submit();
+	else
+		erroCertificado_curso(mensagemErro);
+}
+
+function erroCertificado_curso(mensagemErro) {
+	mensagemAlertaErro(mensagemErro); 
+	$('.small.modal.erro').modal('show');
+
+	setTimeout(function(){
+	 	$('.small.modal.erro').modal('hide');
+	}, 2500);	
+}

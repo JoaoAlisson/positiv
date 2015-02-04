@@ -1,7 +1,7 @@
 <?php
 	require(RAIZ . SEPARADOR . 'views' . SEPARADOR . 'documentos' . SEPARADOR . 'htmlPdf.php');
-	header('Content-type: application/pdf');
-	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+	//header('Content-type: application/pdf');
+	//header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$pdf = new PDF_HTML('L', 'cm', 'A4');	
 
@@ -32,7 +32,7 @@
 
 	$pdf->SetFont('CrimsonText-Regular','', 25);
 	$pdf->SetTextColor(133, 166, 175);
-	$pdf->Cell( null, 1, utf8_decode("Certificado de Consagração"), 0, 1,'C');
+	$pdf->Cell( null, 1, "Certificado de Curso", 0, 1,'C');
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 29);
 	$pdf->SetTextColor(80, 113, 128);
@@ -40,9 +40,9 @@
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
 
-	$consagrado = ($dados['sexo'] = 1) ? 'consagrado' : 'consagrada';
+	$cargaH = ($dados['cargaH'] != '') ? ', com a duração de '. $dados['cargaH'] .' horas-aula' : '';
+	$text = "<p>          Certificamos para os devidos fins, que <strong>". $dados['aluno'] ."</strong> concluiu o curso <strong>". $dados['curso'] ."</strong> realizado pela Igreja ". $IGREJA . $cargaH . ".";
 
-	$text = "<p>          Certificamos que <strong>". $dados['nome'] ."</strong>, membro da Igreja ". $IGREJA . ", tendo provado sua vocação divina, conforme a Palavra de Deus, e sendo chamado ao ministério do Evangélio de Cristo, estando em comunhão com a Igreja, foi regularmente ". $consagrado ." à <strong>". $dados['consagracao'] . "</strong> para exercer as funções pertencentes ao mesmo ministério.";
 	$text = utf8_decode($text);
 	$pdf->Ln(-6.7);
 	$pdf->WriteHTML($text);
@@ -51,15 +51,18 @@
 	$pdf->SetFont('arial','B',16);
 	$pdf->Cell( null, 0.5, '_________________', 0, 1,'L');   
 	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 11);
-	$pdf->Cell(2, 0.5, '                     Pastor', 0, 0, 'L');
+	$pdf->SetXY(4.3, 16);
+	$pdf->Cell(9, 0.5, utf8_decode($dados['responsavel']), 0, 0, 'C');
+	$pdf->SetXY(4.3, 16.3);
+	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 9);
+	$pdf->Cell(9, 0.5, utf8_decode('(Responsável)'), 0, 0, 'C');
 
 	$pdf->SetXY(18, 15.5);
 	$pdf->SetFont('arial','B',16);
 	$pdf->Cell( null, 0.5, '_________________', 0, 1,'L');   
 	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 11);
-	$pdf->SetXY(20, 16);
-	$pdf->Cell(null, 0.5, 'Membro', 0, 1, 'L');	
-
+	$pdf->SetXY(16.3, 16);
+	$pdf->Cell(9, 0.5, utf8_decode($dados['aluno']), 0, 1, 'C');	
 
 	$pdf->SetXY(21.5, 5.5);
 	$pdf->SetFont('CrimsonText-Regular','I', 12);

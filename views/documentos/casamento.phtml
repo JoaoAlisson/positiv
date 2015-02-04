@@ -1,0 +1,70 @@
+<div style="width:100%; text-align:center; text-transform: uppercase;">
+    <h2><i class="file icon"></i>Documento</h2>
+    <h3>Certificado de Casamento</h3>
+</div>
+<script type="text/javascript">
+  function submeterCasamento(){
+      mensagemErro = '';
+      iconeErro = '<i class=\'warning icon\'></i>';
+      if($("#input_esposo").val() == "")
+        mensagemErro = iconeErro + 'Informe o nome do Esposo.';
+
+      if($("#input_esposa").val() == "")
+        if(mensagemErro != '')
+          mensagemErro = mensagemErro + '<br>' + iconeErro + 'Informe o nome da Esposa.';
+        else
+          mensagemErro = iconeErro + 'Informe o nome da Esposa.';       
+
+      if($("#input_data").val() == "")
+        if(mensagemErro != '')
+          mensagemErro = mensagemErro + '<br>' + iconeErro + 'Informe a data do Casamento.';
+        else
+          mensagemErro = iconeErro + 'Informe a data do Casamento.';                      
+      
+      if(mensagemErro == '')
+        $("#formRelatorio").submit();
+      else
+        erroCertificado_curso(mensagemErro);
+  }
+</script>
+<form class="formulario" method="post" id="formRelatorio" target="_blank">
+<div class="ui column center aligned grid">
+	<div class="column" style="width: auto;">
+		<div class="ui purple segment" style="width: auto;">
+
+<input hidden name='postado' value=''>
+<div class="field" id="campo_esposo" style="margin: 2px; float:left; text-align:left;">
+<label>Nome do Esposo</label><br>
+<div class="ui corner labeled left icon input">
+    <input type="text" class="obrigatorio nome" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_esposo" placeholder="" name="esposo" onkeyup="; limpaNome('nome');" onblur=""><i class="male icon"></i> <div class="ui corner label"><i class="icon asterisk"></i></div>
+</div>
+</div>
+<br>
+
+<div class="field" id="campo_esposa" style="margin: 2px; float:left; text-align:left;">
+<label>Nome da Esposa</label><br>
+<div class="ui corner labeled left icon input">
+    <input type="text" class="obrigatorio nome" value="" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_esposa" placeholder="" name="esposa" onkeyup="; limpaNome('nome');" onblur=""><i class="female icon"></i> <div class="ui corner label"><i class="icon asterisk"></i></div>
+</div>
+</div>
+<br>
+
+<div class="field" id="campo_data" style="margin: 2px; float:left; text-align:left;">
+<label>Data do Casamento</label><br>
+<div class="ui corner labeled left icon input">
+    <input type="text" class="obrigatorio" value="" onfocus="datapick('input_data');" onkeypress="enterSubmit(event);" style="max-width:450px; min-width:300px;" id="input_data" placeholder="" name="data" onkeyup="; limpaNome('nome');" onblur=""><i class="empty calendar icon"></i>
+    <div class="ui corner label"><i class="icon asterisk"></i></div>
+</div>
+</div>
+
+<br>
+			<div style="width:auto; float: left; text-align:left;">
+				<br>
+				<div class="ui green vertical labeled icon submit button" style=" margin-right: 20px; margin: 5px; margin-top: 2px;" onclick="submeterCasamento();">
+	   				<i class="checkmark icon"></i>Gerar Certificado
+	 			</div>	
+	 		</div>
+		</div>
+	</div>
+</div>
+</form>	

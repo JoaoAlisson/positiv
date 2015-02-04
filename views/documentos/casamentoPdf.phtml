@@ -17,6 +17,9 @@
 	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes_igreja' . SEPARADOR . 'logo.png';
 	$pdf->Image($imagem, 4, 4.2, null, 2);
 
+	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'aliancas.png';
+	$pdf->Image($imagem, 14, 8, null, 1.5);	
+
 	$pdf->AddFont('CrimsonText-Regular','','CrimsonText-Regular.php');
 	$pdf->AddFont('CrimsonText-Regular','B','CrimsonText-Bold.php');
 	$pdf->AddFont('CrimsonText-Regular','I','CrimsonText-Italic.php');
@@ -32,7 +35,7 @@
 
 	$pdf->SetFont('CrimsonText-Regular','', 25);
 	$pdf->SetTextColor(133, 166, 175);
-	$pdf->Cell( null, 1, utf8_decode("Certificado de Consagração"), 0, 1,'C');
+	$pdf->Cell( null, 1, "Certificado de Casamento", 0, 1,'C');
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 29);
 	$pdf->SetTextColor(80, 113, 128);
@@ -40,30 +43,33 @@
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
 
-	$consagrado = ($dados['sexo'] = 1) ? 'consagrado' : 'consagrada';
-
-	$text = "<p>          Certificamos que <strong>". $dados['nome'] ."</strong>, membro da Igreja ". $IGREJA . ", tendo provado sua vocação divina, conforme a Palavra de Deus, e sendo chamado ao ministério do Evangélio de Cristo, estando em comunhão com a Igreja, foi regularmente ". $consagrado ." à <strong>". $dados['consagracao'] . "</strong> para exercer as funções pertencentes ao mesmo ministério.";
+	$data = formataData($dados['data']);
+	$text = "<p>            A Igrea " . $IGREJA . ", confere este certificado de casamento ao casal <strong>".$dados['esposo']."</strong> e <strong>". $dados['esposa'] ."</strong>, pela realização do seu matrimônio no dia $data.<br><br><i>            'Portanto, o que Deus juntou não separe o homem'.<i> Mateus 19:6.";
 	$text = utf8_decode($text);
-	$pdf->Ln(-6.7);
+	$pdf->Ln(-6.9);
 	$pdf->WriteHTML($text);
 
-	$pdf->SetXY(6, 15.5);
+
+	$pdf->SetXY(6, 15);
 	$pdf->SetFont('arial','B',16);
-	$pdf->Cell( null, 0.5, '_________________', 0, 1,'L');   
+	$pdf->Cell( 3, 0.5, '_________________', 0, 1,'C');   
 	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 11);
-	$pdf->Cell(2, 0.5, '                     Pastor', 0, 0, 'L');
+	$pdf->Cell(3, 0.5, utf8_decode($dados['esposo']), 0, 0, 'C');
 
-	$pdf->SetXY(18, 15.5);
+	$pdf->SetXY(20.5, 15);
 	$pdf->SetFont('arial','B',16);
-	$pdf->Cell( null, 0.5, '_________________', 0, 1,'L');   
+	$pdf->Cell( 3, 0.5, '_________________', 0, 1,'C');   
 	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 11);
-	$pdf->SetXY(20, 16);
-	$pdf->Cell(null, 0.5, 'Membro', 0, 1, 'L');	
+	$pdf->SetXY(20.5, 15.5);
+	$pdf->Cell(3, 0.5, utf8_decode($dados['esposa']), 0, 0, 'C');	
 
 
-	$pdf->SetXY(21.5, 5.5);
-	$pdf->SetFont('CrimsonText-Regular','I', 12);
-	$pdf->Cell( null, 1, $data, 0, 1,'L');		
+
+	$pdf->SetXY(6, 16);
+	$pdf->SetFont('arial','B',16);
+	$pdf->Cell( null, 0.5, '_________________', 0, 1,'C');   
+	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 11);
+	$pdf->Cell(null, 0.5, 'Pastor', 0, 0, 'C');
 
 	$pdf->Output();
 
@@ -72,6 +78,17 @@
 		$mesArray = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");		
 
 		return $mesArray[$mes];
+	}
+
+
+	function formataData($data) {
+
+		$data = explode('/', $data);
+		$dia  = $data[0];
+		$mes  = $data[1];
+		$ano  = $data[2];
+
+		return $dia . ' de ' . pegaMes($mes) . ' de ' . $ano;
 	}
 ?>
 

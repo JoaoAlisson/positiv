@@ -1,3 +1,4 @@
+<?php // ob_start("ob_gzhandler"); ?>
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -32,7 +33,6 @@
     if(MODO_DESENVOLVIMENTO)
       echo "<script type=\"text/javascript\" src=\"" . URL . "desenvolvimento/js\"></script>";
   ?>
-
 	
 	<script type="text/javascript">
     var URL = <?php echo "'".URL ."'";?>;

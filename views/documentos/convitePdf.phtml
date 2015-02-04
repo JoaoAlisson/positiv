@@ -1,0 +1,121 @@
+<?php
+	require(RAIZ . SEPARADOR . 'views' . SEPARADOR . 'documentos' . SEPARADOR . 'htmlPdf.php');
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+
+	$pdf = new PDF_HTML('P', 'cm', 'A4');	
+
+	$pdf->Open();
+	$pdf->SetMargins(2, 7, 2);
+	$pdf->AddPage();
+
+	$IGREJA = "Batista Ágape";
+
+	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes_igreja' . SEPARADOR . 'logo.png';
+	$pdf->Image($imagem, 9, 1.5, null, 1.5);
+
+	$pdf->AddFont('CrimsonText-Regular','','CrimsonText-Regular.php');
+//	$pdf->AddFont('CrimsonText-Regular','B','CrimsonText-Bold.php');
+	$pdf->AddFont('CrimsonText-Regular','I','CrimsonText-Italic.php');
+	$pdf->AddFont('CrimsonText-SemiboldItalic','','CrimsonText-SemiboldItalic.php');
+    $pdf->AddFont('CrimsonText-Regular','B','CrimsonText-SemiboldItalic.php');
+
+	$dia = date('d');
+	$mes = pegaMes(date('m'));
+	$ano = date('y') + 2000;
+
+	$dataHj = $dia . ' de ' . $mes . ', ' . $ano;
+	$dataHj = utf8_decode($dataHj);
+
+	$pdf->SetFont('CrimsonText-Regular','', 29);
+	$pdf->SetTextColor(133, 166, 175);
+	//$pdf->SetXY(null, 2 );
+	$pdf->Cell( null, 0.5, "", 0, 1,'C');
+	
+	$pdf->SetFont('CrimsonText-SemiboldItalic','', 22);
+	$pdf->SetTextColor(80, 113, 128);
+	$pdf->Cell( null, 0.5, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
+
+	$pdf->SetFont('CrimsonText-Regular','', 14);
+	
+	$prefix = ', que será realizado';
+	$data = '';
+	if($dados['inicio'] != '0000-00-00' || $dados['fim'] != '0000-00-00') {
+			if($dados['inicio'] != '0000-00-00' && $dados['fim'] != '0000-00-00')
+				$data = ' entre os dias ' . formataData1($dados['inicio'], $dados['fim']);
+			else
+				if($dados['inicio'] != '0000-00-00')
+					$data = ' no dia ' . formataData($dados['inicio']);
+				else
+					$data = ' no dia ' . formataData($dados['fim']);
+	}
+
+	$local = ($dados['local'] != '') ? ' no(a) ' . $dados['local'] : '';
+
+	$informacoes = ($data != '' || $local != '') ? $prefix . $data . $local : '';
+
+	$descricao = '';
+	if($dados['descricao'] != '')
+		$descricao = ' <br><br>Descrição do Evento:<br>           ' . $dados['descricao'];
+
+	$text = "<i>           É com grande satisfação que convidamos os amados irmãos para participarem conosco do </i><strong>". $dados['nome'] . "</strong><i>$informacoes.$descricao</i>";
+	$text = utf8_decode($text);
+	$pdf->Ln(2);
+	$pdf->WriteHTML($text);
+
+	$Y = 14;
+	if($descricao != '')
+		$Y = $Y + 2.5;
+
+	$pdf->SetXY(2, $Y);
+	$pdf->SetFont('arial','B',16);
+	$pdf->Cell( null, 0.5, '_______________________', 0, 1,'C');   
+	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 11);
+	$pdf->Cell(null, 0.5, 'Pastor da Igreja', 0, 0, 'C');
+
+	$dataY = $Y - 1;
+	$pdf->SetXY(13.7, $dataY);
+	$pdf->SetFont('CrimsonText-Regular','I', 12);
+	$pdf->Cell( null, 1, $dataHj, 0, 1,'L');	
+
+	$pdf->SetFont('CrimsonText-Regular','', 33);
+	$pdf->SetTextColor(133, 166, 175);
+	$pdf->SetXY(2, 4.1);
+	$pdf->Cell( null, null, "Convite Especial", 0, 1,'C');		
+
+	$pdf->Output();
+
+	function pegaMes($mes) {
+		$mes = (int)$mes;
+		$mesArray = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");		
+
+		return $mesArray[$mes];
+	}
+
+	function formataData1($inicio, $fim) {
+
+		$inicio = explode('-', $inicio);
+		$mesIn  = $inicio[1];
+		$diaIn  = $inicio[2];
+
+		$fim = explode('-', $fim);
+		$mesFim  = $fim[1];
+		$diaFim  = $fim[2];
+
+		if($mesIn == $mesFim)
+			return $diaIn . ' e ' . $diaFim . ' de ' . pegaMes($mesIn);
+		else
+			return $diaIn . ' de ' . pegaMes($mesIn) . ' e ' . $diaFim . ' de ' . pegaMes($mesFim);
+	}
+
+	function formataData($data) {
+
+		$data = explode('-', $data);
+		$ano  = $data[0];
+		$mes  = $data[1];
+		$dia  = $data[2];
+
+		return $dia . ' de ' . pegaMes($mes) . ' de ' . $ano;
+	}
+?>
+

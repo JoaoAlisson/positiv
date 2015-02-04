@@ -93,5 +93,72 @@ class documentos extends Controller{
 
 		$this->dados($dados);	
 	}
+
+	public function certificado_curso() {
+		if(!isset($_POST['postado'])) {
+			$model = $this->pegaModel('certificado_curso');
+			$retorna  = $model->membros();
+			$this->dados($retorna);
+		} else
+			$this->pdf('certificado_curso');		
+	}
+
+	private function certificado_cursoPdf() {
+
+		$model = $this->pegaModel('certificado_curso');
+
+		$aluno                = isset($_POST['nome'])   	 ? $_POST['nome'] 							  : '';
+		$dados['aluno']       = isset($_POST['membro'])      ? $model->membro($_POST['membro']) 	      : $aluno;
+		$dados['responsavel'] = isset($_POST['responsavel']) ? $model->responsavel($_POST['responsavel']) : '';
+		$dados['curso']       = isset($_POST['curso'])       ? $_POST['curso']                            : '';
+		$dados['cargaH']      = isset($_POST['quantidade'])  ? $_POST['quantidade']                       : '';
+
+		$this->dados($dados);	
+	}
+
+	public function apresentacao() {
+		if(isset($_POST['postado']))
+			$this->pdf('apresentacao');
+	}
+
+	private function apresentacaoPdf() {
+		$dados['crianca']    = isset($_POST['crianca'])    ? $_POST['crianca'] : '';
+		$dados['pai']        = isset($_POST['pai'])   	   ? $_POST['pai'] : '';
+		$dados['mae']        = isset($_POST['mae'])   	   ? $_POST['mae'] : '';
+		$dados['nascimento'] = isset($_POST['nascimento']) ? $_POST['nascimento'] : '';
+		$dados['sexo']       = isset($_POST['sexo'])       ? $_POST['sexo'] : '';
+
+		$this->dados($dados);
+	}
+
+	public function casamento() {
+		if(isset($_POST['postado']))
+			$this->pdf('casamento');		
+	}
+
+	private function casamentoPdf() {
+		$dados['esposo'] = isset($_POST['esposo']) ? $_POST['esposo'] : '';
+		$dados['esposa'] = isset($_POST['esposa']) ? $_POST['esposa'] : '';
+		$dados['data']   = isset($_POST['data'])   ? $_POST['data']   : '';
+
+		$this->dados($dados);
+	}
+
+	public function convite() {
+		if(!isset($_POST['postado'])) {
+			$model = $this->pegaModel('convite');
+			$retorna  = $model->eventos();
+			$this->dados($retorna);
+		} else
+			$this->pdf('convite');		
+	}
+
+	private function convitePdf() {
+		$model = $this->pegaModel('convite');
+		$dados = isset($_POST['membro']) ? (int)$_POST['membro'] : '';
+		$dados = $model->evento($dados['evento']);
+
+		$this->dados($dados);
+	}
 }
 ?>
