@@ -138,23 +138,26 @@
 	$pdf->AliasNbPages();
 	$pdf->AddPage();
 
-	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes_igreja' . SEPARADOR . 'logo.png';
-	$pdf->Image($imagem,1,1, null, 2.5);
+	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes' . SEPARADOR . 'logo.png';
+	if(file_exists($imagem))
+		$pdf->Image($imagem,1,1, null, 2.5);
 
 	$pdf->SetTextColor(85, 85, 85);
 
 	$pdf->SetXY(1,0.9);
 	$pdf->SetFont('arial','B',12);
-	$nomeIgreja = utf8_decode("Igreja Batista Ágape");
-	$pdf->Cell(0, 1,$nomeIgreja, 0, 1,'C');  
+	$nomeIgreja = 'Igreja ' . utf8_decode($_POST['IGREJA']);
+	$l = ($_POST['TELEFONE'] == '' && $_POST['EMAIL'] == '') ? 2.5 : 1;
+	$pdf->Cell(0, $l,$nomeIgreja, 0, 1,'C');  
+
+	$pdf->SetXY(1,1.9);
+	$pdf->SetFont('arial','', 12);
+	$telef = ($_POST['TELEFONE'] != '') ? 'Telefone: ' . $_POST['TELEFONE'] : '';
+	$pdf->Cell(0, 0.3,$telef, 0, 1,'C'); 	
 
 	$pdf->SetFont('arial','', 12);
-	$estado = utf8_decode("Sobral - CE");
-	$pdf->Cell(0, 0.3,$estado, 0, 1,'C'); 	
-
-	$pdf->SetFont('arial','', 12);
-	$estado = utf8_decode("Telefone: (88) 3614-5416");
-	$pdf->Cell(0, 0.6,$estado, 0, 1,'C');	
+	$email = ($_POST['EMAIL'] != '') ? 'Email: ' . utf8_decode($_POST['EMAIL']) : '';
+	$pdf->Cell(0, 0.6,$email, 0, 1,'C');	
 
 	$nomeRelatorio = utf8_decode($dados['nome']);
 

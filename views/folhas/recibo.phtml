@@ -67,7 +67,7 @@
 
 		$pdf->SetXY(1,2.05);
 		$pdf->SetFont('arial','',9);	
-		$igreja = "Igreja Batista Ágape";
+		$igreja = "Igreja " . $dados['igreja'];
 		$igreja = strtoupper($igreja);
 		$igreja = utf8_decode($igreja);
 		$pdf->Cell(8,1,$igreja,0,0,'L');
@@ -97,7 +97,7 @@
 
 		$pdf->SetXY(9,2.05);
 		$pdf->SetFont('arial','',9);	
-		$pdf->Cell(8,1,"02.325.596/0002-06",0,0,'L');
+		$pdf->Cell(8,1,utf8_decode($dados['cnpj']),0,0,'L');
 
 		$pdf->SetXY(13,2);	
 		$pdf->Cell(3,0.8,"",1,0,'C');

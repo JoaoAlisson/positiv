@@ -9,10 +9,14 @@
 	$pdf->SetMargins(2, 7, 2);
 	$pdf->AddPage();
 
-	$IGREJA = "Batista Ágape";
+	$IGREJA = $dados['nomeIgreja'];
+	
+	$imagem = PASTA_SISTEMA . 'imagens' . SEPARADOR . 'modelo convite.jpg';
+	$pdf->Image($imagem, 0, 0, null, 31);
 
-	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes_igreja' . SEPARADOR . 'logo.png';
-	$pdf->Image($imagem, 9, 1.5, null, 1.5);
+	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes' . SEPARADOR . 'logo.png';
+	if(file_exists($imagem))
+		$pdf->Image($imagem, 9, 1.5, null, 1.5);
 
 	$pdf->AddFont('CrimsonText-Regular','','CrimsonText-Regular.php');
 //	$pdf->AddFont('CrimsonText-Regular','B','CrimsonText-Bold.php');
@@ -117,5 +121,6 @@
 
 		return $dia . ' de ' . pegaMes($mes) . ' de ' . $ano;
 	}
+
 ?>
 

@@ -8,10 +8,10 @@ class funcionariosMd extends classePdo{
 
 	public function pegarFuncionarios($campos, $onde){
 
-		$tbMembro 		= PREFIXO."membros";
-		$tbFcun   		= PREFIXO."func_nao_membro";
-		$tbFuncionario 	= PREFIXO."funcionarios";
-		$tbCargo		= PREFIXO."cargos";
+		$tbMembro 		= PREFIXO . "membros";
+		$tbFcun   		= PREFIXO . "func_nao_membro";
+		$tbFuncionario 	= PREFIXO . "funcionarios";
+		$tbCargo		= PREFIXO . "cargos";
 
 		$campos  = implode("`, `$tbFuncionario`.`", $campos);
 		$campos  = "`$tbFuncionario`.`$campos`, ";

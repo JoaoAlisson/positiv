@@ -1,7 +1,7 @@
 <?php
 	require(RAIZ . SEPARADOR . 'views' . SEPARADOR . 'documentos' . SEPARADOR . 'htmlPdf.php');
-	//header('Content-type: application/pdf');
-	//header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
 
 	$pdf = new PDF_HTML('L', 'cm', 'A4');	
 
@@ -9,13 +9,14 @@
 	$pdf->SetMargins(6, 6, 6);
 	$pdf->AddPage();
 
-	$IGREJA = "Batista Ágape";
+	$IGREJA = $dados['nomeIgreja'];
 
-	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'moldura.jpg';
+	$imagem = PASTA_SISTEMA . 'imagens' . SEPARADOR . 'moldura.jpg';
 	$pdf->Image($imagem, 0, 0, null, 21);
 
-	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes_igreja' . SEPARADOR . 'logo.png';
-	$pdf->Image($imagem, 4, 4.2, null, 2);
+	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes' . SEPARADOR . 'logo.png';
+	if(file_exists($imagem))
+		$pdf->Image($imagem, 4, 4.2, null, 2);
 
 	$pdf->AddFont('CrimsonText-Regular','','CrimsonText-Regular.php');
 	$pdf->AddFont('CrimsonText-Regular','B','CrimsonText-Bold.php');

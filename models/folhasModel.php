@@ -31,6 +31,18 @@ class folhasModel extends Model{
 		return $resultado;			
 	}
 
+	public function pegarInformacoes() {
+		$tabela = PREFIXO . "informacoes";
+		
+		$sql = "SELECT nome, cnpj FROM $tabela WHERE id = 1";
+
+		$query = $this->prepare($sql);
+		$query->execute();
+		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
+
+		return $resultado[0];			
+	}
+
 	public function pegarTodosOsEventos($idFolha, $idFunc){
 		$tabela = PREFIXO."descontos_abonos";
 		$where = "";

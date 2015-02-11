@@ -7,6 +7,13 @@ class Relatorios extends Controller
 		
 	}
 
+	private function infIgreja(&$model) {
+		$inf = $model->infIgreja();
+		$_POST['IGREJA']   = $inf['nome'];
+		$_POST['EMAIL']    = $inf['email'];
+		$_POST['TELEFONE'] = $inf['telefone'];
+	}
+
 	public function membros()
 	{
 		if(!isset($_POST['postado']))
@@ -55,6 +62,8 @@ class Relatorios extends Controller
 			$dados['filtros'] = $filtros;
 
 		$dados['linhas']  = $membros;
+
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -115,6 +124,8 @@ class Relatorios extends Controller
 			$dados['filtros'] = $filtros;
 
 		$dados['linhas']  = $membros;
+
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -223,6 +234,8 @@ class Relatorios extends Controller
 		$dados['tipos']   = array('nascimento' => 'data');
 
 		$dados['linhas']  = $membros;
+
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}	
 
@@ -270,6 +283,7 @@ class Relatorios extends Controller
 		$dados['tipos']   = array('nascimento' => 'data');
 
 		$dados['linhas']  = $membros;
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -318,6 +332,7 @@ class Relatorios extends Controller
 			$dados['filtros'] = $filtros;
 
 		$dados['linhas']  = $membros;
+		$this->infIgreja($model);
 		$this->dados($dados);			
 	}
 
@@ -389,6 +404,8 @@ class Relatorios extends Controller
 			$dados['filtros'] = $filtros;
 
 		$dados['linhas']  = $funcionarios;
+
+		$this->infIgreja($model);
 		$this->dados($dados);			
 	}
 
@@ -457,12 +474,17 @@ class Relatorios extends Controller
 			$dados['filtros'] = $filtros;
 
 		$dados['linhas']  = $funcionarios;
+
+		$this->infIgreja($model);
 		$this->dados($dados);			
 	}
 
 	private function escrvFiltProgramacoes($onde)
 	{	
 		$retorna = "";
+		if($onde['inicio'] == '' && $onde['fim'] == '')
+			return '';
+		
 		if($onde['inicio'] != "" && $onde['fim'] != "")
 		{
 			$retorna = "Entre " . $onde['inicio'] . " e " . $onde['fim'] . ".";
@@ -512,6 +534,8 @@ class Relatorios extends Controller
 								  'mes'		  => 'mes');
 
 		$dados['linhas']  = $folhas;
+
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -564,6 +588,8 @@ class Relatorios extends Controller
 								  'descontos' => 'moeda');
 
 		$dados['linhas']  = $retornou;
+
+		$this->infIgreja($model);
 		$this->dados($dados);		
 	}
 
@@ -626,6 +652,8 @@ class Relatorios extends Controller
 		}
 
 		$dados['linhas']  = $retornou;
+
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -650,6 +678,8 @@ class Relatorios extends Controller
 								  'vencimento' => 'data');
 
 		$dados['linhas']  = $retornou;
+
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -673,6 +703,8 @@ class Relatorios extends Controller
 								  'vencimento' => 'data');
 
 		$dados['linhas']  = $retornou;
+
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -724,6 +756,8 @@ class Relatorios extends Controller
 			$dados['filtros'] = $filtros;		
 
 		$dados['linhas']  = $retornou;
+
+		$this->infIgreja($model);
 		$this->dados($dados);		
 	}
 
@@ -774,6 +808,8 @@ class Relatorios extends Controller
 			$dados['filtros'] = $filtros;		
 
 		$dados['linhas']  = $retornou;
+
+		$this->infIgreja($model);
 		$this->dados($dados);		
 	}
 
@@ -801,6 +837,7 @@ class Relatorios extends Controller
 		$dados['saidas']   = $movimento['saidas'];
 		$dados['ano']      = $ano;
 		
+		$this->infIgreja($model);
 		$this->dados($dados);
 	}
 
@@ -849,6 +886,8 @@ class Relatorios extends Controller
 		}
 
 		$dados['linhas']  = $retornou;
+
+		$this->infIgreja($model);
 		$this->dados($dados);		
 	}
 }

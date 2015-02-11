@@ -7,17 +7,20 @@ class documentos extends Controller{
 
 	}
 
-	private function pegaModel($class) {
+	private function pegaModel($class = '') {
 		$this->importa($class);
-		$className = $class . "Dc";
+		$className = ($class == '') ? 'classePdo' : $class . "Dc";
 		return new $className();
 	}
 
 	private function importa($class) {
 		$caminho1 = RAIZ . SEPARADOR . 'relatoriosModels' . SEPARADOR;
-		$caminho2 = RAIZ . SEPARADOR . 'documentosModels' . SEPARADOR;
 		require_once($caminho1 . 'classePdo.php');
-		require_once($caminho2 . $class . 'Dc.php');		
+
+		if($class != '') {
+			$caminho2 = RAIZ . SEPARADOR . 'documentosModels' . SEPARADOR;
+			require_once($caminho2 . $class . 'Dc.php');	
+		}	
 	}
 
 	public function certificado_membro() {
@@ -43,6 +46,7 @@ class documentos extends Controller{
 		$id = isset($_POST['membro']) ? (int)$_POST['membro'] : '';
 		$model = $this->pegaModel('certificadoMembro');
 		$membro = $model->membro($id);
+		$_POST['nomeIgreja'] = $model->nomeIgreja();
 
 		$this->dados($membro);
 	}
@@ -61,6 +65,7 @@ class documentos extends Controller{
 		$id = isset($_POST['membro']) ? (int)$_POST['membro'] : '';
 		$model = $this->pegaModel('batismo');
 		$retorna = $model->membro($id);
+		$_POST['nomeIgreja'] = $model->nomeIgreja();
 		$this->dados($retorna);		
 	}
 
@@ -90,6 +95,7 @@ class documentos extends Controller{
 		$dados['nome'] 		  = $retorna['nome'];
 		$dados['sexo']        = $retorna['sexo'];
 		$dados['consagracao'] = $consagracao;
+		$dados['nomeIgreja']  = $model->nomeIgreja();
 
 		$this->dados($dados);	
 	}
@@ -112,7 +118,8 @@ class documentos extends Controller{
 		$dados['responsavel'] = isset($_POST['responsavel']) ? $model->responsavel($_POST['responsavel']) : '';
 		$dados['curso']       = isset($_POST['curso'])       ? $_POST['curso']                            : '';
 		$dados['cargaH']      = isset($_POST['quantidade'])  ? $_POST['quantidade']                       : '';
-
+		$dados['nomeIgreja']  = $model->nomeIgreja();
+ 
 		$this->dados($dados);	
 	}
 
@@ -128,6 +135,8 @@ class documentos extends Controller{
 		$dados['nascimento'] = isset($_POST['nascimento']) ? $_POST['nascimento'] : '';
 		$dados['sexo']       = isset($_POST['sexo'])       ? $_POST['sexo'] : '';
 
+		$model = $this->pegaModel();
+		$dados['nomeIgreja'] = $model->nomeIgreja();
 		$this->dados($dados);
 	}
 
@@ -140,6 +149,9 @@ class documentos extends Controller{
 		$dados['esposo'] = isset($_POST['esposo']) ? $_POST['esposo'] : '';
 		$dados['esposa'] = isset($_POST['esposa']) ? $_POST['esposa'] : '';
 		$dados['data']   = isset($_POST['data'])   ? $_POST['data']   : '';
+
+		$model = $this->pegaModel();
+		$dados['nomeIgreja'] = $model->nomeIgreja();
 
 		$this->dados($dados);
 	}
@@ -157,8 +169,17 @@ class documentos extends Controller{
 		$model = $this->pegaModel('convite');
 		$dados = isset($_POST['membro']) ? (int)$_POST['membro'] : '';
 		$dados = $model->evento($dados['evento']);
+		$dados['nomeIgreja'] = $model->nomeIgreja();
 
 		$this->dados($dados);
+	}
+
+	public function informacoes() {
+		$this->usarLayout(false);
+		$model = $this->pegaModel('informacoes');
+		$retorna = $model->informacoes();
+
+		$this->dados($retorna);
 	}
 }
 ?>

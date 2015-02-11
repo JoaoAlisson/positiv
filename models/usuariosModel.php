@@ -1,10 +1,10 @@
 <?php 
 class usuariosModel extends Model{
  
-	public $tipos = array( "nome"     	=> "nome",
-						   "login"		=> "login",
-						   "senha"		=> "senha",
-						   "dono"		=> "inteiro");
+	public $tipos = array( "nome"  => "nome",
+						   "login" => "login",
+						   "senha" => "senha",
+						   "dono"  => "inteiro");
 
 	public $obrigatorios = array("nome", "login", "senha");
 
@@ -41,7 +41,18 @@ class usuariosModel extends Model{
 	public function depoisDeCadastrar(&$dados){
 		$id = $this->lastInsertId();
 		$this->addPermissoes($id);
+
+		$this->qtdUsuariosInfo(1);
 	}
+
+	public function qtdUsuariosInfo($soma = 1) {
+
+		$operacao = ($soma == 1) ? '+' : '-';
+
+		$tabela = PREFIXO . 'informacoes';
+		$sth = $this->prepare("UPDATE $tabela SET qtd_usuarios = qtd_usuarios $operacao 1 WHERE id = 1");
+		$sth->execute();			
+	}	
 
 	private function addPermissoes($id){
 		$campos = array("igreja", "usuarios", "funcionarios", "programacao", "patrimonio", "financas", "relatorios", "documentos");
@@ -68,6 +79,8 @@ class usuariosModel extends Model{
 		$tabela = PREFIXO."usuariostipos";			
 		$stmt = $this->prepare("DELETE FROM $tabela WHERE id_usuario = '$id'");
 		$stmt->execute();
+
+		$this->qtdUsuariosInfo(2);
 	}
 	private function loginUnico($login, $id = 0){
 		$tabela = PREFIXO."usuarios";

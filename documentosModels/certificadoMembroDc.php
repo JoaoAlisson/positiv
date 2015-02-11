@@ -17,5 +17,6 @@ class certificadoMembroDc extends classePdo {
 		$retorna = $this->pegar($id, array('nome'), 'membros');
 		return $retorna[0]['nome'];
 	}
+
 }
 ?>

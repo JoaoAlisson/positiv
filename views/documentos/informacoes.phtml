@@ -1,0 +1,153 @@
+<?php
+	require(RAIZ . SEPARADOR . 'views' . SEPARADOR . 'documentos' . SEPARADOR . 'htmlPdf.php');
+ 	header('Content-type: application/pdf');
+	header('Content-Disposition: attachment; filename="Recibo de Pagamento.pdf"');
+
+	Class PDF_Inf extends PDF_HTML 
+	{
+
+		function mes($mes) {
+			$mes = (int)$mes;
+			$mesArray = array("", "Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junio", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro");		
+
+			return $mesArray[$mes];
+		}
+
+		function Header()
+		{
+			$this->SetTextColor(85, 85, 85);
+		    $this->SetFont('Arial','I',9);
+		    $this->Cell(0, -4,'Positv, Sistemas Inteligentes',0,0,'R');
+		    $pagina = utf8_decode('Página: ');
+		    $this->Cell(0, -3.2,$pagina.$this->PageNo().'/{nb}',0,0,'R');
+		   	
+		    $this->Ln(0);
+		}
+
+		function Footer()
+		{
+
+		    $this->SetY(-6);
+		    $this->SetFont('Arial','I',8);
+		    $this->SetTextColor(85, 85, 85);
+		    $dia = date('d');
+		    $mes = $this->mes(date('m')/1);
+		    $ano = 2000 + date('y');
+		    $data = $dia.', de '.$mes.' de '.$ano;
+		    $data = utf8_decode($data);
+			$pagina = utf8_decode('Página: ');
+		    $this->Cell(5,10, $data,0,0,'L');
+		    $hora = date('G').':'.date('i').':'.date('s').' (Brasília)';
+		    $hora = utf8_decode($hora);
+		    $this->Cell(0,10, $hora,0,0,'L');
+		    $this->Cell(0,10,$pagina.$this->PageNo().'/{nb}',0,0,'R');
+		}
+	}
+
+	$pdf = new PDF_Inf('P', 'cm', 'A4');	
+	$pdf->AliasNbPages();
+	$pdf->Open();
+	$pdf->SetMargins(2, 3, 2);
+	$pdf->AddPage();
+
+	$IGREJA = $dados['nome'];
+	
+	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes' . SEPARADOR . 'logo.png';
+	if(file_exists($imagem))
+		$pdf->Image($imagem, 9, 1.5, null, 1.5);
+
+	$pdf->AddFont('CrimsonText-Regular','','CrimsonText-Regular.php');
+	$pdf->AddFont('CrimsonText-Regular','B','CrimsonText-Bold.php');
+	$pdf->AddFont('CrimsonText-Regular','I','CrimsonText-Italic.php');
+	$pdf->AddFont('CrimsonText-SemiboldItalic','','CrimsonText-SemiboldItalic.php');
+ //   $pdf->AddFont('CrimsonText-Regular','B','CrimsonText-SemiboldItalic.php');
+
+	$dia = date('d');
+	$mes = $pdf->mes(date('m'));
+	$ano = date('y') + 2000;
+
+	$dataHj = $dia . ' de ' . $mes . ', ' . $ano;
+	$dataHj = utf8_decode($dataHj);
+
+	$pdf->Cell( null, 0.5, "", 0, 1,'C');
+	
+	$pdf->SetFont('CrimsonText-SemiboldItalic','', 18);
+	$pdf->SetTextColor(85, 85, 85);
+	$pdf->Cell( null, 0.5, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
+
+	$pdf->SetFont('CrimsonText-Regular','', 12);
+
+
+	$array = array('pastor'      => 'Pastor Responsável',
+		           'cnpj'		 => 'CNPJ',
+		           'qtd_membros' => 'Quantidade de Membros',
+		           'estado'		 => 'Estado',
+		           'cidade'		 => 'Cidade',
+		           'bairro'		 => 'Bairro',
+		           'rua'	  	 => 'Rua',
+		           'numero'		 => 'Número',
+		           'telefone'	 => 'Telefone',
+		           'email'		 => 'Email',
+		           'site'		 => 'Site',
+		           'face'		 => 'Facebook');
+
+	$pastor = 'Pastor ' . $dados['pastor'];
+	$dados['pastor'] = 'Pr. ' . $dados['pastor']; 
+	$texto = formataTexto($array, $dados);
+
+	$texto = utf8_decode($texto);
+	$pdf->Ln(2);
+	$pdf->WriteHTML($texto);
+
+	$Y = 14;
+
+	$pdf->SetXY(2, $Y);
+	$pdf->SetFont('arial','B',16);
+	$pdf->Cell( null, 0.5, '_______________________', 0, 1,'C');   
+	$pdf->SetFont('CrimsonText-SemiboldItalic', '', 11);
+	
+	$pdf->Cell(null, 0.5, utf8_decode($pastor), 0, 0, 'C');
+
+	$pdf->Output();
+
+
+
+	function formataTexto(&$array, &$dados) {
+
+	    $texto = '';
+		foreach ($array as $chave => $valor)
+			$texto .= ($dados[$chave] != '') 
+				? '<strong>' . $array[$chave] . ':</strong> ' . $dados[$chave] . '.<br>' 
+				: '';	
+
+		return $texto;
+	}
+
+	function formataData1($inicio, $fim) {
+
+		$inicio = explode('-', $inicio);
+		$mesIn  = $inicio[1];
+		$diaIn  = $inicio[2];
+
+		$fim = explode('-', $fim);
+		$mesFim  = $fim[1];
+		$diaFim  = $fim[2];
+
+		if($mesIn == $mesFim)
+			return $diaIn . ' e ' . $diaFim . ' de ' . pegaMes($mesIn);
+		else
+			return $diaIn . ' de ' . pegaMes($mesIn) . ' e ' . $diaFim . ' de ' . pegaMes($mesFim);
+	}
+
+	function formataData($data) {
+
+		$data = explode('-', $data);
+		$ano  = $data[0];
+		$mes  = $data[1];
+		$dia  = $data[2];
+
+		return $dia . ' de ' . pegaMes($mes) . ' de ' . $ano;
+	}
+
+?>
+

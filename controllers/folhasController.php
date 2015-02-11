@@ -177,6 +177,10 @@ class folhas extends Controller{
 		$retorno['eventos'] = $eventosOrd;
 		$retorno['eventosTodos'] = $eventosTodos;
 
+		$informacoes = $this->model->pegarInformacoes();
+		$retorno['igreja'] = $informacoes['nome'];
+		$retorno['cnpj']   = $informacoes['cnpj'];	
+
 		$this->dados($retorno);			
 	}
 
@@ -229,11 +233,15 @@ class folhas extends Controller{
 		}
 
 		//$folha = $this->model->visualizar($id);
-		$retorno['folha'] = $folha['folhas'];
-		$retorno['tabelaInss'] = $this->model->pegarTabelaInss();
+		$retorno['folha']        = $folha['folhas'];
+		$retorno['tabelaInss']   = $this->model->pegarTabelaInss();
 		$retorno['funcionarios'] = $funcionarios;
-		$retorno['eventos'] = $eventosOrd;
+		$retorno['eventos']      = $eventosOrd;
 		$retorno['eventosTodos'] = $eventosTodos;
+
+		$informacoes = $this->model->pegarInformacoes();
+		$retorno['igreja'] = $informacoes['nome'];
+		$retorno['cnpj']   = $informacoes['cnpj'];
 
 		$this->dados($retorno);		
 	}

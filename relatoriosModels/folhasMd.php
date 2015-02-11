@@ -1,7 +1,8 @@
 <?php 
 class folhasMd extends classePdo{
 
-	public function pegarFolhas($ano){
+	public function pegarFolhas($ano)
+	{
 
 		require(RAIZ . SEPARADOR . 'models' . SEPARADOR . 'folhasModel.php');
 		$model = new folhasModel();

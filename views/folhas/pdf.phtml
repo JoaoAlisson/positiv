@@ -51,8 +51,9 @@
 	$pdf->Ln(0.4);
 	$pdf->SetFont('arial','',9);
 
-	$igreja = "Estabelecimento: ". strtoupper('Igreja Batista Ágape') ." - CNPJ: 02.324.596/0001-25";
-	$igreja = utf8_decode($igreja);
+	$cnpj = ($dados['cnpj'] != '') ? ' - CNPJ: ' . $dados['cnpj'] : '';
+	$igreja = 'Estabelecimento: IGREJA ' . strtoupper($dados['igreja']) . $cnpj;
+	$igreja = utf8_decode($igreja); 
 
 	$mes = ($dados['folha']['mes'] < 10) ? "0".$dados['folha']['mes'] : $dados['folha']['mes'];
 	$mesano = "Mês/Ano: ".$mes."/".$dados['folha']['ano'];

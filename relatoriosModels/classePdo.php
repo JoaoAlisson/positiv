@@ -1,5 +1,6 @@
 <?php 
-class classePdo extends PDO{
+class classePdo extends PDO
+{
 
 	private $conectado = false;
 	function __construct(){	}
@@ -47,5 +48,17 @@ class classePdo extends PDO{
 		return $query->fetchAll(PDO::FETCH_ASSOC);
 
 	}
+
+	public function nomeIgreja()
+	{
+		$igreja = $this->pegar(1,  array('nome'), 'informacoes');
+		return $igreja[0]['nome'];
+	}
+
+	public function infIgreja()
+	{
+		$igreja = $this->pegar(1,  array('nome', 'email', 'telefone'), 'informacoes');
+		return $igreja[0];
+	}	
 }
 ?>

@@ -102,11 +102,17 @@ class Database extends PDO{
 
 		foreach ($imagens as $key => $campo){
 
-			if($dados[$campo] == "" || $dados[$campo] == null)
-				$this->excluirImagem($id, $campo, $nomesBanco[$campo], $dados);
-			else
+			/*
+				if($dados[$campo] == "" || $dados[$campo] == null)
+					$this->excluirImagem($id, $campo, $nomesBanco[$campo], $dados);
+				else
+					$this->novaImagem($id, $campo, $nomesBanco[$campo], $dados);
+			*/
+			if($dados[$campo] != "" && $dados[$campo] != null)
 				$this->novaImagem($id, $campo, $nomesBanco[$campo], $dados);
 		}
+
+		return $imagens;
 	}
 
 	private function excluirImagem($id, $campo, $nomeBanco, &$dados){
@@ -143,14 +149,17 @@ class Database extends PDO{
 				$this->antesDeEditar($id, $dados);
 
 			ksort($dados);
-			$this->atualizaImagens($id, $dados);
+			$camposImagens = $this->atualizaImagens($id, $dados);
 
 			if($tabela == null)
 				$tabela = str_replace("Model", "", get_class($this));
 
 			$alteracoes = NULL;
 			foreach ($dados as $key => $value) {
-				$alteracoes .= "$key = :$key,"; 
+				if(!in_array($key, $camposImagens))
+					$alteracoes .= "$key = :$key,";
+				elseif ($value != '')
+					$alteracoes .= "$key = :$key,";
 			}
 
 			$alteracoes = rtrim($alteracoes, ",");
@@ -162,7 +171,12 @@ class Database extends PDO{
 			$sth->bindValue(":id", $id);
 			mysql_connect(DB_HOST, DB_USER, DB_PASS);
 			foreach ($dados as $key => $value) {
-				$sth->bindValue(":$key", mysql_real_escape_string($value));
+				if(!in_array($key, $camposImagens))
+					$sth->bindValue(":$key", mysql_real_escape_string($value));
+				elseif ($value != '')
+				 	$sth->bindValue(":$key", mysql_real_escape_string($value));
+
+
 			}
 
 			$validar[1] = "Editado com Sucesso";
