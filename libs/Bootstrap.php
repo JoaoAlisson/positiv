@@ -4,10 +4,19 @@ class Bootstrap {
 	function __construct(){
 		
 		if($this->verificarLogado()){
-			$this->carregarPgs();
+			if(Sessao::pegar('ativo') == 0)
+				$this->bloqueado();
+			else
+				$this->carregarPgs();
 		}else{
 			$this->carregarTelaLogin();
 		}
+	}
+
+	private function bloqueado() {
+
+		require RAIZ . SEPARADOR . 'views' . SEPARADOR . 'bloqueado' . SEPARADOR . 'bloqueado.phtml';
+		exit();
 	}
 
 	public function verificarLogado(){

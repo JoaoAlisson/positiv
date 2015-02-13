@@ -37,17 +37,7 @@ class membrosModel extends Model{
 			$tabela = PREFIXO."consagracoes";
 			$sth = $this->prepare("UPDATE $tabela SET qtd = qtd + 1 WHERE id = $id");
 			$sth->execute();
-		}
-
-		$tabela = PREFIXO . 'informacoes';
-		$sth = $this->prepare("UPDATE $tabela SET qtd_membros = qtd_membros + 1 WHERE id = 1");
-		$sth->execute();		
-	}
-
-	public function depoisDeDeletar() {
-		$tabela = PREFIXO . 'informacoes';
-		$sth = $this->prepare("UPDATE $tabela SET qtd_membros = qtd_membros - 1 WHERE id = 1");
-		$sth->execute();			
+		}	
 	}
 
 	public function antesDeEditar($id, $dados) {

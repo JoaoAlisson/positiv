@@ -159,9 +159,8 @@ class BancoAdm {
 		$campo = explode(PREFIXO, $tabela);
 		$campo = $campo[1];
 		$funcao = "SELECT $campo INTO @qtd FROM " . PREFIXO . "qtds WHERE id = 1;
-				   IF (@qtd > $maximo) THEN
-				   SIGNAL SQLSTATE '12345'
-    			   SET MESSAGE_TEXT = 'erro';
+				   IF (@qtd >= $maximo) THEN
+				   SIGNAL SQLSTATE '12345';
     			   END IF;";
    		$nome = $tabela . 'Limite';
    		$this->criarTrigger($tabela, $nome, $funcao, 'BEFORE', 'INSERT');

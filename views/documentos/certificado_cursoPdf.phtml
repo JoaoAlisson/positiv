@@ -10,6 +10,7 @@
 	$pdf->AddPage();
 
 	$IGREJA = $dados['nomeIgreja'];
+	$IGREJA = Uteis::nomeIgreja($IGREJA);
 
 	$imagem = PASTA_SISTEMA . 'imagens' . SEPARADOR . 'moldura.jpg';
 	$pdf->Image($imagem, 0, 0, null, 21);
@@ -37,12 +38,12 @@
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 29);
 	$pdf->SetTextColor(80, 113, 128);
-	$pdf->Cell( null, 1.2, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
+	$pdf->Cell( null, 1.2, utf8_decode($IGREJA), 0, 0,'C');   
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
 
 	$cargaH = ($dados['cargaH'] != '') ? ', com a duração de '. $dados['cargaH'] .' horas-aula' : '';
-	$text = "<p>          Certificamos para os devidos fins, que <strong>". $dados['aluno'] ."</strong> concluiu o curso <strong>". $dados['curso'] ."</strong> realizado pela Igreja ". $IGREJA . $cargaH . ".";
+	$text = "<p>          Certificamos para os devidos fins, que <strong>". $dados['aluno'] ."</strong> concluiu o curso <strong>". $dados['curso'] ."</strong> realizado pela ". $IGREJA . $cargaH . ".";
 
 	$text = utf8_decode($text);
 	$pdf->Ln(-6.7);

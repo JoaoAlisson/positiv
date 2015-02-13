@@ -10,6 +10,7 @@
 	$pdf->AddPage();
 
 	$IGREJA = $dados['nomeIgreja'];
+	$IGREJA = Uteis::nomeIgreja($IGREJA);
 
 	$imagem = PASTA_SISTEMA . 'imagens' . SEPARADOR . 'moldura.jpg';
 	$pdf->Image($imagem, 0, 0, null, 21);
@@ -37,13 +38,13 @@
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 29);
 	$pdf->SetTextColor(80, 113, 128);
-	$pdf->Cell( null, 1.2, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
+	$pdf->Cell( null, 1.2, utf8_decode($IGREJA), 0, 0,'C');   
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
 
 	$consagrado = ($dados['sexo'] = 1) ? 'consagrado' : 'consagrada';
 
-	$text = "<p>          Certificamos que <strong>". $dados['nome'] ."</strong>, membro da Igreja ". $IGREJA . ", tendo provado sua vocação divina, conforme a Palavra de Deus, e sendo chamado ao ministério do Evangélio de Cristo, estando em comunhão com a Igreja, foi regularmente ". $consagrado ." à <strong>". $dados['consagracao'] . "</strong> para exercer as funções pertencentes ao mesmo ministério.";
+	$text = "<p>          Certificamos que <strong>". $dados['nome'] ."</strong>, membro da ". $IGREJA . ", tendo provado sua vocação divina, conforme a Palavra de Deus, e sendo chamado ao ministério do Evangélio de Cristo, estando em comunhão com a Igreja, foi regularmente ". $consagrado ." à <strong>". $dados['consagracao'] . "</strong> para exercer as funções pertencentes ao mesmo ministério.";
 	$text = utf8_decode($text);
 	$pdf->Ln(-6.7);
 	$pdf->WriteHTML($text);

@@ -14,7 +14,7 @@ class informacoesDc extends classePdo
 		$tbCidades = PREFIXO . 'cidades';
 
 		$camposAr = array('nome', 'logo', 'pastor', 'cnpj', 'bairro', 
-						  'rua', 'numero', 'telefone', 'email', 'site', 'face', 'qtd_membros');
+						  'rua', 'numero', 'telefone', 'email', 'site', 'face');
 
 		$campos = '';
 		foreach ($camposAr as $valor) 
@@ -33,8 +33,18 @@ class informacoesDc extends classePdo
 		$query = $this->prepare($this->sqlSelect());
 		$query->execute();
 		$retorno = $query->fetchAll(PDO::FETCH_ASSOC);
+		$retorno = $retorno[0];
+		$retorno['qtd_membros'] = $this->qtdMembros();
 
-		return $retorno[0];
+		return $retorno;
 	}
+
+	private function qtdMembros()
+	{
+		$query = $this->prepare('SELECT membros FROM ' . PREFIXO . 'qtds WHERE id = 1');
+		$query->execute();
+		$qtd = $query->fetchAll(PDO::FETCH_ASSOC);
+		return $qtd[0]['membros'];
+	}	
 }
 ?>

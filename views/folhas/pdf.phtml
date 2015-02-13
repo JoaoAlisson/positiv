@@ -52,7 +52,8 @@
 	$pdf->SetFont('arial','',9);
 
 	$cnpj = ($dados['cnpj'] != '') ? ' - CNPJ: ' . $dados['cnpj'] : '';
-	$igreja = 'Estabelecimento: IGREJA ' . strtoupper($dados['igreja']) . $cnpj;
+	$igreja = Uteis::nomeIgreja($dados['igreja']);
+	$igreja = 'Estabelecimento: ' . strtoupper($igreja) . $cnpj;
 	$igreja = utf8_decode($igreja); 
 
 	$mes = ($dados['folha']['mes'] < 10) ? "0".$dados['folha']['mes'] : $dados['folha']['mes'];

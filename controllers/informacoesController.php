@@ -16,14 +16,12 @@ class informacoes extends Controller
 						   'email'			  => 'Email',						   
 						   'site'			  => 'Site da Igreja',
 						   'face'			  => 'Facebook',
-						   'qtd_membros' 	  => 'Qtd de Membros',
-						   'qtd_usuarios' 	  => 'Qtd de Usuários',
 						   'total_patrimonio' => 'Total de Patrimônio',
 						   'saldo'			  => 'Saldo de Caixa');
 	
 	public $cor = "teal";
 
-	public $inalteraveis = array('qtd_membros','qtd_usuarios', 'total_patrimonio', 'saldo');
+	public $inalteraveis = array('total_patrimonio', 'saldo');
 
 	public $obrigatorios = array('nome');
 
@@ -37,11 +35,19 @@ class informacoes extends Controller
 
 		$retorno = $this->model->visualizar($id);
 		$retorno['nome'] = $this->nome;
+		$retorno[CONTROLLER]['qtd_membros'] = $this->model->qtdMembros();
 		$retorno['id'] = $id;
-		$campos =  $this->campos;
+		$campos;
+		foreach ($this->campos as $camp => $titulo) {
+			$campos[$camp] = $titulo;
+			if($camp == 'face')
+				$campos['qtd_membros'] = 'Qtd de Membros';
+		}
 
+		$tipos = $this->model->tipos;
+		$tipos['qtd_membros'] = 'inteiro';
 		$retorno['campos'] = $campos;
-		$retorno['tipos']  = $this->model->tipos;	
+		$retorno['tipos']  = $tipos;	
 		$retorno['cor']    = $this->informacoes['cor'];
 		$retorno['icone']  = $this->informacoes['icone'];
 		$retorno['dono']   = Sessao::pegar('dono');

@@ -336,17 +336,7 @@ class Model extends Database{
 	Esta função foi tirada do site: http://www.douglaspasqua.com/2013/09/17/removendo-acentuacao-no-php-utf-8/
  */
     public function removeAcentos($value){   
-        $from = "áàãâéêíóôõúüçÁÀÃÂÉÊÍÓÔÕÚÜÇ";
-        $to = "aaaaeeiooouucAAAAEEIOOOUUC";
-                 
-        $keys = array();
-        $values = array();
-        preg_match_all('/./u', $from, $keys);
-        preg_match_all('/./u', $to, $values);
-        $mapping = array_combine($keys[0], $values[0]);
-        $value = strtr($value, $mapping);
-                 
-        return $value;
+        return Uteis::removeAcentos($value);
     }	
 
 	public function validarTexto($texo, $campo = null){
@@ -498,8 +488,8 @@ class Model extends Database{
 		if(!isset($_FILES[$campo])){
 			$retorno = "Nenhum arquivo foi enviado!";
 		}else{
-			if($_FILES[$campo]["size"] >= 3000000){
-				$retorno = "A imagem deve ter no máximo 3 megas!";
+			if($_FILES[$campo]["size"] >= 1000000){
+				$retorno = "A imagem deve ter no máximo 1 mega!";
 			}else{
 				if(!$this->ehImagem($_FILES[$campo]["name"]))
 					$retorno = "O arquivo selecionado não é uma imagem!";

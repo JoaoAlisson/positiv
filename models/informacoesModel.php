@@ -14,9 +14,7 @@ class informacoesModel extends Model
 						  'telefone'		 => 'telefone',
 						  'email'			 => 'email',
 						  'site'			 => 'texto',
-						  'face'			 => 'texto',
-						  'qtd_membros' 	 => 'inteiro',
-						  'qtd_usuarios' 	 => 'inteiro',
+						  'face'			 => 'texto',	
 						  'total_patrimonio' => 'moeda',
 						  'saldo'			 => 'moeda',
 						  'plano'			 => 'inteiro',
@@ -30,5 +28,12 @@ class informacoesModel extends Model
 		return $novoNome;
 	}
 
+	public function qtdMembros()
+	{
+		$query = $this->prepare('SELECT membros FROM ' . PREFIXO . 'qtds WHERE id = 1');
+		$query->execute();
+		$qtd = $query->fetchAll(PDO::FETCH_ASSOC);
+		return $qtd[0]['membros'];
+	}
 }
 ?>

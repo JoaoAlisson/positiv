@@ -39,7 +39,8 @@ class Database extends PDO{
 				$this->antesDeCadastrar($dados);
 
 			ksort($dados);
-			$this->salvaImagens($dados);
+			$camposImags = $this->alteraNomesDasImagens($dados);
+			//$this->salvaImagens($dados, $camposImags);
 
 			if($tabela == null)
 				$tabela = str_replace("Model", "", get_class($this));
@@ -55,19 +56,44 @@ class Database extends PDO{
 				$sth->bindValue(":$key", mysql_real_escape_string($value));
 			}
 
-			$sth->execute();
+			$this->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+			try {
+				$sth->execute();
+			} catch(Exception $e) {
+				$validar[0] = 'erro';
+				if($sth->errorCode() == '12345')
+					$validar[1] = "Você atingiu o limite de " . CONTROLLER . " do seu plano.";
+				else
+					$validar[1] = "Erro no cadastro, os dados não foram salvos.";
+			}				
+		}
+
+		if($validar[0] == 'ok') {
+			$this->salvaImagens($dados, $camposImags);
 			if(method_exists($this, "depoisDeCadastrar"))
 				$this->depoisDeCadastrar($dados);
 		}
+
 		return $validar;
 	}
 
-	private function salvaImagens(&$dados){
+	private function alteraNomesDasImagens(&$dados) {
 		$imagens = $this->pegaCamposImagens($dados);
 		foreach ($imagens as $key => $campo) {
 			if($dados[$campo] != "" && $dados[$campo] != null){
 				$dados[$campo] = $this->novoNome($dados[$campo]);
+				//$this->uploadImg($campo, $dados[$campo]);
+			}
+		}
+
+		return $imagens;
+	}
+
+	private function salvaImagens(&$dados, &$imagens){
+		foreach ($imagens as $key => $campo) {
+			if($dados[$campo] != "" && $dados[$campo] != null){
+				//$dados[$campo] = $this->novoNome($dados[$campo]);
 				$this->uploadImg($campo, $dados[$campo]);
 			}
 		}
@@ -123,7 +149,7 @@ class Database extends PDO{
 	}
 
 	private function deletarImagem($imagem){
-		$caminho = RAIZ . SEPARADOR . "public" . SEPARADOR . "imagens" . SEPARADOR;
+		$caminho = PASTA_ARQUIVOS . "imagens" . SEPARADOR . CONTROLLER . SEPARADOR;
 		unlink($caminho.$imagem);
 	}
 
@@ -318,9 +344,12 @@ class Database extends PDO{
 
 		//pega a quantidade total
 		$quantidadeTodos;
-		
-		$sql = "SELECT COUNT(*) FROM $tabela $where";
-		//echo $sql;
+		$sql;
+		if(isset($this->limiteDeLinhas))
+			$sql = "SELECT " . CONTROLLER . " FROM " . PREFIXO . "qtds WHERE id = 1";
+		else
+			$sql = "SELECT COUNT(*) FROM $tabela $where";
+
 		$resposta =  $this->query($sql);
 		$quantidadeTodos = $resposta->fetchColumn();
 

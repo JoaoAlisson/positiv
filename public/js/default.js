@@ -366,7 +366,7 @@ function submeter(controller, action, id, mudarPg, idForm){
 		          			erroValidacaoAoSubmeter(campo, erros);
 		          		});
 
-						mensagemAlertaErro("Os dados não foram salvos!"); 
+						mensagemAlertaErro(retorno.mensagem); 
 						$('.small.modal.erro').modal('show');
 		            }
 					setTimeout(function(){
@@ -629,7 +629,7 @@ function verificarImagem(nnome){
 
 function tamanhoImagemOk(id){
 	tamanho = ($("#input_"+id))[0].files[0].size;
-	if(tamanho <= 3000000)
+	if(tamanho <= 1000000)
 		return true;
 	else
 		return false;
@@ -642,7 +642,7 @@ function imagem(id){
 		if(!verificarImagem(nnome))
 			retorno = "O arquivo selecionado não é uma imagem!";
 		if(!tamanhoImagemOk(id))
-			retorno = "A imagem pode ter no máximo 3 megas!";
+			retorno = "A imagem pode ter no máximo 1 mega!";
 	}
 	return retorno;
 }

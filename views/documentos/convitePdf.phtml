@@ -10,6 +10,7 @@
 	$pdf->AddPage();
 
 	$IGREJA = $dados['nomeIgreja'];
+	$IGREJA = Uteis::nomeIgreja($IGREJA);
 	
 	$imagem = PASTA_SISTEMA . 'imagens' . SEPARADOR . 'modelo convite.jpg';
 	$pdf->Image($imagem, 0, 0, null, 31);
@@ -38,7 +39,7 @@
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 22);
 	$pdf->SetTextColor(80, 113, 128);
-	$pdf->Cell( null, 0.5, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
+	$pdf->Cell( null, 0.5, utf8_decode($IGREJA), 0, 0,'C');   
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
 	

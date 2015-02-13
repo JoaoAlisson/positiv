@@ -8,7 +8,7 @@ class produtosModel extends Model{
 
 	public $obrigatorios = array("nome", "valor");
 
-	public $validacoes = array("valor"  => "validarValor");
+	public $validacoes   = array("valor"  => "validarValor");
 
 	public function validarValor($valor){
 		if($valor > 5)

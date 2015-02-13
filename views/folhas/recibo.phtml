@@ -67,7 +67,7 @@
 
 		$pdf->SetXY(1,2.05);
 		$pdf->SetFont('arial','',9);	
-		$igreja = "Igreja " . $dados['igreja'];
+		$igreja = Uteis::nomeIgreja($dados['igreja']);
 		$igreja = strtoupper($igreja);
 		$igreja = utf8_decode($igreja);
 		$pdf->Cell(8,1,$igreja,0,0,'L');

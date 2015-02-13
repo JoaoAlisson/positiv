@@ -183,7 +183,8 @@
 
 	$pdf->SetXY(1,0.9);
 	$pdf->SetFont('arial','B',12);
-	$nomeIgreja = 'Igreja ' . utf8_decode($_POST['IGREJA']);
+	$nomeIgreja = Uteis::nomeIgreja($_POST['IGREJA']);
+	$nomeIgreja = utf8_decode($nomeIgreja);
 	$l = ($_POST['TELEFONE'] == '' && $_POST['EMAIL'] == '') ? 2.5 : 1;
 	$pdf->Cell(0, $l,$nomeIgreja, 0, 1,'C');  
 

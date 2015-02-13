@@ -51,6 +51,7 @@
 	$pdf->AddPage();
 
 	$IGREJA = $dados['nome'];
+	$IGREJA = Uteis::nomeIgreja($IGREJA);
 	
 	$imagem = PASTA_ARQUIVOS . 'imagens' . SEPARADOR . 'informacoes' . SEPARADOR . 'logo.png';
 	if(file_exists($imagem))
@@ -73,7 +74,7 @@
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 18);
 	$pdf->SetTextColor(85, 85, 85);
-	$pdf->Cell( null, 0.5, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
+	$pdf->Cell( null, 0.5, utf8_decode($IGREJA), 0, 0,'C');   
 
 	$pdf->SetFont('CrimsonText-Regular','', 12);
 

@@ -9,7 +9,7 @@
 	$pdf->SetMargins(6, 6, 6);
 	$pdf->AddPage();
 
-	$IGREJA = $dados['nomeIgreja'];
+	$IGREJA = Uteis::nomeIgreja($dados['nomeIgreja']);
 
 	$imagem = PASTA_SISTEMA . 'imagens' . SEPARADOR . 'moldura.jpg';
 	$pdf->Image($imagem, 0, 0, null, 21);
@@ -36,7 +36,7 @@
 	
 	$pdf->SetFont('CrimsonText-SemiboldItalic','', 29);
 	$pdf->SetTextColor(80, 113, 128);
-	$pdf->Cell( null, 1.2, 'Igreja ' . utf8_decode($IGREJA), 0, 0,'C');   
+	$pdf->Cell( null, 1.2, utf8_decode($IGREJA), 0, 0,'C');   
 
 	$pdf->SetFont('CrimsonText-Regular','', 14);
 

@@ -34,5 +34,13 @@ class loginModel extends Model{
 
 		return $validar;
 	}	
+
+	public function ativo() {
+		$sql = 'SELECT ativo FROM ' . PREFIXO . 'informacoes WHERE id = 1';
+		$sth = $this->prepare($sql);
+		$sth->execute();
+		$retorna = $sth->fetchAll();
+		return $retorna[0]['ativo'];
+	}
 }
 ?>

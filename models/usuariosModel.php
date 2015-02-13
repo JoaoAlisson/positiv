@@ -42,17 +42,7 @@ class usuariosModel extends Model{
 		$id = $this->lastInsertId();
 		$this->addPermissoes($id);
 
-		$this->qtdUsuariosInfo(1);
 	}
-
-	public function qtdUsuariosInfo($soma = 1) {
-
-		$operacao = ($soma == 1) ? '+' : '-';
-
-		$tabela = PREFIXO . 'informacoes';
-		$sth = $this->prepare("UPDATE $tabela SET qtd_usuarios = qtd_usuarios $operacao 1 WHERE id = 1");
-		$sth->execute();			
-	}	
 
 	private function addPermissoes($id){
 		$campos = array("igreja", "usuarios", "funcionarios", "programacao", "patrimonio", "financas", "relatorios", "documentos");
@@ -80,8 +70,8 @@ class usuariosModel extends Model{
 		$stmt = $this->prepare("DELETE FROM $tabela WHERE id_usuario = '$id'");
 		$stmt->execute();
 
-		$this->qtdUsuariosInfo(2);
 	}
+
 	private function loginUnico($login, $id = 0){
 		$tabela = PREFIXO."usuarios";
 		mysql_connect(DB_HOST, DB_USER, DB_PASS);
