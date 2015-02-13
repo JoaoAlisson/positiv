@@ -1,5 +1,5 @@
 <?php
-class BancoAdm{
+class BancoAdm {
 
 	private $banco;
 	private $campo;
@@ -30,19 +30,19 @@ class BancoAdm{
 	public function criarBanco($nome = null){
 		$nome = ($nome) ? $nome : $this->banco;
 		if(!$this->existeBanco($nome)){
-			mysql_query("CREATE DATABASE ". $nome);
+			mysql_query("CREATE DATABASE " . $nome);
 			$this->selecionaBanco($nome);
 		}
 	}
 
 	public function criarTabela($nome){
 		if(!$this->existeTabela($nome))
-			mysql_query("CREATE TABLE ". $nome ."( id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id))");
+			mysql_query("CREATE TABLE " . $nome . "( id INT NOT NULL AUTO_INCREMENT, PRIMARY KEY(id))");
 	}
 
 	public function deletarTabela($nome){
 		if($this->existeTabela($nome))
-			mysql_query("DROP TABLE ". $nome);
+			mysql_query("DROP TABLE " . $nome);
 	}
 
 	public function deletarCampo($campo, $tabela){
@@ -84,7 +84,7 @@ class BancoAdm{
 	public function criarCidades(){
 		$tabela = PREFIXO."cidades";
 		if(!$this->existeTabela($tabela)){
-			include_once(RAIZ . SEPARADOR . "libs". SEPARADOR . "Cidades.php");
+			include_once(RAIZ . SEPARADOR . "libs" . SEPARADOR . "Cidades.php");
 			$cidades = new Cidades();
 			$cidades->criarCidades();
 		}
@@ -118,8 +118,8 @@ class BancoAdm{
 		$retorna = mysql_list_tables($this->banco);
 		$tabelas = array();
 
-		$tabelaUsuario = PREFIXO."usuarios";
-		$tabelaUsuariostipos = PREFIXO."usuariostipos";
+		$tabelaUsuario = PREFIXO . "usuarios";
+		$tabelaUsuariostipos = PREFIXO . "usuariostipos";
 		while($tabela = mysql_fetch_array($retorna))
 			if($tabela[0] != $tabelaUsuario && $tabela[0] != $tabelaUsuariostipos)
 				array_push($tabelas, $tabela[0]);
@@ -135,6 +135,65 @@ class BancoAdm{
 			array_push($campos, $campo[0]);		
 
 		return $campos;
+	}
+
+	public function triggerIncremento($tabela) {
+		$this->incremtDecremt('+', $tabela);
+	}
+
+	public function triggerDecremento($tabela) {
+		$this->incremtDecremt('-', $tabela);
+	}	
+
+	private function incremtDecremt($sinal, $tabela) {
+		$campo = explode(PREFIXO, $tabela);
+		$campo = $campo[1];		
+		$funcao = 'UPDATE ' . PREFIXO . "qtds SET $campo = $campo $sinal 1 WHERE id = 1;";
+		$nome = ($sinal == '+') ? $tabela . 'Inc' : $tabela . 'Dec';
+		$evento = ($sinal == '+') ? 'INSERT' : 'DELETE';
+		$this->criarTrigger($tabela, $nome, $funcao, 'AFTER', $evento);
+	}
+
+	public function triggerLimite($tabela, $maximo) {
+		
+		$campo = explode(PREFIXO, $tabela);
+		$campo = $campo[1];
+		$funcao = "SELECT $campo INTO @qtd FROM " . PREFIXO . "qtds WHERE id = 1;
+				   IF (@qtd > $maximo) THEN
+				   SIGNAL SQLSTATE '12345'
+    			   SET MESSAGE_TEXT = 'erro';
+    			   END IF;";
+   		$nome = $tabela . 'Limite';
+   		$this->criarTrigger($tabela, $nome, $funcao, 'BEFORE', 'INSERT');
+	}
+
+	private function criarTrigger($tabela, $nome, $funcao, $momento, $evento) {
+
+		$this->deletarTrigger($nome);
+
+		$sql = "CREATE TRIGGER $nome
+				$momento $evento
+				ON $tabela
+				FOR EACH ROW
+				BEGIN
+					$funcao
+				END";
+
+		mysql_query($sql);		
+	}
+
+	public function deletarTrigger($nome) {
+		mysql_query("DROP TRIGGER IF EXISTS  `$nome`;");
+	}
+
+	public function deletarTirgsTabela($tabela) {
+		$this->deletarTrigger($tabela . 'Inc');
+		$this->deletarTrigger($tabela . 'Dec');
+		$this->deletarTrigger($tabela . 'Limite');
+	}
+
+	public function realizaQuery($sql) {
+		mysql_query($sql);
 	}
 }
 ?>

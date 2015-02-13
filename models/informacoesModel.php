@@ -18,7 +18,9 @@ class informacoesModel extends Model
 						  'qtd_membros' 	 => 'inteiro',
 						  'qtd_usuarios' 	 => 'inteiro',
 						  'total_patrimonio' => 'moeda',
-						  'saldo'			 => 'moeda');
+						  'saldo'			 => 'moeda',
+						  'plano'			 => 'inteiro',
+						  'ativo'			 => 'inteiro');
 
 	public function novoNome($nomeImagem)
 	{

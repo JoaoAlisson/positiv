@@ -7,6 +7,7 @@ class AtualizarBanco {
 	private $tabelasDeletar;
 	private $tabelasAlterar;
 	private $relacionamentos = array();
+	private $limites = array();
 
 	function __construct(){
 		$this->bancoAdm = new BancoAdm();
@@ -20,8 +21,71 @@ class AtualizarBanco {
 		$this->criarTabelas();
 		$this->editarTabelas();
 
-		$this->delEstadosCidades();
+		if(!empty($this->limites)) {
+			$this->delEstadosCidades();
+			$this->criarTabelaQtds();
+			$this->criaTodosTriggers();
+			$this->atualizarQtds();
+		} else 
+			$this->bancoAdm->deletarTabela(PREFIXO . 'qtds');
+	}
 
+	private function atualizarQtds() {
+
+		$campos = '';
+		foreach ($this->limites as $tabela => $limite) {
+			$tabela = explode(PREFIXO, $tabela);
+			$tabela = $tabela[1];
+			$qtd  = "(SELECT COUNT(*) FROM " . PREFIXO . "$tabela)";
+			$campos .= ($campos == '') ? "$tabela = $qtd" : ", $tabela = $qtd";
+		}		
+		$sql = "UPDATE " . PREFIXO . "qtds SET $campos WHERE id = 1; ";
+
+		$this->bancoAdm->realizaQuery($sql);
+	}
+
+	private function criaTodosTriggers() {
+		foreach ($this->limites as $model) {
+			$this->criaTriggers($model);
+		}
+	}
+
+	private function criaTriggers($model) {
+		$this->bancoAdm->triggerLimite($model['tabela'], $model['limite']);
+		$this->bancoAdm->triggerIncremento($model['tabela']);
+		$this->bancoAdm->triggerDecremento($model['tabela']);
+	}
+
+	private function criarTabelaQtds() {
+		$tabela = PREFIXO . 'qtds';
+		$naumExistia = false;
+		if(!$this->bancoAdm->existeTabela($tabela)) {
+			$this->bancoAdm->criarTabela($tabela);
+			$naumExistia = true;
+		}
+
+		if(!DESENVOLVIMENTO_SEGURO){
+			$todosOsCampos = $this->bancoAdm->campos($tabela);
+			foreach ($todosOsCampos as $key => $campo)
+				if(!isset($this->limites[PREFIXO . $campo]) && $campo != "id")
+					$this->bancoAdm->deletarCampo($campo, $tabela);
+		}		
+
+		foreach ($this->limites as $limite) {
+
+			$campo = explode(PREFIXO, $limite['tabela']);
+			$campo = $campo[1];
+			$campoQualquer = $campo;
+			if($this->bancoAdm->existeCampo($campo, $tabela))
+				$this->bancoAdm->alterarCampo($campo, $tabela, 'inteiro');
+			else
+				$this->bancoAdm->criarCampo($campo, $tabela, 'inteiro');
+		}	
+
+		if($naumExistia) {
+			$sql = "INSERT INTO " . PREFIXO . "qtds ($campoQualquer) VALUES ('1')";
+			$this->bancoAdm->realizaQuery($sql);
+		}	
 	}
 
 	private function delEstadosCidades(){
@@ -42,7 +106,7 @@ class AtualizarBanco {
 	private function editarTabela($tabela){
 		$modelClass = explode(PREFIXO, $tabela);
 		$modelClass = $modelClass[1]."Model";
-		include_once RAIZ . SEPARADOR . "models". SEPARADOR . $modelClass . ".php";
+		include_once RAIZ . SEPARADOR . "models" . SEPARADOR . $modelClass . ".php";
 		$modelClass = $modelClass;
 
 		$model = new $modelClass();
@@ -50,6 +114,11 @@ class AtualizarBanco {
 		$camposModel = array();
 		if(isset($model->tipos))
 			$camposModel = $model->tipos;
+
+		if(isset($model->limiteDeLinhas))
+			$this->limites[$tabela] = array('tabela' => $tabela, 'limite' => $model->limiteDeLinhas);
+		else
+			$this->bancoAdm->deletarTirgsTabela($tabela);
 
 		if(!DESENVOLVIMENTO_SEGURO){
 			$todosOsCampos = $this->bancoAdm->campos($tabela);
@@ -86,18 +155,21 @@ class AtualizarBanco {
 		if(isset($model->tipos))
 			$campos = $model->tipos;
 
+		if(isset($model->limiteDeLinhas))
+			$this->limites[$tabela] = array('tabela' => $tabela, 'limite' => $model->limiteDeLinhas);
+
 		foreach ($campos as $campo => $tipo)
 			$this->bancoAdm->criarCampo($campo, $tabela, $tipo);
 	}
 
-	private function deletaTabelas(){
+	private function deletaTabelas() {
 		foreach ($this->tabelasDeletar as $key => $tabela)
 			$this->bancoAdm->deletarTabela($tabela);
 	}
 
-	private function separaTabelas(){
+	private function separaTabelas() {
 		$tabelas = $this->bancoAdm->tabelas();
-		$models = $this->pegarModels();
+		$models  = $this->pegarModels();
 
 		$estados = PREFIXO."estados";
 		if(in_array($estados, $tabelas))
@@ -107,7 +179,11 @@ class AtualizarBanco {
 		if(in_array($cidades, $tabelas))
 			unset($tabelas[array_search($cidades, $tabelas)]);
 
-		$this->tabelasCriar = array_diff($models, $tabelas);
+		$limite = PREFIXO."qtds";
+		if(in_array($limite, $tabelas))
+			unset($tabelas[array_search($limite, $tabelas)]);		
+
+		$this->tabelasCriar   = array_diff($models, $tabelas);
 		$this->tabelasDeletar = array_diff($tabelas, $models);
 		$this->tabelasAlterar = array_intersect($models, $tabelas);
 	}

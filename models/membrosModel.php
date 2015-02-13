@@ -29,6 +29,8 @@ class membrosModel extends Model{
 
 	public $obrigatorios = array("nome", "sexo");
 
+	public $limiteDeLinhas = 10;
+
 	public function depoisDeCadastrar($dados) {
 		$id = $dados['consagracao'];
 		if($id != "" && $id != "0"){
