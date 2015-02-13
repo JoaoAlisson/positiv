@@ -7,5 +7,6 @@ class consagracoesModel extends Model{
 
 	public $obrigatorios = array("nome");
 
+	public $limiteDeLinhas = 1000;
 }
 ?>

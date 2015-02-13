@@ -10,5 +10,6 @@ class programacaoModel extends Model{
 
 	public $obrigatorios = array("nome");
 
+	public $limiteDeLinhas = 50000;
 }
 ?>

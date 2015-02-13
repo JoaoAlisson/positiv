@@ -8,6 +8,8 @@ class folhasModel extends Model{
 
 	private $tabelaInss = "";
 
+	public $limiteDeLinhas = 120;
+
 	public function retornaQuantidade($ano, $mes){
 		$tabela = PREFIXO."folhas";
 		$ano = (int)$ano;

@@ -17,6 +17,8 @@ class patrimonioModel extends Model{
 
 	public $obrigatorios = array("nome");
 
+	public $limiteDeLinhas = 20000;
+
 	public function antesDeCadastrar(&$dados){
 		$valor = ($dados['valor'] != "") ? $dados['valor'] : 0;
 		$qtd = ($dados['quantidade'] != "") ? $dados['quantidade'] : 0;

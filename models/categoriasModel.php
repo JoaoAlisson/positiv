@@ -5,5 +5,6 @@ class categoriasModel extends Model{
 
 	public $obrigatorios = array("nome");
 
+	public $limiteDeLinhas = 10000;
 }
 ?>

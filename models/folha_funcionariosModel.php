@@ -10,4 +10,6 @@ class folha_funcionariosModel extends Model{
 						   "inss"   	=> "moeda",
 						   "admissao"	=> "data",
 						   "cargo" 		=> "texto");
+
+	public $limiteDeLinhas = 200000;
 }

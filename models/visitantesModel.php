@@ -24,7 +24,7 @@ class visitantesModel extends Model{
 
 	public $obrigatorios = array("nome", "sexo");
 
-	public $limiteDeLinhas = 12;
+	public $limiteDeLinhas = 10000;
 
 }
 ?>

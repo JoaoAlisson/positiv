@@ -23,6 +23,8 @@ class func_nao_membroModel extends Model{
 
 	public $obrigatorios = array("nome", "sexo");
 
+	public $limiteDeLinhas = 1000;
+
 	public function depoisDeCadastrar($dados){
 		
 		$id = $this->lastInsertId();

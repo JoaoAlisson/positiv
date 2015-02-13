@@ -15,6 +15,8 @@ class funcionariosModel extends Model{
 
 	public $obrigatorios = array("nome", "cargo", "situacao");
 
+	public $limiteDeLinhas = 3000;
+
 	public function depoisDeCadastrar($dados){
 		$id = $dados['cargo'];
 		if($id != "" && $id != "0"){

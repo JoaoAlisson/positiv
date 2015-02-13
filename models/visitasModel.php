@@ -18,4 +18,6 @@ class visitasModel extends Model{
 		$resultado = $consulta->fetchAll(PDO::FETCH_ASSOC);
 		return $resultado[0];
 	}	
+
+	public $limiteDeLinhas = 50000;
 }?>

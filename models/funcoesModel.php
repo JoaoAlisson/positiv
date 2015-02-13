@@ -7,5 +7,6 @@ class funcoesModel extends Model{
 
 	public $obrigatorios = array("nome");
 
+	public $limiteDeLinhas = 5000;
 }
 ?>

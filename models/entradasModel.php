@@ -10,6 +10,8 @@ class entradasModel extends Model{
 
 	public $obrigatorios = array("nome", "categoria", "vencimento", "pago");
 
+	public $limiteDeLinhas = 100000;
+
 	public function antesDeCadastrar(&$dados){
 		$valor = ($dados['valor'] != "") ? $dados['valor'] : 0;
 		if($dados['pago'] == "Efetuado")

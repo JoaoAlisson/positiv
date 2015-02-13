@@ -9,6 +9,8 @@ class ministeriosModel extends Model{
 
 	public $obrigatorios = array("nome");
 
+	public $limiteDeLinhas = 1000;
+
 
 	public function antesDeDeletar($id){
 

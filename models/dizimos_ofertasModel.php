@@ -10,6 +10,8 @@ class dizimos_ofertasModel extends Model{
 
 	public $obrigatorios = array("tipo", "data");
 
+	public $limiteDeLinhas = 100000;
+
 	public function depoisDeCadastrar($dados){
 		if($dados['valor'] > 0)
 			$this->alteraTotal($dados['valor'], "+");

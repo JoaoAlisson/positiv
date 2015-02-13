@@ -8,6 +8,8 @@ class integrantesModel extends Model{
 
 	public $validacoes = array("membro"  => "validarMembro");
 
+	public $limiteDeLinhas = 100000;
+
 	public function validarMembro($valor){
 		$valor = (int)$valor;
 		$idMinisterio = $this->dados['ministerio'];
