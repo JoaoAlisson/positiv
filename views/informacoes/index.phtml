@@ -49,7 +49,7 @@
 						<a class="ui left <?php echo $dados['cor']; ?> corner label">
    							<i class="photo icon"></i>
  						</a>
-						<img style="max-height:115px;" src="<?php echo URL.CONTROLLER."/imagens/img:".$dados[CONTROLLER][$campo];?>">
+						<img style="max-height:115px;" src="<?php echo Uteis::url().CONTROLLER."/imagens/img:".$dados[CONTROLLER][$campo];?>">
 					</div>
 				<?php unset($dados['campos'][$campo]); 
 				}?>

@@ -21,17 +21,18 @@ class login extends Controller {
 					$tipo = $this->model->pegaTipoUsuario($retorno[1]['id']);
 
 					Sessao::iniciar();
-					Sessao::inserir("logado", true);
-					Sessao::inserir("tipo", $tipo);
-					Sessao::inserir("usuario", $retorno[1]["nome"]);
-					Sessao::inserir("id", $retorno[1]["id"]);
-					Sessao::inserir("dono", $retorno[1]["dono"]);
-					Sessao::inserir("ativo", $this->model->ativo());
+					Sessao::inserir('logado', true);
+					Sessao::inserir('tipo', $tipo);
+					Sessao::inserir('usuario', $retorno[1]['nome']);
+					Sessao::inserir('id', $retorno[1]['id']);
+					Sessao::inserir('dono', $retorno[1]['dono']);
+					Sessao::inserir('ativo', $this->model->ativo());
+					Sessao::inserir('sis_user', $this->nomeUser());
 					header('location: ' . $url);
 				} else
 					$this->dados($retorno);
 					//$this->renderizar("login/index");
-	
+
 				header('location: ' . $url);
 			}
 		}
@@ -40,6 +41,10 @@ class login extends Controller {
 	public function deslogar(){
 		Sessao::destruir();
 		header('location: ' . URL);
+	}
+
+	private function nomeUser() {
+		return 'agapesobral';
 	}
 }
 ?> 

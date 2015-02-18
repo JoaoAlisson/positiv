@@ -13,6 +13,8 @@ class Bootstrap {
 		}
 	}
 
+	private $urlTratada = array();
+
 	private function bloqueado() {
 
 		require RAIZ . SEPARADOR . 'views' . SEPARADOR . 'bloqueado' . SEPARADOR . 'bloqueado.phtml';
@@ -21,8 +23,14 @@ class Bootstrap {
 
 	public function verificarLogado(){
 		Sessao::iniciar();
-		$logado = Sessao::pegar("logado");
-		return $logado;
+		$this->trataUrl();
+		$logado   = Sessao::pegar('logado');
+		$sis_user = (Sessao::pegar('sis_user') == $this->urlTratada['user_sys']) ? true : false;
+
+		if($logado && $sis_user)
+			return true;
+		else
+			return false;
 	}
 
 	public function carregarTelaLogin(){
@@ -34,9 +42,9 @@ class Bootstrap {
 		$controller->index();
 		$controller->view->adicionarDados($controller->getDados());
 		$controller->view->render("login", "login". SEPARADOR ."index", false);			
-	}	
+	}
 
-	public function carregarPgs(){
+	private function trataUrl() {
 		$url = isset($_GET['url']) ? $_GET['url'] : null;
 		$url = rtrim($url, '/');
 		$url =  explode('/', $url);
@@ -45,13 +53,37 @@ class Bootstrap {
 		if(isset($url[2])){
 			$gets = $url;
 			unset($gets[0], $gets[1]);
-			
-			$variaveisGet = array();
-			foreach ($gets as $nome => $valor) {
+		}
+
+		$retorna['user_sys']      = isset($url[0]) ? $url[0] : '';
+		$retorna['contAction'][0] = isset($url[1]) ? $url[1] : null;
+		$retorna['contAction'][1] = isset($url[2]) ? $url[2] : null;
+		$retorna['gets']          = array();
+
+		Uteis::setSis_user($retorna['user_sys']);
+		if(isset($url[3])){
+			$retorna['gets'] = $url;
+			unset($retorna['gets'][0], $retorna['gets'][1], $retorna['gets'][2]);
+		}
+		
+		$this->urlTratada = $retorna;
+	}
+
+	public function carregarPgs(){
+
+		if(empty($this->urlTratada))
+			$this->trataUrl();
+
+		$url = $this->urlTratada['contAction'];
+
+		//criando as variaveil $_GET[].
+		$variaveisGet = array();
+		if(!empty($this->urlTratada['gets'])){			
+			foreach ($this->urlTratada['gets'] as $nome => $valor) {
 				$vr = explode(":", $valor);
 				$variaveisGet[$vr[0]] = $vr[1];
 			}	
-		}		
+		}
 
 		if(empty($url[0])){
 			require "controllers/indexController.php";

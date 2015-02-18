@@ -116,7 +116,7 @@ class HTML{
 		if($normal)
 			$invertido = "";
 
-		echo "<a class=\"$cor $active item menuprin esconder\" id=\"menu_$nome\" href=\"".URL."$controller$view\" onClick=\"navegacao('$controller','$view', '$nome')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
+		echo "<a class=\"$cor $active item menuprin esconder\" id=\"menu_$nome\" href=\"".Uteis::url()."$controller$view\" onClick=\"navegacao('$controller','$view', '$nome')\" style=\"width:100px; padding-left:0px; padding-right:0px;\">
   				<i class=\"circular $cor $invertido big $icone icon\"></i>$nome
 			  </a>";
 	}
@@ -138,7 +138,7 @@ class HTML{
 			$active = "active";
 		$imgIcone = ($icone != "") ? "<i class=\"$icone icon\"></i>" : "";
 		$controller .= ($controller != "") ? "/" : "";
-		echo "<a class=\"item submenu $active\" href=\"".URL."$controller$view\" id=\"subMenu_$nome\" style=\"min-width:120px;\" onClick=\"navegacaoSub('$controller','$view', '$nome'); evento(event);\">$imgIcone$nome</a>";
+		echo "<a class=\"item submenu $active\" href=\"".Uteis::url()."$controller$view\" id=\"subMenu_$nome\" style=\"min-width:120px;\" onClick=\"navegacaoSub('$controller','$view', '$nome'); evento(event);\">$imgIcone$nome</a>";
 	}
 
 //<<--------------- CAMPOS DE INPUT -------------------->>

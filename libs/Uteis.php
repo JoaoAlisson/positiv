@@ -2,6 +2,8 @@
 
 class Uteis
 {
+	public static $sis_user; 
+
 	public static function nomeIgreja($nome)
 	{	
 		$lower = Uteis::removeAcentos($nome);
@@ -26,6 +28,16 @@ class Uteis
         $texto = strtr($texto, $mapping);
                  
         return $texto;		
+	}
+
+	public static function setSis_user($valor) 
+	{
+		Uteis::$sis_user = $valor;
+	}
+
+	public static function url() 
+	{
+		return URL . Uteis::$sis_user . '/';
 	}
 }
 ?>

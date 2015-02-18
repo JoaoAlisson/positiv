@@ -117,7 +117,7 @@ class ControllerCRUD extends Controller{
 
 	public function nomeController(){
 		if($this->getAcao() == "nomeController" || $this->getAcao() == "nomecontroller")
-			header('location: '. URL);
+			header('location: '. Uteis::url());
 		else		
 			return get_class($this);
 	}
@@ -129,7 +129,7 @@ class ControllerCRUD extends Controller{
 					require RAIZ . SEPARADOR . "views" . SEPARADOR . "erro" . SEPARADOR ."negado.phtml";
 					exit();
 				}else{ 
-					header('location: '.URL.'erro/negado');
+					header('location: '.Uteis::url().'erro/negado');
 				}
 			}
 
@@ -184,7 +184,7 @@ class ControllerCRUD extends Controller{
 			$id = $_POST['id'];
 
 		if($id == "")
-			header('location: '. URL . $this->nomeController());
+			header('location: '. Uteis::url() . $this->nomeController());
 
 
 		if($this->permissao == "ver" || $this->permissao == "nenhuma"){
@@ -192,7 +192,7 @@ class ControllerCRUD extends Controller{
 				require RAIZ . SEPARADOR . "views" . SEPARADOR . "erro" . SEPARADOR ."negado.phtml";
 				exit();
 			}else{ 
-				header('location: '.URL.'erro/negado');
+				header('location: '.Uteis::url().'erro/negado');
 			}
 		}
 				
@@ -243,7 +243,7 @@ class ControllerCRUD extends Controller{
 			$id = $_POST['idSet'];
 
 		if($id == "")
-			header('location: '. URL . $this->nomeController());
+			header('location: '. Uteis::url() . $this->nomeController());
 
 		$retorno = $this->model->visualizar($id);
 		$retorno['nome'] = $this->nome;
@@ -275,7 +275,7 @@ class ControllerCRUD extends Controller{
 
 	public function filtro($acao){
 		if($this->getAcao() == "filtro"){
-			header('location: '. URL);
+			header('location: '. Uteis::url());
 		}else{
 
 			//$this->getAcao() = $acao;
@@ -284,7 +284,7 @@ class ControllerCRUD extends Controller{
 
 	public function buscas($acao){
 		if($this->getAcao() == "buscas"){
-			header('location: '. URL);
+			header('location: '. Uteis::url());
 		}else{
 			//$this->getAcao() = $acao;
 		}
@@ -292,7 +292,7 @@ class ControllerCRUD extends Controller{
 
 	public function qtdPorPg($qtd){
 		if($this->getAcao() == "qtdPorPg"){
-			header('location: '. URL);
+			header('location: '. Uteis::url());
 		}else{
 			$this->valQtdPorPg = $qtd;
 		}
@@ -300,7 +300,7 @@ class ControllerCRUD extends Controller{
 	
 	public function tipoIndex($tipo){
 		if($this->getAcao() == "tipoIndex"){
-			header('location: '. URL);
+			header('location: '. Uteis::url());
 		}else{
 			$this->valTipoIndex = $tipo;
 		}
@@ -308,7 +308,7 @@ class ControllerCRUD extends Controller{
 
 	public function nome($valor){
 		if($this->getAcao() == "nome"){
-			header('location: '. URL);
+			header('location: '. Uteis::url());
 		}else{
 			$this->valNome = $valor;
 		}
