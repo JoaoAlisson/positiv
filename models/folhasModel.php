@@ -1,17 +1,17 @@
 <?php 
 class folhasModel extends Model{
  
-	public $tipos = array( "mes"    => "inteiro",
-						   "ano"	=> "inteiro",
-						   "total"  => "moeda",
-						   "contab" => "inteiro");
+	public $tipos = array('mes'    => 'inteiro',
+						  'ano'	   => 'inteiro',
+						  'total'  => 'moeda',
+						  'contab' => 'inteiro');
 
-	private $tabelaInss = "";
+	private $tabelaInss = '';
 
 	public $limiteDeLinhas = 120;
 
 	public function retornaQuantidade($ano, $mes){
-		$tabela = PREFIXO."folhas";
+		$tabela = PREFIXO . 'folhas';
 		$ano = (int)$ano;
 		$mes = (int)$mes;
 
@@ -22,6 +22,7 @@ class folhasModel extends Model{
 	}
 
 	public function pegarTabelaInss(){
+/*
 		$tabela = PREFIXO."inss";
 		
 		$sql = "SELECT id, inicio, fim, taxa FROM $tabela";
@@ -31,10 +32,14 @@ class folhasModel extends Model{
 		$resultado = $query->fetchAll(PDO::FETCH_ASSOC);
 
 		return $resultado;			
+*/	
+		$tabelaInss = new Inss();
+
+		return $tabelaInss->pegarInss();
 	}
 
 	public function pegarInformacoes() {
-		$tabela = PREFIXO . "informacoes";
+		$tabela = PREFIXO . 'informacoes';
 		
 		$sql = "SELECT nome, cnpj FROM $tabela WHERE id = 1";
 
@@ -46,8 +51,8 @@ class folhasModel extends Model{
 	}
 
 	public function pegarTodosOsEventos($idFolha, $idFunc){
-		$tabela = PREFIXO."descontos_abonos";
-		$where = "";
+		$tabela = PREFIXO . 'descontos_abonos';
+		$where = '';
 		if($idFunc != 0)
 			$where = " AND (funcionario = '$idFunc' OR todos = '1')";
 		$sql = "SELECT * FROM $tabela WHERE folha = '$idFolha'".$where;
@@ -60,12 +65,12 @@ class folhasModel extends Model{
 	}
 
 	public function funcsDaFolha($idFolha, $campos = ""){
-		$tabela = PREFIXO."folha_funcionarios";
+		$tabela = PREFIXO . 'folha_funcionarios';
 		$idFolha = (int)$idFolha;
-		if($campos == "")
-			$campos = "id, nome";
+		if($campos == '')
+			$campos = 'id, nome';
 		else
-			$campos = implode(", ", $campos);
+			$campos = implode(', ', $campos);
 
 		$sql = "SELECT $campos FROM $tabela WHERE folha = $idFolha ORDER BY nome";
 
@@ -76,7 +81,7 @@ class folhasModel extends Model{
 
 	public function pegarFuncionario($id){
 		$id = (int)$id;
-		$tabela = PREFIXO."folha_funcionarios";
+		$tabela = PREFIXO . 'folha_funcionarios';
 		$sql = "SELECT * FROM $tabela WHERE id = $id";
 
 		$query = $this->prepare($sql);
@@ -85,10 +90,10 @@ class folhasModel extends Model{
 	}
 
 	public function todos(){
-		$tbMembro 		= PREFIXO."membros";
-		$tbFcun   		= PREFIXO."func_nao_membro";
-		$tbFuncionario 	= PREFIXO."funcionarios";
-		$tbCargo		= PREFIXO."cargos";
+		$tbMembro 		= PREFIXO . 'membros';
+		$tbFcun   		= PREFIXO . 'func_nao_membro';
+		$tbFuncionario 	= PREFIXO . 'funcionarios';
+		$tbCargo		= PREFIXO . 'cargos';
 
 		$campos = "(CASE 
 						WHEN (`$tbFuncionario`.`membro` > 0)
@@ -152,22 +157,25 @@ class folhasModel extends Model{
 
 		$idFolha = (int)$idFolha;
 
-		$tabela = PREFIXO."folha_funcionarios";
-		$sql = "INSERT INTO $tabela (folha, funci, nome, cpf, rg, salario, inss, cargo, admissao) VALUES";
+		$tabela = PREFIXO . 'folha_funcionarios';
+		$sql = "INSERT INTO $tabela (taxa, folha, funci, nome, cpf, rg, salario, inss, cargo, admissao) VALUES";
 		$inssTotal = (double)0;
 		$salarioTotal = (double)0;
+		
 		foreach ($todosFuncionarios as $key => $campos) {
 			$inss = 0;
-			if($campos['inss'] == 1)
+			$taxa = '';
+			if($campos['inss'] == 1) {
 				$inss = $this->calculaInss($campos['salario']);
-
+				$taxa = $this->retornaTaxa($campos['salario']);
+			}
 			$inssTotal = $inssTotal + $inss;
 			$salarioTotal = $salarioTotal + $campos['salario'];
 
 			if($key == 0)
-				$sql .= " ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
+				$sql .= " ('$taxa', '$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
 			else
-				$sql .= ", ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
+				$sql .= ", ('$taxa', '$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
 		}
 
 		$sth = $this->prepare($sql);
@@ -179,17 +187,17 @@ class folhasModel extends Model{
 	}
 
 	private function setTotalFolha($id, $total){
-		$tabela = PREFIXO."folhas";
+		$tabela = PREFIXO . 'folhas';
 		$id = (int)$id;
 		$sth = $this->prepare("UPDATE $tabela SET total = $total WHERE id = $id");
 		$sth->execute();
 	}
 
-	public function eventosFuncionario($idFuncionario = "", $idFolha){
-		$tabela = PREFIXO . "descontos_abonos";
+	public function eventosFuncionario($idFuncionario = '', $idFolha){
+		$tabela = PREFIXO . 'descontos_abonos';
 		$idFolha = (int)$idFolha;
 		$idFuncionario = (int)$idFuncionario;
-		$funcionario = ($idFuncionario != "") ? "(funcionario = '$idFuncionario') OR" : "";
+		$funcionario = ($idFuncionario != '') ? "(funcionario = '$idFuncionario') OR" : "";
 		$sql = "SELECT * FROM $tabela WHERE $funcionario (folha = '$idFolha' AND todos = '1') ORDER BY id DESC"; 
 		$query = $this->prepare($sql);
 		$query->execute();
@@ -200,7 +208,7 @@ class folhasModel extends Model{
 
 	public function qtdFunctionariosFolha($idFolha){
 
-		$tabela = PREFIXO."folha_funcionarios";
+		$tabela = PREFIXO . 'folha_funcionarios';
 		$idFolha = (int)$idFolha;	
 
 		$sql = "SELECT COUNT(*) FROM $tabela WHERE folha = $idFolha";
@@ -223,15 +231,15 @@ class folhasModel extends Model{
 		$id = (int)$id;
 		$valor = (double)$valor;
 
-		$sinal = ($soma == 'soma') ? "+" : "-";
-		$tabela = PREFIXO."folhas";
+		$sinal = ($soma == 'soma') ? '+' : '-';
+		$tabela = PREFIXO . 'folhas';
 		$sth = $this->prepare("UPDATE $tabela SET total = total $sinal $valor WHERE id = $id");
 		$sth->execute();
 	}
 
 	private function trataValor($valor){
-		$valor = str_replace(".", "", $valor);
-		$valor = str_replace(",", ".", $valor);
+		$valor = str_replace('.', '', $valor);
+		$valor = str_replace(',', '.', $valor);
 
 		return $valor;
 	}
@@ -242,37 +250,40 @@ class folhasModel extends Model{
 		if($campos['inss'] == 1)
 			$inss = $this->calculaInss($campos['salario']);
 
-		$tabela = PREFIXO."folha_funcionarios";
+		$tabela = PREFIXO . 'folha_funcionarios';
 		$sth = $this->prepare("UPDATE $tabela SET nome = '".$campos['nome']."', cpf = '".$campos['cpf']."', rg = '".$campos['rg']."', cargo = '".$campos['cargo']."', inss = '$inss', admissao = '".$campos['admissao']."' WHERE id = $id");
 		$sth->execute();
 	}
 
 	public function deletaFuncFolha($id){
 
-		$tabela = PREFIXO.'folha_funcionarios';			
+		$tabela = PREFIXO . 'folha_funcionarios';			
 		$stmt = $this->prepare("DELETE FROM $tabela WHERE id = '$id'");
 		$stmt->execute();
 
-		$tabela = PREFIXO.'descontos_abonos';			
+		$tabela = PREFIXO . 'descontos_abonos';			
 		$stmt = $this->prepare("DELETE FROM $tabela WHERE funcionario = '$id'");
 		$stmt->execute();					
 	}	
 
 	public function criarNovosFuncionarios($idFolha, $funcionarios){
 
-		$tabela = PREFIXO."folha_funcionarios";
-		$sql = "INSERT INTO $tabela (folha, funci, nome, cpf, rg, salario, inss, cargo, admissao) VALUES";
+		$tabela = PREFIXO . 'folha_funcionarios';
+		$sql = "INSERT INTO $tabela (taxa, folha, funci, nome, cpf, rg, salario, inss, cargo, admissao) VALUES";
 
 		$cont = 0;
 		foreach ($funcionarios as $key => $campos) {
 			$inss = 0;
-			if($campos['inss'] == 1)
+			$taxa = '';
+			if($campos['inss'] == 1) {
 				$inss = $this->calculaInss($campos['salario']);
+				$taxa = $this->retornaTaxa($campos['salario']);
+			}
 
 			if($cont == 0)
-				$sql .= " ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
+				$sql .= " ('$taxa', '$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
 			else
-				$sql .= ", ('$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
+				$sql .= ", ('$taxa', '$idFolha', '".$campos['id']."', '".$campos['nome']."', '".$campos['cpf']."', '".$campos['rg']."', '".$campos['salario']."', '$inss', '".$campos['cargo']."', '".$campos['admissao']."')";
 			$cont++;
 		}
 
@@ -281,7 +292,7 @@ class folhasModel extends Model{
 	}
 
 	private function totalSalarioInss($idFolha){
-		$tabela = PREFIXO."folha_funcionarios";
+		$tabela = PREFIXO . 'folha_funcionarios';
 		$sql = "SELECT SUM(salario), SUM(inss) FROM $tabela WHERE folha = '$idFolha'";
 		$query = $this->prepare($sql);
 		$query->execute();
@@ -296,7 +307,7 @@ class folhasModel extends Model{
 	}
 
 	private function somaValorEventos($onde){
-		$tabela = PREFIXO."descontos_abonos";
+		$tabela = PREFIXO . 'descontos_abonos';
 		$sql = "SELECT SUM(valor) FROM $tabela WHERE $onde";
 		$query = $this->prepare($sql);
 		$query->execute();

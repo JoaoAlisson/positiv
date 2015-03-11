@@ -171,6 +171,12 @@ $paginacao = "";
       } 
     }
 
+    foreach ($dados['itens'] as $chave => $campos) {
+        $botao = "<a class=\"mini ui teal labeled icon button balao\" href='". URL ."patrimonio/etiqueta/cod:". $campos['id'] ."' TARGET='_blank' data-content='Etiqueta do Patrimônio' onClick=\"function(event){ return true; };\"><i class=\"tag icon\"></i>Etiqueta</a>";
+        
+        $dados['itens'][$chave]['botao'] = $botao;
+    }
+
     $retorna["listagem"] = $dados['itens'];
     $retorna["paginacao"] = $paginacao;
     $retorna['total'] = $dados['qtd'];

@@ -45,7 +45,7 @@
 <?php } ?>
 
 <?php  } ?>
-	<form class="ui form formulario" action="<?php echo URL;?>login" method="POST">
+	<form class="ui form formulario" action="<?php echo URL . $_POST['sis_user'];?>/login" method="POST">
 	<input name="token" value="<?php echo $token;?>" hidden/>
 	<div class="ui column center aligned grid" >
 	    <div class="column" style="width:auto;">

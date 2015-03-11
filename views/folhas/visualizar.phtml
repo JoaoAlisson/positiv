@@ -4,7 +4,7 @@
 <div style="width:100%; text-align:center; text-transform: uppercase;">
 	<h2><i class="file powerpoint outline icon"></i>Folha</h2>
 
-  <a class="ui vertical labeled icon small button linkDireto" style="margin-top:2px;" href="<?php echo URL.'folhas/pdf/cod:'.$dados['id']; ?>" target="_blank" onclick="function(event){ return true; }">
+  <a class="ui vertical labeled icon small button linkDireto" style="margin-top:2px;" href="<?php echo Uteis::url() . 'folhas/pdf/cod:' . $dados['id']; ?>" target="_blank" onclick="function(event){ return true; }">
     <i class="file pdf outline icon"></i>Folha PDF
   </a>
   <div class="ui vertical labeled icon small button linkDireto" style="margin-top:2px;" onclick="navegacaoSub('folhas/','reciboEscolha/cod:<?php echo $dados['id']; ?>', '');">

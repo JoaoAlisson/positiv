@@ -65,7 +65,7 @@ class TiposCampos{
 	}
 
 	private function senha(){
-		return "varchar (30)";
+		return "varchar (40)";
 	}	
 
 	private function numero(){

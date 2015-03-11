@@ -306,7 +306,7 @@ class Database extends PDO{
 				foreach ($onde as $campo => $valor){
 					$valor = mysql_real_escape_string($valor);
 					if($valor != ""){
-						if($this->tipos[$campo] == "numero" || $this->tipos[$campo] == "moeda" || $this->tipos[$campo] == "inteiro")
+						if($this->tipos[$campo] == "numero" || $this->tipos[$campo] == "moeda" || $this->tipos[$campo] == "inteiro" || is_array($this->tipos[$campo]))
 							$where .= ($i > 0) ? "AND `$tabela`.`".$campo."` = '".$valor."' " : "`$tabela`.`".$campo."` = '".$valor."' ";
 						else
 							$where .= ($i > 0) ? "AND `$tabela`.`".$campo."` LIKE '%".$valor."%' " : "`$tabela`.`".$campo."` LIKE '%".$valor."%' ";

@@ -191,7 +191,7 @@
 		$totalDescontos = 0;
 		if($dados['funcionarios'][$chave]['inss'] != 0){
 			$pdf->SetX(1.1);
-			$taixa = retornaTaxa($dados['funcionarios'][$chave]['salario'], $dados['tabelaInss']);
+			$taixa = $dados['funcionarios'][$chave]['taxa'];
 			$taixa .= "%";
 			$pdf->Cell(12.9, 0.4,"INSS ($taixa)",0,0,'L');
 			$pdf->Cell(3, 0.4,"",0,0,'R');

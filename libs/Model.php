@@ -123,7 +123,7 @@ class Model extends Database{
 
 	}
 
-	public function formataEstado($campo, $valor = "", $integro){
+	public function formataEstado1($campo, $valor = "", $integro){
 		if(!$integro && $valor != "0"){
 			$tabela = PREFIXO."estados";
 
@@ -140,7 +140,45 @@ class Model extends Database{
 		return $valor;		
 	}
 
+	public function formataEstado($campo, $valor = "", $integro){
+		if(!$integro && $valor != "0")
+			$valor = $this->pegarEstado($valor);
+
+		return $valor;		
+	}
+
 	public function formataCidade($campo, $valor = "", $integro){
+		if(!$integro && $valor != "0")
+			$valor = $this->pegarCidade($valor);
+
+		return $valor;		
+	}		
+
+	private function pegarEstado($id) {
+
+		return $this->pegarTbAdm($id, 'estado', 'estados');
+
+	}
+
+	private function pegarCidade($id) {
+		return $this->pegarTbAdm($id, 'cidade', 'cidades');
+	}
+
+	private function pegarTbAdm($id, $campo, $tabela) {
+
+		mysql_connect(DB_HOST, DB_USER, DB_PASS);
+		mysql_select_db(DB_ADM);
+
+		$tabela = PREFIXO_ADM . $tabela;
+		$sql = "SELECT $campo FROM $tabela WHERE id = $id;";
+
+		$retorna = mysql_query($sql);
+		$retorna = mysql_fetch_assoc($retorna);
+
+		return $retorna[$campo];	
+	}
+
+	public function formataCidade1($campo, $valor = "", $integro){
 		if(!$integro && $valor != "0"){
 			$tabela = PREFIXO."cidades";
 

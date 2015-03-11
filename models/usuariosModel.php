@@ -10,6 +10,8 @@ class usuariosModel extends Model{
 
 	public $validacoes = array("login"  => "loginValidar");
 
+	public $limiteDeLinhas = 2;
+
 	public function loginValidar($login){
 		$id = isset($_POST['idUsuario']) ? $_POST['idUsuario'] : 0;
 		if($this->loginUnico($login, $id))

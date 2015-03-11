@@ -3,7 +3,7 @@ class folhas extends Controller{
 
 	private $tabelaInss = array();
 
-	public $nome = array("Folha de Pagamento","Folhas de Pagamentos");
+	public $nome = array("Folha de Pagamento", "Folhas de Pagamentos");
 
 	public $campos = array( "mes"   => "Mês",
 						    "ano"	=> "Ano",
@@ -148,7 +148,7 @@ class folhas extends Controller{
 
 		$this->usarLayout(false);
 
-		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo', 'admissao');
+		$array = array('id', 'nome', 'salario', 'inss', 'cpf', 'rg', 'cargo', 'admissao', 'taxa');
 		if($func == 0)
 			$funcionarios = $this->model->funcsDaFolha($id, $array);
 		else

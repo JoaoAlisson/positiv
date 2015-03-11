@@ -2,12 +2,12 @@
 	if(MODO_DESENVOLVIMENTO) { 
 		header('Content-Type: application/javascript');
 ?>
-
 var ATUALIZANDOBANCO = false;
 function atualizarBanco(){
 	if(ATUALIZANDOBANCO == false){
+		alert('teste');
 		colocaLoad();
-		$.get("<?php echo URL; ?>desenvolvimento/atualizar", function(retorno){
+		$.get("<?php echo Uteis::url(); ?>desenvolvimento/atualizar", function(retorno){
 			tiraLoad();
 			if(retorno !== "ok")
 				alert("Ocorreu um erro durante a atualização");

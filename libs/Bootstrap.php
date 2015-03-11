@@ -26,8 +26,9 @@ class Bootstrap {
 		$this->trataUrl();
 		$logado   = Sessao::pegar('logado');
 		$sis_user = (Sessao::pegar('sis_user') == $this->urlTratada['user_sys']) ? true : false;
+		$sis 	  = (Sessao::pegar('sis') == 'igrj') ? true : false;
 
-		if($logado && $sis_user)
+		if($logado && $sis_user && $sis)
 			return true;
 		else
 			return false;
@@ -35,13 +36,13 @@ class Bootstrap {
 
 	public function carregarTelaLogin(){
 
-		require RAIZ . SEPARADOR . "controllers". SEPARADOR ."loginController.php";
+		require RAIZ . SEPARADOR . 'controllers' . SEPARADOR . 'loginController.php';
 
-		$controller = new login();
-		$controller->setViewRender("login".SEPARADOR."index");
+		$controller = new login($this->urlTratada['user_sys']);
+		$controller->setViewRender('login' . SEPARADOR . 'index');
 		$controller->index();
 		$controller->view->adicionarDados($controller->getDados());
-		$controller->view->render("login", "login". SEPARADOR ."index", false);			
+		$controller->view->render('login', 'login' . SEPARADOR . 'index', false);			
 	}
 
 	private function trataUrl() {
@@ -55,7 +56,9 @@ class Bootstrap {
 			unset($gets[0], $gets[1]);
 		}
 
+
 		$retorna['user_sys']      = isset($url[0]) ? $url[0] : '';
+		define('DB_NAME', PREFIXO_TB_CLIENTES . $retorna['user_sys']);
 		$retorna['contAction'][0] = isset($url[1]) ? $url[1] : null;
 		$retorna['contAction'][1] = isset($url[2]) ? $url[2] : null;
 		$retorna['gets']          = array();
@@ -86,7 +89,7 @@ class Bootstrap {
 		}
 
 		if(empty($url[0])){
-			require "controllers/indexController.php";
+			require RAIZ . SEPARADOR . 'controllers' . SEPARADOR . 'indexController.php';
 			$controller = new Index();
 
 			$controller->setViewRender(strtolower(get_class($controller))."/index");
@@ -98,12 +101,12 @@ class Bootstrap {
 			return false;
 		}
 
-		$file = 'controllers/'.$url[0].'Controller.php';
+		$file = RAIZ . SEPARADOR . 'controllers' . SEPARADOR . $url[0].'Controller.php';
 		if(file_exists($file)){
 			require $file;
 
 		}else{
-			require "controllers/errorController.php";
+			require RAIZ . SEPARADOR . 'controllers' . SEPARADOR . 'errorController.php';
 			//throw new Exception("The file {$file} does not exists." );
 			$error = new Error();			
 			return false; 
